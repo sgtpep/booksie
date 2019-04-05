@@ -1,0 +1,11 @@
+deploy:
+  fqdn: www.booksie.org
+  github_token:
+    secure: y3bk6dhiXfkItXTUqsP/ewWxjJSIPoXXFcDAQgI12GGhDHZnFFIayPSoHHND+AiiNSVZt6gSjUhtXdpU5ojJOytM7J/6wmWJizgegr7A/ddDZHyWUkyBPmKljaMdT4cl8HGrDl2jeoNxIstTbhRHI1wjPNkk0F23Y33u886jpoUd2ubdPzr9Adbv8r8yCDLSqAiShZtbypP1yqx2Gs2quIBiuyFA186zjYrNmKR9Xpd5uQKGm5RXj2/QeAjlqdamg/SYzWH+u5GjrrWXaIkqyKjZ8jDt7DP0EYD8NJBXTHyV6AHgoVhIHCOI8tG/A+zjtvNTtSjQZsEKDjmF74K8H4owgLuRm+MxtEXrshMnIk1PryZbeMxjnvirxTFXIVRqvI8mi1g9Ryy0ch3kjkwqff9kh9mj2+Kk3vImvS3EjuQe5vWK6yN27ZSjPsAqTv1IycpaI8d/bsFoefzUGzl5Q2sU61SlLL7Fkm/+49cw68wcW8KBfIYHmYqrAsDtrW2vvlIFeEYdVRSlJH77YqEKnjqazJibd110apUfaW8uBaDr9dL7biIRlSTkwK5W9fXbQ17DlamWwnT9jwUsnd9MiM2dTSWOT1E7EmCbNgQPR5kXGQKYRXA6f6nDoV8F8IK4hEhjXsbMH/j35gTj1f0w5SvzHR55SmW95crLm+SCs8A=
+  on:
+    branch: master
+  provider: pages
+  skip_cleanup: true
+language: node_js
+node_js: node
+script: echo TODO
