@@ -6,7 +6,7 @@ const { execFileSync } = require('child_process');
 const buildBooks = () =>
   cache(fetchBooks)()
     .sort((a, b) => -a.created.localeCompare(b.created))
-    .map(book => replaceTokens(readInclude('book'), book))
+    .map(book => replaceTokens(readInclude('book').trim(), book))
     .join('');
 
 const buildIndex = () =>
