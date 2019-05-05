@@ -1,0 +1,43 @@
+#!/usr/bin/env node
+const fs = require('fs');
+const path = require('path');
+const { execFileSync } = require('child_process');
+
+const buildIndex = () =>
+  readInclude('header') +
+  fetchBooks()
+    .map(book => replaceTokens(readInclude('book'), book))
+    .join('\n') +
+  readInclude('footer');
+
+const fetchBooks = () =>
+  JSON.parse(
+    execFileSync('curl', [
+      '-Lf',
+      '--retry',
+      2,
+      'https://data.booksie.org/books.json',
+    ])
+  );
+
+const generateIndex = () => {
+  const index = 'dist/index.html';
+  fs.mkdirSync(path.dirname(index), {
+    recursive: true,
+  });
+  fs.writeFileSync(index, buildIndex());
+};
+
+const main = () => generateIndex();
+
+const readInclude = name =>
+  fs.readFileSync(path.join('includes', `${name}.html`), 'utf8');
+
+const replaceTokens = (string, replacements) =>
+  Object.entries(replacements).reduce(
+    (string, [token, replacement]) =>
+      string.replace(new RegExp(`\\{${token}}`, 'g'), replacement),
+    string
+  );
+
+require.main === module && main();
