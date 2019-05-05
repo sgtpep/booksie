@@ -5,10 +5,20 @@ const { execFileSync } = require('child_process');
 
 const buildIndex = () =>
   readInclude('header') +
+  buildStyles() +
   fetchBooks()
     .map(book => replaceTokens(readInclude('book'), book))
-    .join('\n') +
+    .join('') +
   readInclude('footer');
+
+const buildStyles = () =>
+  `<style>${fs
+    .readdirSync('styles')
+    .map(filename => fs.readFileSync(path.join('styles', filename), 'utf8'))
+    .join('')
+    .replace(/\s+/g, ' ')
+    .trim()}</style>
+`;
 
 const fetchBooks = () =>
   JSON.parse(
