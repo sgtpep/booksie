@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "booksie-data": "github:sgtpep/booksie-data#master"
+  }
+}

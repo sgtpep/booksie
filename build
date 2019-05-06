@@ -2,42 +2,60 @@
 const fs = require('fs');
 const path = require('path');
 const { execFileSync } = require('child_process');
+const {
+  cachePath,
+  distributionPath,
+  fetchURL,
+  makeDirectories,
+} = require('booksie-data');
 
-const buildIndex = () => {
-  const index = 'dist/index.html';
-  fs.mkdirSync(path.dirname(index), { recursive: true });
-  fs.writeFileSync(index, generateIndex());
-};
+const buildIndex = () =>
+  fs.writeFileSync(
+    makeDirectories(distributionPath('index.html')),
+    generateIndex()
+  );
 
 const cache = func => (...args) => {
-  const cache = path.join(
-    'cache',
+  const cache = cachePath(
     `${func.name}(${JSON.stringify(args).replace(/^\[(.*)]$/, '$1')})`
   );
-  if (!fs.existsSync(cache)) {
-    fs.mkdirSync(path.dirname(cache), { recursive: true });
-    fs.writeFileSync(cache, JSON.stringify(func(...args)));
-  }
+  fs.existsSync(cache) ||
+    fs.writeFileSync(makeDirectories(cache), JSON.stringify(func(...args)));
   return JSON.parse(fs.readFileSync(cache, 'utf8'));
 };
 
 const fetchBooks = () =>
-  JSON.parse(
-    execFileSync('curl', [
-      '-Lf',
-      '--retry',
-      2,
-      'https://data.booksie.org/books.json',
-    ])
-  );
+  JSON.parse(fetchURL('https://data.booksie.org/books.json'));
 
-const generateBook = book => replaceTokens(readInclude('book'), book);
+const generateBook = book =>
+  replaceTokens(readInclude('book'), {
+    ...book,
+    cover: (process.env.CI ? func => func : cache)(generateCoverURL)(
+      book.source,
+      book.slug
+    ),
+  });
 
 const generateBooks = () =>
   cache(fetchBooks)()
     .sort((a, b) => -a.created.localeCompare(b.created))
     .map(book => generateBook(book).trim())
     .join('');
+
+const generateCoverURL = (source, slug) =>
+  `data:image/jpeg;base64,${execFileSync(
+    'convert',
+    ['-resize', '256x256>', '-', '-'],
+    {
+      input: fetchURL(
+        `https://data.booksie.org/${encodeURIComponent(
+          source
+        )}/${encodeURIComponent(slug)}.jpg`,
+        undefined,
+        true
+      ),
+    }
+  ).toString('base64')}`;
 
 const generateIndex = () =>
   readInclude('header') +

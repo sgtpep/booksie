@@ -1,3 +1,6 @@
+cache:
+  directories:
+    - cache
 deploy:
   fqdn: www.booksie.org
   github_token:
