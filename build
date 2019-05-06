@@ -30,14 +30,11 @@ const fetchBooks = () =>
 const generateBook = book =>
   replaceTokens(readInclude('book'), {
     ...book,
-    cover: (process.env.CI ? func => func : cache)(generateCoverURL)(
-      book.source,
-      book.slug
-    ),
+    cover: cache(generateCoverURL)(book.source, book.slug),
   });
 
 const generateBooks = () =>
-  cache(fetchBooks)()
+  (process.env.CI ? func => func : cache)(fetchBooks)()
     .sort((a, b) => -a.created.localeCompare(b.created))
     .map(book => generateBook(book).trim())
     .join('');
