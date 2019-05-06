@@ -3,23 +3,11 @@ const fs = require('fs');
 const path = require('path');
 const { execFileSync } = require('child_process');
 
-const buildBooks = () =>
-  cache(fetchBooks)()
-    .sort((a, b) => -a.created.localeCompare(b.created))
-    .map(book => replaceTokens(readInclude('book').trim(), book))
-    .join('');
-
-const buildIndex = () =>
-  readInclude('header') + buildStyles() + buildBooks() + readInclude('footer');
-
-const buildStyles = () =>
-  `<style>${fs
-    .readdirSync('styles')
-    .map(filename => fs.readFileSync(path.join('styles', filename), 'utf8'))
-    .join('')
-    .replace(/\s+/g, ' ')
-    .trim()}</style>
-`;
+const buildIndex = () => {
+  const index = 'dist/index.html';
+  fs.mkdirSync(path.dirname(index), { recursive: true });
+  fs.writeFileSync(index, generateIndex());
+};
 
 const cache = func => (...args) => {
   const cache = path.join(
@@ -43,13 +31,30 @@ const fetchBooks = () =>
     ])
   );
 
-const generateIndex = () => {
-  const index = 'dist/index.html';
-  fs.mkdirSync(path.dirname(index), { recursive: true });
-  fs.writeFileSync(index, buildIndex());
-};
+const generateBook = book => replaceTokens(readInclude('book'), book);
 
-const main = () => generateIndex();
+const generateBooks = () =>
+  cache(fetchBooks)()
+    .sort((a, b) => -a.created.localeCompare(b.created))
+    .map(book => generateBook(book).trim())
+    .join('');
+
+const generateIndex = () =>
+  readInclude('header') +
+  generateStyles() +
+  generateBooks() +
+  readInclude('footer');
+
+const generateStyles = () =>
+  `<style>${fs
+    .readdirSync('styles')
+    .map(filename => fs.readFileSync(path.join('styles', filename), 'utf8'))
+    .join('')
+    .replace(/\s+/g, ' ')
+    .trim()}</style>
+`;
+
+const main = () => buildIndex();
 
 const readInclude = name =>
   fs.readFileSync(path.join('includes', `${name}.html`), 'utf8');
