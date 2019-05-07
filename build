@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
 const { execFileSync } = require('child_process');
@@ -17,7 +18,10 @@ const buildIndex = () =>
 
 const cache = func => (...args) => {
   const cache = cachePath(
-    `${func.name}(${JSON.stringify(args).replace(/^\[(.*)]$/, '$1')})`
+    `${func.name}:${crypto
+      .createHash('md5')
+      .update(JSON.stringify(args))
+      .digest('hex')}`
   );
   fs.existsSync(cache) ||
     fs.writeFileSync(makeDirectories(cache), JSON.stringify(func(...args)));
