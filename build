@@ -77,7 +77,7 @@ const fetchBooks = () =>
     (process.env.CI ? memoize : cache)(fetchURL)(
       'https://data.booksie.org/books.json'
     )
-  );
+  ).sort((a, b) => -a.created.localeCompare(b.created));
 
 const generateBook = book => replaceTokens(readInclude('book'), book);
 
@@ -88,7 +88,6 @@ const generateBooks = () =>
       left: (index % spriteSize) * coverSize,
       top: Math.floor(index / spriteSize) * coverSize,
     }))
-    .sort((a, b) => -a.created.localeCompare(b.created))
     .map(book => generateBook(book).trim())
     .join('');
 
