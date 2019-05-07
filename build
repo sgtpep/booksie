@@ -98,12 +98,13 @@ const generateIndex = () =>
   readInclude('footer');
 
 const generateStyles = () =>
-  `<style>${fs
-    .readdirSync('styles')
-    .map(filename => fs.readFileSync(path.join('styles', filename), 'utf8'))
-    .join('')
-    .replace(/\s+/g, ' ')
-    .trim()}</style>
+  `<style>
+${fs
+  .readdirSync('styles')
+  .map(filename => fs.readFileSync(path.join('styles', filename), 'utf8'))
+  .join('\n')
+  .trim()}
+</style>
 `;
 
 const main = () => {
