@@ -9,7 +9,7 @@ const {
   fetchURL,
   makeDirectories,
   memoize,
-} = require('booksie-data');
+} = require('.');
 
 const coverSize = 256;
 const spriteSize = 100;
