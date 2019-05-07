@@ -1,17 +1,12 @@
 .book {
   display: inline-block;
   vertical-align: top;
-  width: 25%;
 }
 a.book {
   color: inherit;
   text-decoration: none;
 }
 
-.book > figure {
-  margin: 0;
-}
-
-.book > figure > img {
-  width: 100%;
+.book > div {
+  background: no-repeat url(covers.jpg);
 }

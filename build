@@ -8,7 +8,51 @@ const {
   distributionPath,
   fetchURL,
   makeDirectories,
+  memoize,
 } = require('booksie-data');
+
+const coverSize = 256;
+const spriteSize = 100;
+
+const buildCovers = () => {
+  const output = distributionPath('covers.jpg');
+  if (!fs.existsSync(output) || process.env.CI) {
+    execFileSync('montage', [
+      ...fetchBooks().map(book => {
+        const output = cachePath(path.join(book.source, `${book.slug}.jpg`));
+        if (!fs.existsSync(output)) {
+          execFileSync(
+            'convert',
+            [
+              '-resize',
+              `${coverSize}x${coverSize}>`,
+              '-',
+              makeDirectories(output),
+            ],
+            {
+              input: fetchURL(
+                `https://data.booksie.org/${encodeURIComponent(
+                  book.source
+                )}/${encodeURIComponent(book.slug)}.jpg`,
+                undefined,
+                true
+              ),
+            }
+          );
+        }
+        return output;
+      }),
+      '-quality',
+      '80%',
+      '-tile',
+      `${spriteSize}x`,
+      '-geometry',
+      `${coverSize}x${coverSize}`,
+      makeDirectories(output),
+    ]);
+  }
+  return output;
+};
 
 const buildIndex = () =>
   fs.writeFileSync(
@@ -29,37 +73,27 @@ const cache = func => (...args) => {
 };
 
 const fetchBooks = () =>
-  JSON.parse(fetchURL('https://data.booksie.org/books.json'));
+  JSON.parse(
+    (process.env.CI ? memoize : cache)(fetchURL)(
+      'https://data.booksie.org/books.json'
+    )
+  );
 
-const generateBook = book =>
-  replaceTokens(readInclude('book'), {
-    ...book,
-    cover: cache(generateCoverURL)(book.source, book.slug),
-  });
+const generateBook = book => replaceTokens(readInclude('book'), book);
 
 const generateBooks = () =>
-  (process.env.CI ? func => func : cache)(fetchBooks)()
+  fetchBooks()
+    .map((book, index) => ({
+      ...book,
+      left: (index % spriteSize) * coverSize,
+      top: Math.floor(index / spriteSize) * coverSize,
+    }))
     .sort((a, b) => -a.created.localeCompare(b.created))
     .map(book => generateBook(book).trim())
     .join('');
 
-const generateCoverURL = (source, slug) =>
-  `data:image/jpeg;base64,${execFileSync(
-    'convert',
-    ['-resize', '256x256>', '-', '-'],
-    {
-      input: fetchURL(
-        `https://data.booksie.org/${encodeURIComponent(
-          source
-        )}/${encodeURIComponent(slug)}.jpg`,
-        undefined,
-        true
-      ),
-    }
-  ).toString('base64')}`;
-
 const generateIndex = () =>
-  readInclude('header') +
+  replaceTokens(readInclude('header'), { coverSize }) +
   generateStyles() +
   generateBooks() +
   readInclude('footer');
@@ -73,7 +107,10 @@ const generateStyles = () =>
     .trim()}</style>
 `;
 
-const main = () => buildIndex();
+const main = () => {
+  buildCovers();
+  buildIndex();
+};
 
 const readInclude = name =>
   fs.readFileSync(path.join('includes', `${name}.html`), 'utf8');
