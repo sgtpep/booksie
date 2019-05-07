@@ -98,14 +98,23 @@ const generateIndex = () =>
   readInclude('footer');
 
 const generateStyles = () =>
-  `<style>
-${fs
-  .readdirSync('styles')
-  .map(filename => fs.readFileSync(path.join('styles', filename), 'utf8'))
-  .join('\n')
-  .trim()}
-</style>
-`;
+  (process.env.CI ? '<style>\n' : '') +
+  fs
+    .readdirSync('styles')
+    .map(filename => {
+      const stylesheet = path.join('styles', filename);
+      if (process.env.CI) {
+        return fs.readFileSync(stylesheet, 'utf8');
+      } else {
+        const symlink = distributionPath(filename);
+        fs.existsSync(symlink) ||
+          fs.symlinkSync(path.join('..', stylesheet), symlink);
+        return `<link href="${filename}" rel="stylesheet">`;
+      }
+    })
+    .join('\n') +
+  (process.env.CI ? '</style>' : '') +
+  '\n';
 
 const main = () => {
   buildCovers();
