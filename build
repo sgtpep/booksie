@@ -76,8 +76,6 @@ const cache = func => (...args) => {
   return JSON.parse(fs.readFileSync(cache, 'utf8'));
 };
 
-const deindentLines = string => string.replace(/^  /gm, '');
-
 const downloadCovers = () => {
   const books = fetchBooks().map(book => ({
     ...book,
@@ -149,9 +147,9 @@ const generateCoversStyle = () =>
 const generateFooter = () => readInclude('footer');
 
 const generateHead = () =>
-  replaceTokens(deindentLines(readInclude('head')).replace('</html>\n', ''), {
+  replaceTokens(readInclude('head').replace('</html>\n', ''), {
     coverSize,
-    coversStyle: indentLines(generateCoversStyle()).trim(),
+    coversStyle: generateCoversStyle(),
     description:
       'Booksie — an open catalog of free picture storybooks for children instantly available for reading.',
     name: 'Booksie',
@@ -168,20 +166,18 @@ const generateIndex = () =>
   generateHead() + generateHeader() + generateMain() + generateFooter();
 
 const generateMain = () =>
-  replaceTokens(deindentLines(readInclude('main')), {
-    books: indentLines(generateBooks()),
+  replaceTokens(readInclude('main'), {
+    books: generateBooks(),
   });
 
 const generateStyle = () =>
   `<style>
-${indentLines(
-  fs
-    .readdirSync('styles')
-    .map(filename =>
-      fs.readFileSync(path.join('styles', filename), 'utf8').trim()
-    )
-    .join('\n\n')
-)}
+${fs
+  .readdirSync('styles')
+  .map(filename =>
+    fs.readFileSync(path.join('styles', filename), 'utf8').trim()
+  )
+  .join('\n\n')}
 </style>`;
 
 const generateStylesheets = () =>
@@ -195,8 +191,6 @@ const generateStylesheets = () =>
     })
     .join('\n');
 
-const indentLines = string => string.replace(/^/gm, '  ').replace(/^  /, '');
-
 const main = () => {
   buildCovers();
   buildCovers(2);
@@ -209,7 +203,9 @@ const readInclude = name =>
 const replaceTokens = (string, replacements) =>
   Object.entries(replacements).reduce(
     (string, [token, replacement]) =>
-      string.replace(new RegExp(`\\{${token}}`, 'g'), replacement),
+      string
+        .replace(new RegExp(`^ +(?=\\{${token}})`, 'gm'), '')
+        .replace(new RegExp(`\\{${token}}`, 'g'), replacement),
     string
   );
 
