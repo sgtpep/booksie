@@ -12,7 +12,7 @@ const {
   memoize,
 } = require('.');
 
-const coverSize = 256;
+const coverSize = 192;
 const spriteSize = 100;
 
 const buildCovers = (scale = 1) => {
