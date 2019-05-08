@@ -154,7 +154,14 @@ const generateHead = () =>
     {
       coverSize,
       coversStyle: indentLines(generateCoversStyle()).trim(),
+      description:
+        'Booksie — an open catalog of free picture storybooks for children instantly available for reading.',
+      name: 'Booksie',
       style: process.env.CI ? generateStyle() : generateStylesheets(),
+      title: 'Free Picture Storybooks for Children',
+      url: `https://${fs
+        .readFileSync('.travis.yml', 'utf8')
+        .match(/(?<= fqdn: ).+/)}/`,
     }
   );
 
