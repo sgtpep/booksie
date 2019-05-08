@@ -14,5 +14,14 @@
 }
 
 .books > * {
-  margin: var(--vertical-margin) var(--horizontal-margin);
+  margin-left: var(--horizontal-margin);
+  margin-right: var(--horizontal-margin);
+}
+.books > .book {
+  margin-bottom: var(--vertical-margin);
+  margin-top: var(--vertical-margin);
+}
+
+.books-placeholder {
+  width: var(--cover-size);
 }
