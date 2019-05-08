@@ -110,8 +110,8 @@ const moveFile = (source, destination) => {
   return destination;
 };
 
-const removeFiles = files => {
-  executeCommand(['rm', '-fr', '--', ...files]);
+const removeDirectory = directory => {
+  executeCommand(['rm', '-fr', '--', directory]);
 };
 
 const symlinkFile = (target, link) => {
@@ -156,7 +156,7 @@ module.exports = {
   makeDirectories,
   memoize,
   moveFile,
-  removeFiles,
+  removeDirectory,
   symlinkFile,
   tempPath,
   unpackArchive,
