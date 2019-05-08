@@ -129,7 +129,7 @@ const generateFooter = () => readInclude('footer');
 const generateHead = () =>
   replaceTokens(readInclude('head'), {
     coverSize,
-    coversStyle: generateCoversStyle(),
+    coversStyle: indentLines(generateCoversStyle()).trim(),
     style: process.env.CI ? generateStyle() : generateStylesheets(),
   });
 
@@ -145,12 +145,12 @@ const generateMain = () =>
 
 const generateStyle = () =>
   `<style>
-${fs
+${indentLines(fs
   .readdirSync('styles')
   .map(filename =>
     fs.readFileSync(path.join('styles', filename), 'utf8').trim()
   )
-  .join('\n\n')}
+  .join('\n\n'))}
 </style>`;
 
 const generateStylesheets = () =>
@@ -163,6 +163,8 @@ const generateStylesheets = () =>
       return `<link href="${filename}" rel="stylesheet">`;
     })
     .join('\n');
+
+const indentLines = string => string.replace(/^/gm, '  ');
 
 const main = () => {
   buildCovers();
