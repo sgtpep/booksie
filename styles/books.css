@@ -13,15 +13,12 @@
   }
 }
 
-.books > * {
+.books > span {
   margin-left: var(--horizontal-margin);
   margin-right: var(--horizontal-margin);
-}
-.books > .book {
-  margin-bottom: var(--vertical-margin);
-  margin-top: var(--vertical-margin);
+  width: var(--cover-size);
 }
 
-.books-placeholder {
-  width: var(--cover-size);
+.books > .book {
+  margin: var(--vertical-margin) var(--horizontal-margin);
 }
