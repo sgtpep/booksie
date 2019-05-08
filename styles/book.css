@@ -1,8 +1,13 @@
 .book {
   display: inline-block;
   vertical-align: top;
+  width: var(--cover-size);
 }
 a.book {
   color: inherit;
   text-decoration: none;
+}
+
+.book > div {
+  height: var(--cover-size);
 }
