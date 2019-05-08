@@ -1,11 +1,11 @@
 .books {
   --horizontal-margin: 4px;
+  --vertical-margin: 0.75em;
   align-items: flex-start;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
-  margin-left: var(--horizontal-margin);
-  margin-right: var(--horizontal-margin);
+  margin: var(--vertical-margin) var(--horizontal-margin);
 }
 @media (min-width: 768px) {
   .books {
@@ -14,5 +14,5 @@
 }
 
 .books > * {
-  margin: 0.75em var(--horizontal-margin);
+  margin: var(--vertical-margin) var(--horizontal-margin);
 }
