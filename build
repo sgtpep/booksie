@@ -3,6 +3,7 @@ const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
 const {
+  assert,
   cachePath,
   distributionPath,
   executeCommand,
@@ -14,6 +15,18 @@ const {
 
 const coverSize = 192;
 const spriteSize = 100;
+
+const sourceNames = {
+  'book-dash': 'Book Dash',
+  'paul-choy': 'Paul Choy',
+  'pratham-books': 'Pratham Books',
+  'room-to-read': 'Room to Read',
+  'storybooks-canada': 'Storybooks Canada',
+  bookbot: 'Bookbot',
+  icharacter: 'iCharacter',
+  rubbishbooks: 'Rubbish Books',
+  storyweaver: 'StoryWeaver',
+};
 
 const buildCovers = (scale = 1) => {
   const output = distributionPath(
@@ -112,7 +125,14 @@ const fetchBooks = () =>
     )
   ).sort((a, b) => -a.created.localeCompare(b.created));
 
-const generateBook = book => replaceTokens(readInclude('book'), book);
+const generateBook = book =>
+  replaceTokens(readInclude('book'), {
+    ...book,
+    sourceName: assert(
+      sourceNames[book.source],
+      `Unknow source ${book.source}`
+    ),
+  });
 
 const generateBooks = () =>
   fetchBooks()

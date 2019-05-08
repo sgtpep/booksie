@@ -1,13 +1,26 @@
 .book {
-  border: 1px solid grey;
+  border-radius: 0.375em;
+  box-shadow: 0 0.0625em 0.25em rgba(0, 0, 0, 0.25);
   display: block;
+  transition: 0.3s opacity;
   width: var(--cover-size);
+}
+.book:hover {
+  opacity: 0.8;
 }
 a.book {
   color: inherit;
   text-decoration: none;
 }
 
-.book > div {
+.book > :first-child {
   padding-top: 100%;
+}
+
+.book > :last-child {
+  padding: 0.357em 0.5em;
+}
+
+.book > :last-child > * {
+  line-height: 1.2;
 }
