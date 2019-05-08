@@ -127,11 +127,16 @@ const generateBooks = () =>
 const generateFooter = () => readInclude('footer');
 
 const generateHead = () =>
-  replaceTokens(readInclude('head'), {
-    coverSize,
-    coversStyle: indentLines(generateCoversStyle()).trim(),
-    style: process.env.CI ? generateStyle() : generateStylesheets(),
-  });
+  replaceTokens(
+    readInclude('head')
+      .replace(/^  /, '')
+      .replace('</html>\n', ''),
+    {
+      coverSize,
+      coversStyle: indentLines(generateCoversStyle()).trim(),
+      style: process.env.CI ? generateStyle() : generateStylesheets(),
+    }
+  );
 
 const generateHeader = () => readInclude('header');
 
@@ -145,12 +150,14 @@ const generateMain = () =>
 
 const generateStyle = () =>
   `<style>
-${indentLines(fs
-  .readdirSync('styles')
-  .map(filename =>
-    fs.readFileSync(path.join('styles', filename), 'utf8').trim()
-  )
-  .join('\n\n'))}
+${indentLines(
+  fs
+    .readdirSync('styles')
+    .map(filename =>
+      fs.readFileSync(path.join('styles', filename), 'utf8').trim()
+    )
+    .join('\n\n')
+)}
 </style>`;
 
 const generateStylesheets = () =>

@@ -1,6 +1,6 @@
 .book {
-  display: inline-block;
-  vertical-align: top;
+  border: 1px solid grey;
+  display: block;
   width: var(--cover-size);
 }
 a.book {
@@ -9,5 +9,5 @@ a.book {
 }
 
 .book > div {
-  height: var(--cover-size);
+  padding-top: 100%;
 }
