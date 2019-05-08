@@ -34,28 +34,42 @@ const buildCovers = (scale = 1) => {
     'covers',
     `%d${scale === 1 ? '' : `@${scale}x`}.jpg`
   );
-  (fs.existsSync(output.replace('%d', '0')) && !process.env.CI) ||
-    executeCommand(
-      [
-        'montage',
-        ...downloadCovers(),
-        '-geometry',
-        `${coverSize * scale}x${coverSize * scale}`,
-        '-interlace',
-        'Plane',
-        '-quality',
-        '80%',
-        '-tile',
-        `1x${spriteSize}`,
-        makeDirectories(output),
-      ],
-      { env: { MAGICK_TEMPORARY_PATH: cachePath() } }
-    );
+  scale === 1 || process.env.CI
+    ? (fs.existsSync(output.replace('%d', '0')) && !process.env.CI) ||
+      executeCommand(
+        [
+          'montage',
+          ...downloadCovers(),
+          '-geometry',
+          `${coverSize * scale}x${coverSize * scale}`,
+          '-interlace',
+          'Plane',
+          '-quality',
+          '80%',
+          '-tile',
+          `1x${spriteSize}`,
+          makeDirectories(output),
+        ],
+        { env: { MAGICK_TEMPORARY_PATH: cachePath() } }
+      )
+    : fs
+        .readdirSync(path.dirname(output), { withFileTypes: true })
+        .filter(dirent => dirent.isFile())
+        .forEach(dirent =>
+          symlinkFile(
+            dirent.name,
+            output.replace('%d', path.basename(dirent.name, '.jpg'))
+          )
+        );
+  const regExp = new RegExp(
+    path
+      .basename(output)
+      .replace('%d', '\\d+')
+      .replace('.', '\\.')
+  );
   return fs
     .readdirSync(path.dirname(output))
-    .filter(filename =>
-      filename.endsWith(path.basename(output).replace('%d', ''))
-    )
+    .filter(filename => regExp.test(filename))
     .map(filename => path.join(path.dirname(output), filename));
 };
 
