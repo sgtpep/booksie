@@ -124,33 +124,45 @@ const generateBooks = () =>
     .map(book => generateBook(book).trim())
     .join('');
 
-const generateIndex = () =>
-  replaceTokens(readInclude('header'), {
+const generateFooter = () => readInclude('footer');
+
+const generateHead = () =>
+  replaceTokens(readInclude('head'), {
     coverSize,
     coversStyle: generateCoversStyle(),
-  }) +
-  generateStyles() +
-  generateBooks() +
-  readInclude('footer');
+    style: process.env.CI ? generateStyle() : generateStylesheets(),
+  });
 
-const generateStyles = () =>
-  (process.env.CI ? '<style>\n' : '') +
+const generateHeader = () => readInclude('header');
+
+const generateIndex = () =>
+  generateHead() + generateHeader() + generateMain() + generateFooter();
+
+const generateMain = () =>
+  replaceTokens(readInclude('main'), {
+    books: generateBooks(),
+  });
+
+const generateStyle = () =>
+  `<style>
+${fs
+  .readdirSync('styles')
+  .map(filename =>
+    fs.readFileSync(path.join('styles', filename), 'utf8').trim()
+  )
+  .join('\n\n')}
+</style>`;
+
+const generateStylesheets = () =>
   fs
     .readdirSync('styles')
     .map(filename => {
-      const stylesheet = path.join('styles', filename);
-      if (process.env.CI) {
-        return fs.readFileSync(stylesheet, 'utf8');
-      } else {
-        const symlink = distributionPath(filename);
-        fs.existsSync(symlink) ||
-          fs.symlinkSync(path.join('..', stylesheet), symlink);
-        return `<link href="${filename}" rel="stylesheet">`;
-      }
+      const symlink = distributionPath(filename);
+      fs.existsSync(symlink) ||
+        fs.symlinkSync(path.join('..', 'styles', filename), symlink);
+      return `<link href="${filename}" rel="stylesheet">`;
     })
-    .join('\n') +
-  (process.env.CI ? '</style>' : '') +
-  '\n';
+    .join('\n');
 
 const main = () => {
   buildCovers();
