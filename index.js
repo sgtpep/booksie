@@ -55,15 +55,19 @@ const downloadFile = (url, output, options = []) => {
   return moveFile(temp, output);
 };
 
-const executeCurl = (options, buffer = false) => {
-  const curlOptions = ['-Lf', '--retry', 2, ...options];
-  return log(`Executing curl ${curlOptions.join(' ')}`, () =>
-    execFileSync('curl', curlOptions, {
-      encoding: buffer ? 'buffer' : 'utf8',
-      stdio: ['pipe', 'pipe', 'inherit'],
+const executeCommand = (args, options = {}) =>
+  log(`Executing ${args.join(' ')}`, () =>
+    execFileSync(args[0], args.slice(1), {
+      encoding: 'utf8',
+      ...options,
     })
   );
-};
+
+const executeCurl = (options, buffer = false) =>
+  executeCommand(['curl', '-Lf', '--retry', 2, ...options], {
+    encoding: buffer ? 'buffer' : 'utf8',
+    stdio: ['pipe', 'pipe', 'inherit'],
+  });
 
 const extractPath = urlOrPath =>
   isURL(urlOrPath) ? new URL(urlOrPath).pathname : urlOrPath;
@@ -106,20 +110,22 @@ const moveFile = (source, destination) => {
   return destination;
 };
 
-const removeFiles = files => execFileSync('rm', ['-fr', '--', ...files]);
+const removeFiles = files => {
+  executeCommand(['rm', '-fr', '--', ...files]);
+};
 
 const tempPath = (...components) => path.join(os.tmpdir(), ...components);
 
-const unpackArchive = (archive, directory) =>
-  log(`Unpacking ${archive}`, () => {
-    execFileSync('unzip', [
-      '-o',
-      '-d',
-      makeDirectories(directory, true),
-      archive,
-    ]);
-    return directory;
-  });
+const unpackArchive = (archive, directory) => {
+  executeCommand([
+    'unzip',
+    '-o',
+    '-d',
+    makeDirectories(directory, true),
+    archive,
+  ]);
+  return directory;
+};
 
 module.exports = {
   assert,
@@ -128,6 +134,7 @@ module.exports = {
   decodeHTMLEntities,
   distributionPath,
   downloadFile,
+  executeCommand,
   executeCurl,
   extractPath,
   fetchURL,

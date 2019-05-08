@@ -2,13 +2,12 @@
 const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
-const { execFileSync } = require('child_process');
 const {
   cachePath,
   distributionPath,
+  executeCommand,
   executeCurl,
   fetchURL,
-  log,
   makeDirectories,
   memoize,
 } = require('.');
@@ -21,26 +20,23 @@ const buildCovers = (scale = 1) => {
     'covers',
     `%d${scale === 1 ? '' : `@${scale}x`}.jpg`
   );
-  if (!fs.existsSync(output.replace('%d', '0')) || process.env.CI) {
-    log(`Building ${scale}x covers`, () =>
-      execFileSync(
+  (fs.existsSync(output.replace('%d', '0')) && !process.env.CI) ||
+    executeCommand(
+      [
         'montage',
-        [
-          ...downloadCovers(),
-          '-geometry',
-          `${coverSize * scale}x${coverSize * scale}`,
-          '-interlace',
-          'Plane',
-          '-quality',
-          '80%',
-          '-tile',
-          `1x${spriteSize}`,
-          makeDirectories(output),
-        ],
-        { env: { MAGICK_TEMPORARY_PATH: cachePath() } }
-      )
+        ...downloadCovers(),
+        '-geometry',
+        `${coverSize * scale}x${coverSize * scale}`,
+        '-interlace',
+        'Plane',
+        '-quality',
+        '80%',
+        '-tile',
+        `1x${spriteSize}`,
+        makeDirectories(output),
+      ],
+      { env: { MAGICK_TEMPORARY_PATH: cachePath() } }
     );
-  }
   return fs
     .readdirSync(path.dirname(output))
     .filter(filename =>
@@ -50,11 +46,9 @@ const buildCovers = (scale = 1) => {
 };
 
 const buildIndex = () =>
-  log('Building index', () =>
-    fs.writeFileSync(
-      makeDirectories(distributionPath('index.html')),
-      generateIndex()
-    )
+  fs.writeFileSync(
+    makeDirectories(distributionPath('index.html')),
+    generateIndex()
   );
 
 const cache = func => (...args) => {
