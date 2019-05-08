@@ -114,6 +114,19 @@ const removeFiles = files => {
   executeCommand(['rm', '-fr', '--', ...files]);
 };
 
+const symlinkFile = (target, link) => {
+  try {
+    var exists = fs.readlinkSync(link) === target;
+  } catch {}
+  if (!exists) {
+    try {
+      fs.unlinkSync(link);
+    } catch {}
+    fs.symlinkSync(target, makeDirectories(link));
+  }
+  return link;
+};
+
 const tempPath = (...components) => path.join(os.tmpdir(), ...components);
 
 const unpackArchive = (archive, directory) => {
@@ -144,6 +157,7 @@ module.exports = {
   memoize,
   moveFile,
   removeFiles,
+  symlinkFile,
   tempPath,
   unpackArchive,
   userAgent,
