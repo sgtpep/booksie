@@ -178,7 +178,9 @@ const generateCoversStyle = () =>
 
 const generateFooter = () =>
   readInclude('footer', {
-    script: generateScript(),
+    script: process.env.CI
+      ? generateScript()
+      : '<script src="../script.js"></script>',
     year: new Date().getFullYear(),
   }).trim();
 
