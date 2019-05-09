@@ -6,6 +6,7 @@ const {
   assert,
   cachePath,
   copyDirectory,
+  copyFile,
   distributionPath,
   executeCommand,
   executeCurl,
@@ -98,6 +99,14 @@ const copyImages = () => {
     ? copyDirectory('images', target)
     : symlinkFile('../images', target);
 };
+
+const copyScripts = () =>
+  ['pdf.min.js', 'pdf.worker.min.js'].forEach(filename =>
+    copyFile(
+      path.join('node_modules/pdfjs-dist/build', filename),
+      distributionPath('scripts', filename)
+    )
+  );
 
 const downloadCovers = () => {
   const books = fetchBooks().map(book => ({
@@ -218,6 +227,7 @@ const main = () => {
   buildCovers(2);
   buildIndex();
   copyImages();
+  copyScripts();
 };
 
 const readInclude = (name, replacements = {}) =>

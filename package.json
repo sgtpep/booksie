@@ -1,4 +1,7 @@
 {
+  "dependencies": {
+    "pdfjs-dist": "^2.0.943"
+  },
   "name": "booksie",
   "version": "1.0.0"
 }
