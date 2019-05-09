@@ -167,7 +167,8 @@ const generateCoversStyle = () =>
     )
     .join('\n');
 
-const generateFooter = () => readInclude('footer');
+const generateFooter = () =>
+  readInclude('footer', { year: new Date().getFullYear() });
 
 const generateHead = () =>
   readInclude('head', {
