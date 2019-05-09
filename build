@@ -102,7 +102,7 @@ const copyImages = () => {
 const downloadCovers = () => {
   const books = fetchBooks().map(book => ({
     ...book,
-    cover: cachePath(path.join(book.source, `${book.slug}.jpg`)),
+    cover: cachePath(book.source, `${book.slug}.jpg`),
   }));
   const options = books.reduce(
     (options, book) =>
@@ -208,10 +208,7 @@ const generateStylesheets = () =>
   fs
     .readdirSync('styles')
     .map(filename => {
-      symlinkFile(
-        path.join('..', 'styles', filename),
-        distributionPath(filename)
-      );
+      symlinkFile(path.join('../styles', filename), distributionPath(filename));
       return `<link href="${filename}" rel="stylesheet">`;
     })
     .join('\n');
