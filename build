@@ -5,6 +5,7 @@ const path = require('path');
 const {
   assert,
   cachePath,
+  copyDirectory,
   distributionPath,
   executeCommand,
   executeCurl,
@@ -89,6 +90,13 @@ const cache = func => (...args) => {
   fs.existsSync(cache) ||
     fs.writeFileSync(makeDirectories(cache), JSON.stringify(func(...args)));
   return JSON.parse(fs.readFileSync(cache, 'utf8'));
+};
+
+const copyImages = () => {
+  const target = distributionPath('images');
+  process.env.CI
+    ? copyDirectory('images', target)
+    : symlinkFile('../images', target);
 };
 
 const downloadCovers = () => {
@@ -211,6 +219,7 @@ const main = () => {
   buildCovers();
   buildCovers(2);
   buildIndex();
+  copyImages();
 };
 
 const readInclude = name =>

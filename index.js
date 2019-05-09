@@ -15,6 +15,11 @@ const assert = (value, message) => {
 
 const cachePath = (...components) => path.join('cache', ...components);
 
+const copyDirectory = (source, destination) => {
+  executeCommand(['cp', '-Tr', source, makeDirectories(destination, true)]);
+  return destination;
+};
+
 const copyFile = (source, destination) => {
   fs.copyFileSync(source, makeDirectories(destination));
   return destination;
@@ -143,6 +148,7 @@ const unpackArchive = (archive, directory) => {
 module.exports = {
   assert,
   cachePath,
+  copyDirectory,
   copyFile,
   decodeHTMLEntities,
   distributionPath,
