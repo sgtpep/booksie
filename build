@@ -177,7 +177,10 @@ const generateCoversStyle = () =>
     .join('\n');
 
 const generateFooter = () =>
-  readInclude('footer', { year: new Date().getFullYear() });
+  readInclude('footer', {
+    script: generateScript(),
+    year: new Date().getFullYear(),
+  }).trim();
 
 const generateHead = () =>
   readInclude('head', {
@@ -202,6 +205,10 @@ const generateMain = () =>
   readInclude('main', {
     books: generateBooks(),
   });
+
+const generateScript = () => `<script>
+${fs.readFileSync('script.js', 'utf8').trim()}
+</script>`;
 
 const generateStyle = () =>
   `<style>
