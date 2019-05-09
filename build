@@ -130,7 +130,7 @@ const fetchBooks = () =>
   ).sort((a, b) => -a.created.localeCompare(b.created));
 
 const generateBook = book =>
-  replaceTokens(readInclude('book'), {
+  readInclude('book', {
     ...book,
     sourceName: assert(
       sourceNames[book.source],
@@ -170,7 +170,7 @@ const generateCoversStyle = () =>
 const generateFooter = () => readInclude('footer');
 
 const generateHead = () =>
-  replaceTokens(readInclude('head').replace('</html>\n', ''), {
+  readInclude('head', {
     coverSize,
     coversStyle: generateCoversStyle(),
     description:
@@ -181,7 +181,7 @@ const generateHead = () =>
     url: `https://${fs
       .readFileSync('.travis.yml', 'utf8')
       .match(/(?<= fqdn: ).+/)}/`,
-  });
+  }).replace('</html>\n', '');
 
 const generateHeader = () => readInclude('header');
 
@@ -189,7 +189,7 @@ const generateIndex = () =>
   generateHead() + generateHeader() + generateMain() + generateFooter();
 
 const generateMain = () =>
-  replaceTokens(readInclude('main'), {
+  readInclude('main', {
     books: generateBooks(),
   });
 
@@ -222,8 +222,11 @@ const main = () => {
   copyImages();
 };
 
-const readInclude = name =>
-  fs.readFileSync(path.join('includes', `${name}.html`), 'utf8');
+const readInclude = (name, replacements = {}) =>
+  replaceTokens(
+    fs.readFileSync(path.join('includes', `${name}.html`), 'utf8'),
+    replacements
+  );
 
 const replaceTokens = (string, replacements) =>
   Object.entries(replacements).reduce(
