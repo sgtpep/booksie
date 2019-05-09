@@ -2,6 +2,7 @@
   border-radius: 0.375em;
   box-shadow: 0 0.0625em 0.25em rgba(0, 0, 0, 0.25);
   display: block;
+  overflow: hidden;
   transition: 0.3s opacity;
   width: var(--cover-size);
 }
