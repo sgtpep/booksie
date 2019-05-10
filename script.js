@@ -1,6 +1,5 @@
 'use strict';
 const canvas = document.querySelector('#viewer > canvas');
-const pdfJS = window['pdfjs-dist/build/pdf'];
 const viewer = document.getElementById('viewer');
 
 const calculateViewport = page => {
@@ -33,8 +32,9 @@ const listenHashChange = () => addEventListener('hashchange', onHashChange);
 const listenResize = () => addEventListener('resize', onResize);
 
 const loadDocument = url => {
-  pdfJS.GlobalWorkerOptions.workerSrc = 'scripts/pdf.worker.min.js';
-  pdfJS.getDocument(url).promise.then(pdfDocument =>
+  window['pdfjs-dist/build/pdf'].GlobalWorkerOptions.workerSrc =
+    'scripts/pdf.worker.min.js';
+  window['pdfjs-dist/build/pdf'].getDocument(url).promise.then(pdfDocument =>
     pdfDocument.getPage(1).then(page =>
       page.render({
         background: 'black',
@@ -43,6 +43,17 @@ const loadDocument = url => {
       })
     )
   );
+};
+
+const loadPDFJS = onLoad => {
+  if (window['pdfjs-dist/build/pdf']) {
+    onLoad();
+  } else {
+    var script = document.createElement('script');
+    script.addEventListener('load', onLoad);
+    script.src = 'scripts/pdf.min.js';
+    document.body.appendChild(script);
+  }
 };
 
 const main = () => {
@@ -64,7 +75,7 @@ const onResize = () => {
 };
 
 const showViewer = url => {
-  loadDocument(url);
+  loadPDFJS(() => loadDocument(url));
   viewer.hidden = false;
 };
 
