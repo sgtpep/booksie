@@ -206,6 +206,7 @@ const generateIndex = () =>
 const generateMain = () =>
   readInclude('main', {
     books: generateBooks(),
+    viewer: readInclude('viewer'),
   });
 
 const generateScript = () => `<script>
