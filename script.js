@@ -1,6 +1,7 @@
 'use strict';
 const canvas = document.querySelector('#viewer > canvas');
 const viewer = document.getElementById('viewer');
+let pdfTask;
 
 const calculateViewport = page => {
   const { height, width } = page.getViewport(1);
@@ -16,7 +17,12 @@ const calculateViewport = page => {
   return viewport;
 };
 
-const hideViewer = () => (viewer.hidden = true);
+const hideViewer = () => {
+  viewer.hidden = true;
+  document.body.removeAttribute('style');
+  canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+  setTimeout(() => pdfTask && pdfTask.destroy());
+};
 
 const listenBookClick = () =>
   document.querySelector('.books').addEventListener('click', event => {
@@ -34,7 +40,8 @@ const listenResize = () => addEventListener('resize', onResize);
 const loadDocument = url => {
   window['pdfjs-dist/build/pdf'].GlobalWorkerOptions.workerSrc =
     'scripts/pdf.worker.min.js';
-  window['pdfjs-dist/build/pdf'].getDocument(url).promise.then(pdfDocument =>
+  pdfTask = window['pdfjs-dist/build/pdf'].getDocument(url);
+  pdfTask.promise.then(pdfDocument =>
     pdfDocument.getPage(1).then(page =>
       page.render({
         background: 'black',
@@ -75,8 +82,9 @@ const onResize = () => {
 };
 
 const showViewer = url => {
-  loadPDFJS(() => loadDocument(url));
   viewer.hidden = false;
+  document.body.style.overflow = 'hidden';
+  loadPDFJS(() => loadDocument(url));
 };
 
 location.domain || main();
