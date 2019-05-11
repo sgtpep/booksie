@@ -178,9 +178,7 @@ const generateCoversStyle = () =>
 
 const generateFooter = () =>
   readInclude('footer', {
-    script: process.env.CI
-      ? generateScript()
-      : '<script src="../script.js"></script>',
+    script: process.env.CI ? generateInlineScript() : generateScripts(),
     year: new Date().getFullYear(),
   }).trim();
 
@@ -209,28 +207,46 @@ const generateMain = () =>
     viewer: readInclude('viewer'),
   });
 
-const generateScript = () => `<script>
-${fs.readFileSync('script.js', 'utf8').trim()}
+const generateInlineScript = () => `<script>
+${fs
+  .readdirSync(scriptPath())
+  .map(filename => fs.readFileSync(scriptPath(filename), 'utf8').trim())
+  .join('\n\n')}
 </script>`;
+
+const generateScripts = () =>
+  fs
+    .readdirSync(scriptPath())
+    .map(filename => {
+      symlinkFile(
+        path.join('..', scriptPath(filename)),
+        distributionPath(filename)
+      );
+      return `<script src="${filename}"></script>`;
+    })
+    .join('\n');
 
 const generateStyle = () =>
   `<style>
 ${fs
-  .readdirSync('styles')
-  .map(filename =>
-    fs.readFileSync(path.join('styles', filename), 'utf8').trim()
-  )
+  .readdirSync(stylePath())
+  .map(filename => fs.readFileSync(stylePath(filename), 'utf8').trim())
   .join('\n\n')}
 </style>`;
 
 const generateStylesheets = () =>
   fs
-    .readdirSync('styles')
+    .readdirSync(stylePath())
     .map(filename => {
-      symlinkFile(path.join('../styles', filename), distributionPath(filename));
+      symlinkFile(
+        path.join('..', stylePath(filename)),
+        distributionPath(filename)
+      );
       return `<link href="${filename}" rel="stylesheet">`;
     })
     .join('\n');
+
+const includePath = (...components) => path.join('includes', ...components);
 
 const main = () => {
   buildCovers();
@@ -242,7 +258,7 @@ const main = () => {
 
 const readInclude = (name, replacements = {}) =>
   replaceTokens(
-    fs.readFileSync(path.join('includes', `${name}.html`), 'utf8'),
+    fs.readFileSync(includePath(`${name}.html`), 'utf8'),
     replacements
   );
 
@@ -254,5 +270,9 @@ const replaceTokens = (string, replacements) =>
         .replace(new RegExp(`\\{${token}}`, 'g'), replacement),
     string
   );
+
+const scriptPath = (...components) => path.join('scripts', ...components);
+
+const stylePath = (...components) => path.join('styles', ...components);
 
 require.main === module && main();
