@@ -14,18 +14,16 @@
         ? viewer.clientHeight / height
         : viewer.clientWidth / width
     );
-    //        if (fitHeight) {
-    //          viewport.transform[4] += (canvas.width - viewport.width) / 2;
-    //        } else {
-    //          viewport.transform[5] += (canvas.height - viewport.height) / 2;
-    //        }
-    //    return viewport;
   };
 
   const createCanvas = (width, height) => {
     const canvas = document.createElement('canvas');
-    canvas.width = width;
     canvas.height = height;
+    canvas.width = width;
+    height === viewer.clientHeight &&
+      (canvas.style.left = `${(viewer.clientWidth - canvas.width) / 2}px`);
+    width === viewer.clientWidth &&
+      (canvas.style.top = `${(viewer.clientHeight - canvas.height) / 2}px`);
     return canvas;
   };
 
