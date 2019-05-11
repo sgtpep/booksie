@@ -1,6 +1,5 @@
 'use strict';
 (() => {
-  const canvas = document.querySelector('#viewer > canvas');
   const viewer = document.getElementById('viewer');
   let currentNumber;
   let currentPage;
@@ -10,27 +9,34 @@
 
   const calculateViewport = page => {
     const { height, width } = page.getViewport(1);
-    const fitHeight = height / width > canvas.height / canvas.width;
-    const viewport = page.getViewport(
-      fitHeight ? canvas.height / height : canvas.width / width
+    return page.getViewport(
+      height / width > viewer.clientHeight / viewer.clientWidth
+        ? viewer.clientHeight / height
+        : viewer.clientWidth / width
     );
-    if (fitHeight) {
-      viewport.transform[4] += (canvas.width - viewport.width) / 2;
-    } else {
-      viewport.transform[5] += (canvas.height - viewport.height) / 2;
-    }
-    return viewport;
+    //        if (fitHeight) {
+    //          viewport.transform[4] += (canvas.width - viewport.width) / 2;
+    //        } else {
+    //          viewport.transform[5] += (canvas.height - viewport.height) / 2;
+    //        }
+    //    return viewport;
+  };
+
+  const createCanvas = (width, height) => {
+    const canvas = document.createElement('canvas');
+    canvas.width = width;
+    canvas.height = height;
+    return canvas;
   };
 
   const hideViewer = () => {
     viewer.hidden = true;
     document.body.removeAttribute('style');
-    canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
-    setTimeout(() => loadingTask && loadingTask.destroy());
     unlistenViewerEvents();
+    setTimeout(() => loadingTask && loadingTask.destroy());
   };
 
-  const listenBookClick = () =>
+  const listenBooksClick = () =>
     document.querySelector('.books').addEventListener('click', event => {
       const book = event.target.closest('.book');
       if (book) {
@@ -81,10 +87,9 @@
   };
 
   const main = () => {
-    listenBookClick();
+    listenBooksClick();
     listenHashChange();
     onHashChange();
-    onResize();
   };
 
   const onHashChange = (event = { newURL: location.href }) => {
@@ -99,20 +104,24 @@
       ? loadPage(currentNumber + 1)
       : undefined;
 
-  const onResize = () => {
-    canvas.height = innerHeight;
-    canvas.width = innerWidth;
-    currentPage && renderPage(currentPage, true);
-  };
+  const onResize = () => currentPage && renderPage(currentPage);
 
-  const renderPage = (page, cleanup = false) => {
-    cleanup && (page.cleanupAfterRender = true);
+  const renderPage = page => {
     renderTask && renderTask.cancel();
+    const viewport = calculateViewport(page);
+    const canvas = createCanvas(viewport.width, viewport.height);
     renderTask = page.render({
       canvasContext: canvas.getContext('2d'),
-      viewport: calculateViewport(page),
+      viewport,
     });
-    renderTask.promise.catch(() => {});
+    renderTask.promise.then(
+      () => {
+        const oldCanvas = viewer.querySelector('canvas');
+        oldCanvas.parentElement.insertBefore(canvas, oldCanvas);
+        oldCanvas.parentElement.removeChild(oldCanvas);
+      },
+      () => {}
+    );
   };
 
   const scriptPath = filename => `scripts/${filename}`;
@@ -120,8 +129,8 @@
   const showViewer = url => {
     viewer.hidden = false;
     document.body.style.overflow = 'hidden';
-    loadPDFJS(() => loadDocument(url));
     listenViewerEvents();
+    loadPDFJS(() => loadDocument(url));
   };
 
   const unlistenViewerEvents = () => {
@@ -129,5 +138,5 @@
     removeEventListener('resize', onResize);
   };
 
-  location.domain || main();
+  location.protocol === 'file:' && main();
 })();
