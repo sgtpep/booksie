@@ -26,6 +26,7 @@
     document.body.removeAttribute('style');
     unlistenViewerEvents();
     setTimeout(() => loadingTask && loadingTask.destroy());
+    location.hash === '#' || history.pushState(null, null, '#');
   };
 
   const createCanvas = (width, height) => {
@@ -118,7 +119,7 @@
       : event.key === 'ArrowRight'
       ? loadPage(currentNumber + 1)
       : event.key === 'Escape'
-      ? (location = '#')
+      ? closeViewer()
       : undefined;
 
   const onResize = () => currentPage && renderPage(currentPage);
