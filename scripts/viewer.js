@@ -100,6 +100,8 @@
       ? loadPage(currentNumber - 1)
       : event.key === 'ArrowRight'
       ? loadPage(currentNumber + 1)
+      : event.key === 'Escape'
+      ? (location = '#')
       : undefined;
 
   const onResize = () => currentPage && renderPage(currentPage);
