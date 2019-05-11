@@ -64,7 +64,7 @@
 
   const listenViewerEvents = () => {
     addEventListener('keydown', onKeyDown);
-    onResizeDebounced = debounce(onResize, 300);
+    onResizeDebounced = debounce(onResize, 150);
     addEventListener('resize', onResizeDebounced);
   };
 
