@@ -1,6 +1,7 @@
 'use strict';
 (() => {
   const viewer = document.getElementById('viewer');
+  let canvas = document.querySelector('#viewer > canvas');
   let currentNumber;
   let currentPage;
   let loadingTask;
@@ -16,6 +17,9 @@
         : viewer.clientWidth / width
     );
   };
+
+  const clearCanvas = () =>
+    canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
 
   const closeViewer = () => {
     viewer.hidden = true;
@@ -120,6 +124,7 @@
   const onResize = () => currentPage && renderPage(currentPage);
 
   const openViewer = url => {
+    clearCanvas();
     viewer.hidden = false;
     document.body.style.overflow = 'hidden';
     listenViewerEvents();
@@ -129,16 +134,16 @@
   const renderPage = page => {
     renderTask && renderTask.cancel();
     const viewport = calculateViewport(page);
-    const canvas = createCanvas(viewport.width, viewport.height);
+    const newCanvas = createCanvas(viewport.width, viewport.height);
     renderTask = page.render({
-      canvasContext: canvas.getContext('2d'),
+      canvasContext: newCanvas.getContext('2d'),
       viewport,
     });
     renderTask.promise.then(
       () => {
-        const oldCanvas = viewer.querySelector('canvas');
-        oldCanvas.parentElement.insertBefore(canvas, oldCanvas);
-        oldCanvas.parentElement.removeChild(oldCanvas);
+        canvas.parentElement.insertBefore(newCanvas, canvas);
+        canvas.parentElement.removeChild(canvas);
+        canvas = newCanvas;
       },
       () => {}
     );
