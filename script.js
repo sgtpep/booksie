@@ -2,9 +2,9 @@
 (() => {
   const canvas = document.querySelector('#viewer > canvas');
   const viewer = document.getElementById('viewer');
+  let currentNumber;
   let currentPage;
   let loadingTask;
-  let pageNumber;
   let pdf;
   let renderTask;
 
@@ -27,6 +27,7 @@
     document.body.removeAttribute('style');
     canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
     setTimeout(() => loadingTask && loadingTask.destroy());
+    unlistenViewerEvents();
   };
 
   const listenBookClick = () =>
@@ -40,18 +41,19 @@
 
   const listenHashChange = () => addEventListener('hashchange', onHashChange);
 
-  const listenResize = () => addEventListener('resize', onResize);
+  const listenViewerEvents = () => {
+    addEventListener('keydown', onKeyDown);
+    addEventListener('resize', onResize);
+  };
 
   const loadDocument = url => {
-    window['pdfjs-dist/build/pdf'].GlobalWorkerOptions.workerSrc =
-      'scripts/pdf.worker.min.js';
+    window['pdfjs-dist/build/pdf'].GlobalWorkerOptions.workerSrc = scriptPath(
+      'pdf.worker.min.js'
+    );
     loadingTask = window['pdfjs-dist/build/pdf'].getDocument(url);
     loadingTask.promise.then(loadedPDF => {
       pdf = loadedPDF;
-      pdf.getPage(pageNumber).then(page => {
-        currentPage = page;
-        renderPage(page);
-      });
+      loadPage(1);
     });
   };
 
@@ -61,15 +63,26 @@
     } else {
       var script = document.createElement('script');
       script.addEventListener('load', onLoad);
-      script.src = 'scripts/pdf.min.js';
+      script.src = scriptPath('pdf.min.js');
       document.body.appendChild(script);
+    }
+  };
+
+  const loadPage = number => {
+    if (pdf && number >= 1 && number <= pdf.numPages) {
+      currentNumber = number;
+      pdf.getPage(number).then(page => {
+        if (page.pageIndex === number - 1) {
+          currentPage = page;
+          renderPage(page);
+        }
+      });
     }
   };
 
   const main = () => {
     listenBookClick();
     listenHashChange();
-    listenResize();
     onHashChange();
     onResize();
   };
@@ -79,6 +92,13 @@
     hash ? showViewer(`https://data.booksie.org/${hash}.pdf`) : hideViewer();
   };
 
+  const onKeyDown = event =>
+    event.key === 'ArrowLeft'
+      ? loadPage(currentNumber - 1)
+      : event.key === 'ArrowRight'
+      ? loadPage(currentNumber + 1)
+      : undefined;
+
   const onResize = () => {
     canvas.height = innerHeight;
     canvas.width = innerWidth;
@@ -86,8 +106,8 @@
   };
 
   const renderPage = (page, cleanup = false) => {
-    renderTask && renderTask.cancel();
     cleanup && (page.cleanupAfterRender = true);
+    renderTask && renderTask.cancel();
     renderTask = page.render({
       canvasContext: canvas.getContext('2d'),
       viewport: calculateViewport(page),
@@ -95,11 +115,18 @@
     renderTask.promise.catch(() => {});
   };
 
+  const scriptPath = filename => `scripts/${filename}`;
+
   const showViewer = url => {
     viewer.hidden = false;
     document.body.style.overflow = 'hidden';
-    pageNumber = 1;
     loadPDFJS(() => loadDocument(url));
+    listenViewerEvents();
+  };
+
+  const unlistenViewerEvents = () => {
+    removeEventListener('keydown', onKeyDown);
+    removeEventListener('resize', onResize);
   };
 
   location.domain || main();
