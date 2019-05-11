@@ -4,6 +4,7 @@
   let currentNumber;
   let currentPage;
   let loadingTask;
+  let onResizeDebounced;
   let pdf;
   let renderTask;
 
@@ -34,6 +35,17 @@
     return canvas;
   };
 
+  const debounce = (func, delay, immediate = false) => {
+    let timeout;
+    return function() {
+      const call = immediate && !timeout;
+      const next = () => func.apply(this, arguments);
+      clearTimeout(timeout);
+      timeout = setTimeout(next, delay);
+      call && next();
+    };
+  };
+
   const listenBooksClick = () =>
     document.querySelector('.books').addEventListener('click', event => {
       const book = event.target.closest('.book');
@@ -47,7 +59,8 @@
 
   const listenViewerEvents = () => {
     addEventListener('keydown', onKeyDown);
-    addEventListener('resize', onResize);
+    onResizeDebounced = debounce(onResize, 300);
+    addEventListener('resize', onResizeDebounced);
   };
 
   const loadDocument = url => {
@@ -135,7 +148,7 @@
 
   const unlistenViewerEvents = () => {
     removeEventListener('keydown', onKeyDown);
-    removeEventListener('resize', onResize);
+    removeEventListener('resize', onResizeDebounced);
   };
 
   location.protocol === 'file:' && main();
