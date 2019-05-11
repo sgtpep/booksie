@@ -16,6 +16,13 @@
     );
   };
 
+  const closeViewer = () => {
+    viewer.hidden = true;
+    document.body.removeAttribute('style');
+    unlistenViewerEvents();
+    setTimeout(() => loadingTask && loadingTask.destroy());
+  };
+
   const createCanvas = (width, height) => {
     const canvas = document.createElement('canvas');
     canvas.height = height;
@@ -25,13 +32,6 @@
     width === viewer.clientWidth &&
       (canvas.style.top = `${(viewer.clientHeight - canvas.height) / 2}px`);
     return canvas;
-  };
-
-  const hideViewer = () => {
-    viewer.hidden = true;
-    document.body.removeAttribute('style');
-    unlistenViewerEvents();
-    setTimeout(() => loadingTask && loadingTask.destroy());
   };
 
   const listenBooksClick = () =>
@@ -92,7 +92,7 @@
 
   const onHashChange = (event = { newURL: location.href }) => {
     const hash = event.newURL.replace(/^.+?(#|$)/, '');
-    hash ? showViewer(`https://data.booksie.org/${hash}.pdf`) : hideViewer();
+    hash ? openViewer(`https://data.booksie.org/${hash}.pdf`) : closeViewer();
   };
 
   const onKeyDown = event =>
@@ -103,6 +103,13 @@
       : undefined;
 
   const onResize = () => currentPage && renderPage(currentPage);
+
+  const openViewer = url => {
+    viewer.hidden = false;
+    document.body.style.overflow = 'hidden';
+    listenViewerEvents();
+    loadPDFJS(() => loadDocument(url));
+  };
 
   const renderPage = page => {
     renderTask && renderTask.cancel();
@@ -123,13 +130,6 @@
   };
 
   const scriptPath = filename => `scripts/${filename}`;
-
-  const showViewer = url => {
-    viewer.hidden = false;
-    document.body.style.overflow = 'hidden';
-    listenViewerEvents();
-    loadPDFJS(() => loadDocument(url));
-  };
 
   const unlistenViewerEvents = () => {
     removeEventListener('keydown', onKeyDown);
