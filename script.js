@@ -1,7 +1,11 @@
 'use strict';
 const canvas = document.querySelector('#viewer > canvas');
 const viewer = document.getElementById('viewer');
-let pdfTask;
+let currentPage;
+let loadingTask;
+let pageNumber;
+let pdf;
+let renderTask;
 
 const calculateViewport = page => {
   const { height, width } = page.getViewport(1);
@@ -21,7 +25,7 @@ const hideViewer = () => {
   viewer.hidden = true;
   document.body.removeAttribute('style');
   canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
-  setTimeout(() => pdfTask && pdfTask.destroy());
+  setTimeout(() => loadingTask && loadingTask.destroy());
 };
 
 const listenBookClick = () =>
@@ -40,16 +44,14 @@ const listenResize = () => addEventListener('resize', onResize);
 const loadDocument = url => {
   window['pdfjs-dist/build/pdf'].GlobalWorkerOptions.workerSrc =
     'scripts/pdf.worker.min.js';
-  pdfTask = window['pdfjs-dist/build/pdf'].getDocument(url);
-  pdfTask.promise.then(pdfDocument =>
-    pdfDocument.getPage(1).then(page =>
-      page.render({
-        background: 'black',
-        canvasContext: canvas.getContext('2d'),
-        viewport: calculateViewport(page),
-      })
-    )
-  );
+  loadingTask = window['pdfjs-dist/build/pdf'].getDocument(url);
+  loadingTask.promise.then(loadedPDF => {
+    pdf = loadedPDF;
+    pdf.getPage(pageNumber).then(page => {
+      currentPage = page;
+      renderPage(page);
+    });
+  });
 };
 
 const loadPDFJS = onLoad => {
@@ -79,11 +81,23 @@ const onHashChange = (event = { newURL: location.href }) => {
 const onResize = () => {
   canvas.height = innerHeight;
   canvas.width = innerWidth;
+  currentPage && renderPage(currentPage, true);
+};
+
+const renderPage = (page, cleanup = false) => {
+  renderTask && renderTask.cancel();
+  cleanup && (page.cleanupAfterRender = true);
+  renderTask = page.render({
+    canvasContext: canvas.getContext('2d'),
+    viewport: calculateViewport(page),
+  });
+  renderTask.promise.catch(() => {});
 };
 
 const showViewer = url => {
   viewer.hidden = false;
   document.body.style.overflow = 'hidden';
+  pageNumber = 1;
   loadPDFJS(() => loadDocument(url));
 };
 
