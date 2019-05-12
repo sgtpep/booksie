@@ -1,5 +1,5 @@
 {
-  "dependencies": {
+  "devDpendencies": {
     "pdfjs-dist": "^2.0.943"
   },
   "name": "booksie",
