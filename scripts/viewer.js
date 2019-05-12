@@ -26,7 +26,8 @@
     document.body.removeAttribute('style');
     unlistenViewerEvents();
     setTimeout(() => loadingTask && loadingTask.destroy());
-    location.hash === '#' || history.pushState(null, null, '#');
+    location.hash === '#' ||
+      history.pushState(null, null, location.href.replace(/#.*$/, ''));
   };
 
   const createCanvas = (width, height) => {
