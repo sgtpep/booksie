@@ -1,6 +1,5 @@
 'use strict';
 (() => {
-  const viewer = document.getElementById('viewer');
   let canvas = document.querySelector('#viewer > canvas');
   let currentNumber;
   let currentPage;
@@ -10,12 +9,28 @@
   let prerenderTask;
   let renderTask;
 
+  const elements = Object.entries({
+    navigation: 'viewer-navigation',
+    next: 'viewer-next',
+    number: 'viewer-number',
+    previous: 'viewer-previous',
+    total: 'viewer-total',
+    viewer: 'viewer',
+  }).reduce(
+    (elements, [name, id]) => ({
+      ...elements,
+      [name]: document.getElementById(id),
+    }),
+    {}
+  );
+
   const calculateViewport = page => {
     const { height, width } = page.getViewport(1);
     return page.getViewport(
-      height / width > viewer.clientHeight / viewer.clientWidth
-        ? viewer.clientHeight / height
-        : viewer.clientWidth / width
+      height / width >
+        elements.viewer.clientHeight / elements.viewer.clientWidth
+        ? elements.viewer.clientHeight / height
+        : elements.viewer.clientWidth / width
     );
   };
 
@@ -23,7 +38,7 @@
     canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
 
   const closeViewer = () => {
-    viewer.hidden = true;
+    elements.viewer.hidden = true;
     document.body.removeAttribute('style');
     unlistenViewerEvents();
     setTimeout(() => loadingTask && loadingTask.destroy());
@@ -35,10 +50,12 @@
     const canvas = document.createElement('canvas');
     canvas.height = height;
     canvas.width = width;
-    height === viewer.clientHeight &&
-      (canvas.style.left = `${(viewer.clientWidth - canvas.width) / 2}px`);
-    width === viewer.clientWidth &&
-      (canvas.style.top = `${(viewer.clientHeight - canvas.height) / 2}px`);
+    height === elements.viewer.clientHeight &&
+      (canvas.style.left = `${(elements.viewer.clientWidth - canvas.width) /
+        2}px`);
+    width === elements.viewer.clientWidth &&
+      (canvas.style.top = `${(elements.viewer.clientHeight - canvas.height) /
+        2}px`);
     return canvas;
   };
 
@@ -65,7 +82,7 @@
   const listenHashChange = () => addEventListener('hashchange', onHashChange);
 
   const listenViewerClick = () =>
-    viewer.addEventListener('click', event =>
+    elements.viewer.addEventListener('click', event =>
       event.target.id === 'viewer-close'
         ? closeViewer()
         : event.target.id === 'viewer-next'
@@ -107,10 +124,10 @@
     if (pdf && number >= 1 && number <= pdf.numPages) {
       preload || (currentNumber = number);
       pdf.getPage(number).then(page => {
-        if (page.pageIndex === currentNumber - 1 && !preload) {
+        if (page.pageNumber === currentNumber && !preload) {
           currentPage = page;
           renderPage(page);
-        } else if (page.pageIndex === currentNumber && preload) {
+        } else if (page.pageNumber === currentNumber + 1 && preload) {
           renderPage(page, true);
         }
       });
@@ -142,7 +159,7 @@
 
   const openViewer = url => {
     clearCanvas();
-    viewer.hidden = false;
+    elements.viewer.hidden = false;
     document.body.style.overflow = 'hidden';
     listenViewerEvents();
     loadPDFJS(() => loadDocument(url));
@@ -165,8 +182,9 @@
           canvas.parentElement.insertBefore(newCanvas, canvas);
           canvas.parentElement.removeChild(canvas);
           canvas = newCanvas;
-          page.transport.pageCache[page.pageIndex + 1] ||
-            loadPage(page.pageIndex + 2, true);
+          page.transport.pageCache[page.pageNumber] ||
+            loadPage(page.pageNumber + 1, true);
+          updateNavigation();
         }
       },
       () => {}
@@ -179,6 +197,16 @@
   const unlistenViewerEvents = () => {
     removeEventListener('keydown', onKeyDown);
     removeEventListener('resize', onResizeDebounced);
+  };
+
+  const updateNavigation = () => {
+    elements.number.textContent = currentNumber;
+    elements.next.classList.toggle('disabled', currentNumber === pdf.numPages);
+    elements.previous.classList.toggle('disabled', currentNumber === 1);
+    if (elements.navigation.hidden) {
+      elements.total.textContent = pdf.numPages;
+      elements.navigation.hidden = false;
+    }
   };
 
   location.protocol === 'file:' && main();
