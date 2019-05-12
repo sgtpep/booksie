@@ -136,7 +136,10 @@
   const renderPage = page => {
     renderTask && renderTask.cancel();
     const viewport = calculateViewport(page);
-    const newCanvas = createCanvas(viewport.width, viewport.height);
+    const newCanvas = createCanvas(
+      Math.round(viewport.width),
+      Math.round(viewport.height)
+    );
     renderTask = page.render({
       canvasContext: newCanvas.getContext('2d'),
       viewport,
