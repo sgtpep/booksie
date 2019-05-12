@@ -7,6 +7,7 @@
   let loadingTask;
   let onResizeDebounced;
   let pdf;
+  let prerenderTask;
   let renderTask;
 
   const calculateViewport = page => {
@@ -91,13 +92,15 @@
     }
   };
 
-  const loadPage = number => {
+  const loadPage = (number, preload = false) => {
     if (pdf && number >= 1 && number <= pdf.numPages) {
-      currentNumber = number;
+      preload || (currentNumber = number);
       pdf.getPage(number).then(page => {
-        if (page.pageIndex === number - 1) {
+        if (page.pageIndex === currentNumber - 1 && !preload) {
           currentPage = page;
           renderPage(page);
+        } else if (page.pageIndex === currentNumber && preload) {
+          renderPage(page, true);
         }
       });
     }
@@ -133,25 +136,30 @@
     loadPDFJS(() => loadDocument(url));
   };
 
-  const renderPage = page => {
-    renderTask && renderTask.cancel();
+  const renderPage = (page, preload = false) => {
+    ((preload ? prerenderTask : renderTask) || { cancel: () => {} }).cancel();
     const viewport = calculateViewport(page);
     const newCanvas = createCanvas(
       Math.round(viewport.width),
       Math.round(viewport.height)
     );
-    renderTask = page.render({
+    const task = page.render({
       canvasContext: newCanvas.getContext('2d'),
       viewport,
     });
-    renderTask.promise.then(
+    task.promise.then(
       () => {
-        canvas.parentElement.insertBefore(newCanvas, canvas);
-        canvas.parentElement.removeChild(canvas);
-        canvas = newCanvas;
+        if (!preload) {
+          canvas.parentElement.insertBefore(newCanvas, canvas);
+          canvas.parentElement.removeChild(canvas);
+          canvas = newCanvas;
+          page.transport.pageCache[page.pageIndex + 1] ||
+            loadPage(page.pageIndex + 2, true);
+        }
       },
       () => {}
     );
+    preload ? (prerenderTask = task) : (renderTask = task);
   };
 
   const scriptPath = filename => `scripts/${filename}`;
