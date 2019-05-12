@@ -13,3 +13,23 @@
   position: absolute;
   top: 0;
 }
+
+#viewer-close {
+  border-bottom-left-radius: 0.375em;
+  cursor: pointer;
+  right: 0;
+  top: 0;
+}
+
+.viewer-osd {
+  --line-height: 1.2em;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  font-size: 1.5em;
+  line-height: var(--line-height);
+  opacity: 0.8;
+  position: absolute;
+  text-align: center;
+  text-decoration: none;
+  width: var(--line-height);
+}

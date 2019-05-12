@@ -62,6 +62,11 @@
       }
     });
 
+  const listenCloseClick = () =>
+    document
+      .getElementById('viewer-close')
+      .addEventListener('click', () => closeViewer());
+
   const listenHashChange = () => addEventListener('hashchange', onHashChange);
 
   const listenViewerEvents = () => {
@@ -108,6 +113,7 @@
 
   const main = () => {
     listenBooksClick();
+    listenCloseClick();
     listenHashChange();
     onHashChange();
   };
