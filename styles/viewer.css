@@ -20,20 +20,34 @@
 
 #viewer-close {
   border-bottom-left-radius: 0.375em;
-  cursor: pointer;
+  font-size: 1.5em;
   right: 0;
   top: 0;
 }
 
+#viewer-navigation {
+  border-top-left-radius: 0.375em;
+  bottom: 0;
+  right: 0;
+}
+
+#viewer-next,
+#viewer-previous {
+  font-size: 1.2em;
+}
+
+.viewer-action {
+  cursor: pointer;
+  display: inline-block;
+  text-align: center;
+  width: var(--line-height);
+}
+
 .viewer-osd {
-  --line-height: 1.2em;
+  --line-height: 2rem;
   background-color: rgba(0, 0, 0, 0.5);
   color: white;
-  font-size: 1.5em;
   line-height: var(--line-height);
   opacity: 0.8;
   position: absolute;
-  text-align: center;
-  text-decoration: none;
-  width: var(--line-height);
 }

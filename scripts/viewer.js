@@ -62,12 +62,18 @@
       }
     });
 
-  const listenCloseClick = () =>
-    document
-      .getElementById('viewer-close')
-      .addEventListener('click', () => closeViewer());
-
   const listenHashChange = () => addEventListener('hashchange', onHashChange);
+
+  const listenViewerClick = () =>
+    viewer.addEventListener('click', event =>
+      event.target.id === 'viewer-close'
+        ? closeViewer()
+        : event.target.id === 'viewer-next'
+        ? loadPage(currentNumber + 1)
+        : event.target.id === 'viewer-previous'
+        ? loadPage(currentNumber - 1)
+        : undefined
+    );
 
   const listenViewerEvents = () => {
     addEventListener('keydown', onKeyDown);
@@ -113,8 +119,8 @@
 
   const main = () => {
     listenBooksClick();
-    listenCloseClick();
     listenHashChange();
+    listenViewerClick();
     onHashChange();
   };
 
