@@ -45,7 +45,7 @@
 }
 
 .viewer-action {
-  --delay: 0.3s;
+  --delay: 0.2s;
   display: inline-block;
   text-align: center;
   transition: var(--delay) color, var(--delay) text-shadow;
