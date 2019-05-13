@@ -10,7 +10,7 @@
   text-shadow: 0 0 0.0625em white;
 }
 .viewer-action.disabled {
-  opacity: 0.4;
+  opacity: 0.5;
 }
 .viewer-action:not(.disabled) {
   cursor: pointer;
@@ -20,7 +20,7 @@
   --border-radius: 0.375em;
   --height: 2rem;
   background-color: rgba(0, 0, 0, 0.5);
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--color);
   height: var(--height);
   line-height: var(--height);
   position: absolute;
@@ -28,6 +28,7 @@
 }
 
 #viewer {
+  --color: whitesmoke;
   background-color: black;
   bottom: 0;
   left: 0;
@@ -54,7 +55,7 @@
   --horizontal-margin: 1em;
   align-items: center;
   bottom: 0;
-  color: white;
+  color: var(--color);
   display: flex;
   font-size: larger;
   justify-content: center;

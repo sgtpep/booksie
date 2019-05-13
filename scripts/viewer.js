@@ -102,9 +102,12 @@ const loadDocument = url => {
       loadPage(1);
     },
     error =>
-      updateMessage(`Loading error: ${error.message.replace(/\.$/, '')}.`)
+      (elements.message.textContent = `Loading error: ${error.message.replace(
+        /\.$/,
+        ''
+      )}.`)
   );
-  updateMessage('Loading...');
+  elements.message.textContent = 'Loading...';
 };
 
 const loadPDFJS = onLoad => {
@@ -150,6 +153,7 @@ const onResize = () => currentPage && renderPage(currentPage);
 
 const openViewer = url => {
   clearCanvas();
+  elements.navigation.hidden = true;
   elements.viewer.hidden = false;
   document.body.style.overflow = 'hidden';
   listenViewerEvents();
@@ -176,7 +180,9 @@ const renderPage = (page, preload = false) => {
         page.transport.pageCache[page.pageNumber] ||
           loadPage(page.pageNumber + 1, true);
         updateNavigation();
-        updateMessage();
+        page.transport.pageCache.length === 1 &&
+          (elements.navigation.hidden = false);
+        elements.message.textContent = '';
       }
     },
     () => {}
@@ -189,17 +195,11 @@ const unlistenViewerEvents = () => {
   removeEventListener('resize', onResizeDebounced);
 };
 
-const updateMessage = (message = '') =>
-  (elements.message.textContent = message);
-
 const updateNavigation = () => {
-  elements.number.textContent = currentNumber;
   elements.next.classList.toggle('disabled', currentNumber === pdf.numPages);
+  elements.number.textContent = currentNumber;
   elements.previous.classList.toggle('disabled', currentNumber === 1);
-  if (elements.navigation.hidden) {
-    elements.total.textContent = pdf.numPages;
-    elements.navigation.hidden = false;
-  }
+  elements.total.textContent = pdf.numPages;
 };
 
 export default () => {
