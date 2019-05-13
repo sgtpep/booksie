@@ -1,3 +1,31 @@
+.viewer-action {
+  --delay: 0.2s;
+  display: inline-block;
+  text-align: center;
+  transition: var(--delay) color, var(--delay) text-shadow;
+  width: var(--height);
+}
+.viewer-action:hover {
+  color: white;
+  text-shadow: 0 0 0.0625em white;
+}
+.viewer-action.disabled {
+  opacity: 0.3;
+}
+.viewer-action:not(.disabled) {
+  cursor: pointer;
+}
+
+.viewer-osd {
+  --border-radius: 0.375em;
+  --height: 2rem;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: rgba(255, 255, 255, 0.8);
+  height: var(--height);
+  line-height: var(--height);
+  position: absolute;
+}
+
 #viewer {
   -moz-user-select: none;
   -ms-user-select: none;
@@ -42,32 +70,4 @@
   font-size: var(--font-size);
   position: relative;
   top: calc((1em - var(--font-size)) / -2);
-}
-
-.viewer-action {
-  --delay: 0.2s;
-  display: inline-block;
-  text-align: center;
-  transition: var(--delay) color, var(--delay) text-shadow;
-  width: var(--height);
-}
-.viewer-action:hover {
-  color: white;
-  text-shadow: 0 0 0.0625em white;
-}
-.viewer-action.disabled {
-  opacity: 0.3;
-}
-.viewer-action:not(.disabled) {
-  cursor: pointer;
-}
-
-.viewer-osd {
-  --border-radius: 0.375em;
-  --height: 2rem;
-  background-color: rgba(0, 0, 0, 0.5);
-  color: rgba(255, 255, 255, 0.8);
-  height: var(--height);
-  line-height: var(--height);
-  position: absolute;
 }
