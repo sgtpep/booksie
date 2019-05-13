@@ -19,6 +19,9 @@
 .viewer-osd {
   --border-radius: 0.375em;
   --height: 2rem;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
   background-color: rgba(0, 0, 0, 0.5);
   color: var(--color);
   height: var(--height);
