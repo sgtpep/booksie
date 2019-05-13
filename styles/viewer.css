@@ -10,7 +10,7 @@
   text-shadow: 0 0 0.0625em white;
 }
 .viewer-action.disabled {
-  opacity: 0.3;
+  opacity: 0.4;
 }
 .viewer-action:not(.disabled) {
   cursor: pointer;
