@@ -1,6 +1,7 @@
 {
   "devDependencies": {
-    "pdfjs-dist": "^2.0.943"
+    "pdfjs-dist": "^2.0.943",
+    "rollup": "^1.11.3"
   },
   "name": "booksie",
   "version": "1.0.0"
