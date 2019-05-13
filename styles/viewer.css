@@ -50,6 +50,22 @@
   top: 0;
 }
 
+#viewer-message {
+  --horizontal-margin: 1em;
+  align-items: center;
+  bottom: 0;
+  color: white;
+  display: flex;
+  font-size: larger;
+  justify-content: center;
+  left: 0;
+  margin-left: var(--horizontal-margin);
+  margin-right: var(--horizontal-margin);
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
 #viewer-navigation {
   border-top-left-radius: var(--border-radius);
   bottom: 0;

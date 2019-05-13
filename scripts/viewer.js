@@ -8,6 +8,7 @@ let renderTask;
 
 const elements = {
   canvas: document.querySelector('#viewer > canvas'),
+  message: document.getElementById('viewer-message'),
   navigation: document.getElementById('viewer-navigation'),
   next: document.getElementById('viewer-next'),
   number: document.getElementById('viewer-number'),
@@ -95,10 +96,14 @@ const loadDocument = url => {
   window['pdfjs-dist/build/pdf'].GlobalWorkerOptions.workerSrc =
     'vendor/pdf.worker.min.js';
   loadingTask = window['pdfjs-dist/build/pdf'].getDocument(url);
-  loadingTask.promise.then(loadedPDF => {
-    pdf = loadedPDF;
-    loadPage(1);
-  });
+  loadingTask.promise.then(
+    loadedPDF => {
+      pdf = loadedPDF;
+      loadPage(1);
+    },
+    error =>
+      updateMessage(`Loading error: ${error.message.replace(/\.$/, '')}.`)
+  );
 };
 
 const loadPDFJS = onLoad => {
@@ -170,6 +175,7 @@ const renderPage = (page, preload = false) => {
         page.transport.pageCache[page.pageNumber] ||
           loadPage(page.pageNumber + 1, true);
         updateNavigation();
+        updateMessage();
       }
     },
     () => {}
@@ -181,6 +187,9 @@ const unlistenViewerEvents = () => {
   removeEventListener('keydown', onKeyDown);
   removeEventListener('resize', onResizeDebounced);
 };
+
+const updateMessage = (message = '') =>
+  (elements.message.textContent = message);
 
 const updateNavigation = () => {
   elements.number.textContent = currentNumber;
@@ -197,4 +206,5 @@ export default () => {
   listenHashChange();
   listenViewerClick();
   onHashChange();
+  updateMessage('Loading...');
 };
