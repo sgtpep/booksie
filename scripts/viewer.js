@@ -1,4 +1,3 @@
-let canvas = document.querySelector('#viewer > canvas');
 let currentNumber;
 let currentPage;
 let loadingTask;
@@ -7,20 +6,15 @@ let pdf;
 let prerenderTask;
 let renderTask;
 
-const elements = Object.entries({
-  navigation: 'viewer-navigation',
-  next: 'viewer-next',
-  number: 'viewer-number',
-  previous: 'viewer-previous',
-  total: 'viewer-total',
-  viewer: 'viewer',
-}).reduce(
-  (elements, [name, id]) => ({
-    ...elements,
-    [name]: document.getElementById(id),
-  }),
-  {}
-);
+const elements = {
+  canvas: document.querySelector('#viewer > canvas'),
+  navigation: document.getElementById('viewer-navigation'),
+  next: document.getElementById('viewer-next'),
+  number: document.getElementById('viewer-number'),
+  previous: document.getElementById('viewer-previous'),
+  total: document.getElementById('viewer-total'),
+  viewer: document.getElementById('viewer'),
+};
 
 const calculateViewport = page => {
   const { height, width } = page.getViewport(1);
@@ -32,7 +26,9 @@ const calculateViewport = page => {
 };
 
 const clearCanvas = () =>
-  canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+  elements.canvas
+    .getContext('2d')
+    .clearRect(0, 0, elements.canvas.width, elements.canvas.height);
 
 const closeViewer = () => {
   elements.viewer.hidden = true;
@@ -168,9 +164,9 @@ const renderPage = (page, preload = false) => {
   task.promise.then(
     () => {
       if (!preload) {
-        canvas.parentElement.insertBefore(newCanvas, canvas);
-        canvas.parentElement.removeChild(canvas);
-        canvas = newCanvas;
+        elements.canvas.parentElement.insertBefore(newCanvas, elements.canvas);
+        elements.canvas.parentElement.removeChild(elements.canvas);
+        elements.canvas = newCanvas;
         page.transport.pageCache[page.pageNumber] ||
           loadPage(page.pageNumber + 1, true);
         updateNavigation();
