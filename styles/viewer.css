@@ -19,14 +19,14 @@
 }
 
 #viewer-close {
-  border-bottom-left-radius: 0.375em;
+  border-bottom-left-radius: var(--border-radius);
   font-size: 1.5em;
   right: 0;
   top: 0;
 }
 
 #viewer-navigation {
-  border-top-left-radius: 0.375em;
+  border-top-left-radius: var(--border-radius);
   bottom: 0;
   right: 0;
 }
@@ -55,6 +55,7 @@
 }
 
 .viewer-osd {
+  --border-radius: 0.375em;
   --height: 2rem;
   background-color: rgba(0, 0, 0, 0.5);
   color: white;
