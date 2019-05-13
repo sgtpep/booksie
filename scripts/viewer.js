@@ -104,6 +104,7 @@ const loadDocument = url => {
     error =>
       updateMessage(`Loading error: ${error.message.replace(/\.$/, '')}.`)
   );
+  updateMessage('Loading...');
 };
 
 const loadPDFJS = onLoad => {
@@ -206,5 +207,4 @@ export default () => {
   listenHashChange();
   listenViewerClick();
   onHashChange();
-  updateMessage('Loading...');
 };
