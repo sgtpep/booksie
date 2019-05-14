@@ -1,3 +1,4 @@
+let clientX;
 let currentNumber;
 let currentPage;
 let loadingTask;
@@ -86,6 +87,9 @@ const displayPage = number => {
 
 const displayPreviousPage = () => displayPage(currentNumber - 1);
 
+const eventClientX = event =>
+  (event.changedTouches ? event.changedTouches[0] : event).clientX;
+
 const listenBooksClick = () =>
   document.querySelector('.books').addEventListener('click', event => {
     const book = event.target.closest('.book');
@@ -113,6 +117,13 @@ const listenViewerClick = () =>
       : undefined
   );
 
+const listenViewerDragEvents = () => {
+  viewer.addEventListener('mousedown', onDragStart);
+  viewer.addEventListener('mouseup', onDragStop);
+  viewer.addEventListener('touchend', onDragStop);
+  viewer.addEventListener('touchstart', onDragStart);
+};
+
 const loadDocument = url => {
   window['pdfjs-dist/build/pdf'].GlobalWorkerOptions.workerSrc =
     'pdfjs/pdf.worker.min.js';
@@ -139,6 +150,17 @@ const loadPDFJS = onLoad => {
 };
 
 const numberValid = number => pdf && number >= 1 && number <= pdf.numPages;
+
+const onDragStart = event => {
+  event.preventDefault();
+  clientX = eventClientX(event);
+};
+
+const onDragStop = event => {
+  const difference = eventClientX(event) - clientX;
+  Math.abs(difference) >= 100 &&
+    (difference > 0 ? displayPreviousPage() : displayNextPage());
+};
 
 const onHashChange = (event = { newURL: location.href }) => {
   const hash = event.newURL.replace(/^.+?(#|$)/, '');
@@ -228,5 +250,6 @@ export default () => {
   addEventListener('hashchange', onHashChange);
   listenBooksClick();
   listenViewerClick();
+  listenViewerDragEvents();
   onHashChange();
 };
