@@ -40,9 +40,9 @@ const closeViewer = () => {
   document.body.removeAttribute('style');
   elements.viewer.hidden = true;
   history.pushState(null, null, location.href.replace(/#.*$/, ''));
+  listenGlobalEvents(false);
   setTimeout(() => loadingTask && loadingTask.destroy());
   showNavigation(false);
-  unlistenViewerEvents();
 };
 
 const createCanvas = (width, height) => {
@@ -91,6 +91,13 @@ const listenBooksClick = () =>
     }
   });
 
+const listenGlobalEvents = (listen = true) => {
+  onResizeDebounced || (onResizeDebounced = debounce(onResize, 150));
+  [['keydown', onKeyDown], ['resize', onResizeDebounced]].map(args =>
+    (listen ? addEventListener : removeEventListener)(...args)
+  );
+};
+
 const listenViewerClick = () =>
   elements.viewer.addEventListener('click', event =>
     event.target === elements.close
@@ -101,12 +108,6 @@ const listenViewerClick = () =>
       ? displayPage(currentNumber - 1)
       : undefined
   );
-
-const listenViewerEvents = () => {
-  addEventListener('keydown', onKeyDown);
-  onResizeDebounced = debounce(onResize, 150);
-  addEventListener('resize', onResizeDebounced);
-};
 
 const loadDocument = url => {
   window['pdfjs-dist/build/pdf'].GlobalWorkerOptions.workerSrc =
@@ -154,7 +155,7 @@ const onResize = () => currentPage && renderPage(currentPage);
 const openViewer = url => {
   document.body.style.overflow = 'hidden';
   elements.viewer.hidden = false;
-  listenViewerEvents();
+  listenGlobalEvents();
   loadPDFJS(() => loadDocument(url));
 };
 
@@ -207,11 +208,6 @@ const showNavigation = (shown = true) =>
   [elements.edges, elements.navigation].forEach(
     element => element.hidden === !shown || (element.hidden = !shown)
   );
-
-const unlistenViewerEvents = () => {
-  removeEventListener('keydown', onKeyDown);
-  removeEventListener('resize', onResizeDebounced);
-};
 
 const updateNavigation = () => {
   [elements.next, elements.nextEdge].forEach(element =>
