@@ -82,10 +82,10 @@ const displayPage = number => {
   if (numberValid(number) && !rendering) {
     currentNumber = number;
     pdf.getPage(number).then(page => {
-      if (page.pageNumber === currentNumber) {
+      if (currentNumber === number) {
         currentPage = page;
         renderPage(page);
-        preloadPage(currentNumber + 1, () => preloadPage(currentNumber + 2));
+        preloadPage(number + 1);
       }
     });
   }
@@ -191,18 +191,17 @@ const openViewer = url => {
   loadPDFJS(() => loadDocument(url));
 };
 
-const preloadPage = (number, onPreload = () => {}) =>
+const preloadPage = number =>
   numberValid(number) &&
-  (currentPage.transport.pageCache[number - 1]
-    ? onPreload()
-    : pdf.getPage(number).then(page => {
-        prerenderTask && prerenderTask.cancel();
-        prerenderTask = page.render({
-          canvasContext: document.createElement('canvas').getContext('2d'),
-          viewport: page.getViewport(1),
-        });
-        prerenderTask.promise.then(() => onPreload(), () => {});
-      }));
+  !currentPage.transport.pageCache[number - 1] &&
+  pdf.getPage(number).then(page => {
+    prerenderTask && prerenderTask.cancel();
+    prerenderTask = page.render({
+      canvasContext: document.createElement('canvas').getContext('2d'),
+      viewport: page.getViewport(1),
+    });
+    prerenderTask.promise.catch(() => {});
+  });
 
 const renderPage = page => {
   renderTask && renderTask.cancel();
