@@ -101,11 +101,11 @@ const copyImages = () => {
     : symlinkFile('../images', target);
 };
 
-const copyVendorFiles = () =>
+const copyPDFJSFiles = () =>
   ['pdf.min.js', 'pdf.worker.min.js'].forEach(filename =>
     copyFile(
       path.join('node_modules/pdfjs-dist/build', filename),
-      distributionPath('vendor', filename)
+      distributionPath('pdfjs', filename)
     )
   );
 
@@ -177,9 +177,27 @@ const generateCoversStyle = () =>
     )
     .join('\n');
 
+const generateDevelopmentScript = () => {
+  ['node_modules', 'scripts'].forEach(filename =>
+    symlinkFile(path.join('..', filename), distributionPath(filename))
+  );
+  return `<script src="scripts/index.js" type="module"></script>`;
+};
+
+const generateDevelopmentStyle = () =>
+  fs
+    .readdirSync('styles')
+    .map(filename => {
+      symlinkFile(path.join('../styles', filename), distributionPath(filename));
+      return `<link href="${filename}" rel="stylesheet">`;
+    })
+    .join('\n');
+
 const generateFooter = () =>
   readInclude('footer', {
-    script: process.env.CI ? generateScriptBundle() : generateScript(),
+    script: process.env.CI
+      ? generateProductionScript()
+      : generateDevelopmentScript(),
     year: new Date().getFullYear(),
   }).trim();
 
@@ -190,7 +208,9 @@ const generateHead = () =>
     description:
       'Booksie: an open catalog of free picture storybooks for children instantly available for reading.',
     name: 'Booksie',
-    style: process.env.CI ? generateStyle() : generateStylesheets(),
+    style: process.env.CI
+      ? generateProductionStyle()
+      : generateDevelopmentStyle(),
     title: 'Free Picture Storybooks for Children',
     url: `https://${fs
       .readFileSync('.travis.yml', 'utf8')
@@ -208,12 +228,7 @@ const generateMain = () =>
     viewer: readInclude('viewer'),
   });
 
-const generateScript = () => {
-  symlinkFile('../scripts', distributionPath('scripts'));
-  return `<script src="scripts/index.js" type="module"></script>`;
-};
-
-const generateScriptBundle = () => `<script>
+const generateProductionScript = () => `<script>
 ${executeCommand([
   'rollup',
   'scripts/index.js',
@@ -223,7 +238,7 @@ ${executeCommand([
 ]).trim()}
 </script>`;
 
-const generateStyle = () =>
+const generateProductionStyle = () =>
   `<style>
 ${fs
   .readdirSync('styles')
@@ -233,21 +248,12 @@ ${fs
   .join('\n\n')}
 </style>`;
 
-const generateStylesheets = () =>
-  fs
-    .readdirSync('styles')
-    .map(filename => {
-      symlinkFile(path.join('../styles', filename), distributionPath(filename));
-      return `<link href="${filename}" rel="stylesheet">`;
-    })
-    .join('\n');
-
 const main = () => {
   buildCovers();
   buildCovers(2);
   buildIndex();
   copyImages();
-  copyVendorFiles();
+  copyPDFJSFiles();
 };
 
 const readInclude = (name, replacements = {}) =>
