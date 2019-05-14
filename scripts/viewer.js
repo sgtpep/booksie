@@ -8,11 +8,15 @@ let renderTask;
 
 const elements = {
   canvas: document.querySelector('#viewer > canvas'),
+  close: document.getElementById('viewer-close'),
+  edges: document.getElementById('viewer-edges'),
   message: document.getElementById('viewer-message'),
   navigation: document.getElementById('viewer-navigation'),
   next: document.getElementById('viewer-next'),
+  nextEdge: document.getElementById('viewer-next-edge'),
   number: document.getElementById('viewer-number'),
   previous: document.getElementById('viewer-previous'),
+  previousEdge: document.getElementById('viewer-previous-edge'),
   total: document.getElementById('viewer-total'),
   viewer: document.getElementById('viewer'),
 };
@@ -34,10 +38,10 @@ const clearCanvas = () =>
 const closeViewer = () => {
   clearCanvas();
   document.body.removeAttribute('style');
-  elements.navigation.hidden = true;
   elements.viewer.hidden = true;
   history.pushState(null, null, location.href.replace(/#.*$/, ''));
   setTimeout(() => loadingTask && loadingTask.destroy());
+  showNavigation(false);
   unlistenViewerEvents();
 };
 
@@ -65,6 +69,19 @@ const debounce = (func, delay, immediate = false) => {
   };
 };
 
+const displayPage = number => {
+  if (numberValid(number)) {
+    currentNumber = number;
+    pdf.getPage(number).then(page => {
+      if (page.pageNumber === currentNumber) {
+        currentPage = page;
+        renderPage(page);
+        preloadPage(currentNumber + 1, () => preloadPage(currentNumber + 2));
+      }
+    });
+  }
+};
+
 const listenBooksClick = () =>
   document.querySelector('.books').addEventListener('click', event => {
     const book = event.target.closest('.book');
@@ -76,12 +93,12 @@ const listenBooksClick = () =>
 
 const listenViewerClick = () =>
   elements.viewer.addEventListener('click', event =>
-    event.target.id === 'viewer-close'
+    event.target === elements.close
       ? closeViewer()
-      : event.target.id === 'viewer-next'
-      ? showPage(currentNumber + 1)
-      : event.target.id === 'viewer-previous'
-      ? showPage(currentNumber - 1)
+      : [elements.next, elements.nextEdge].includes(event.target)
+      ? displayPage(currentNumber + 1)
+      : [elements.previous, elements.previousEdge].includes(event.target)
+      ? displayPage(currentNumber - 1)
       : undefined
   );
 
@@ -98,7 +115,7 @@ const loadDocument = url => {
   loadingTask.promise.then(
     loadedPDF => {
       pdf = loadedPDF;
-      showPage(1);
+      displayPage(1);
     },
     error => showMessage(`Loading error: ${error.message.replace(/\.$/, '')}.`)
   );
@@ -125,9 +142,9 @@ const onHashChange = (event = { newURL: location.href }) => {
 
 const onKeyDown = event =>
   event.key === 'ArrowLeft'
-    ? showPage(currentNumber - 1)
+    ? displayPage(currentNumber - 1)
     : event.key === 'ArrowRight'
-    ? showPage(currentNumber + 1)
+    ? displayPage(currentNumber + 1)
     : event.key === 'Escape'
     ? closeViewer()
     : undefined;
@@ -169,6 +186,7 @@ const renderPage = page => {
     () => {
       replaceCanvas(canvas);
       showMessage('');
+      showNavigation();
       updateNavigation();
     },
     () => {}
@@ -185,18 +203,10 @@ const showMessage = message =>
   elements.message.textContent === message ||
   (elements.message.textContent = message);
 
-const showPage = number => {
-  if (numberValid(number)) {
-    currentNumber = number;
-    pdf.getPage(number).then(page => {
-      if (page.pageNumber === currentNumber) {
-        currentPage = page;
-        renderPage(page);
-        preloadPage(currentNumber + 1, () => preloadPage(currentNumber + 2));
-      }
-    });
-  }
-};
+const showNavigation = (shown = true) =>
+  [elements.edges, elements.navigation].forEach(
+    element => element.hidden === !shown || (element.hidden = !shown)
+  );
 
 const unlistenViewerEvents = () => {
   removeEventListener('keydown', onKeyDown);
@@ -204,10 +214,13 @@ const unlistenViewerEvents = () => {
 };
 
 const updateNavigation = () => {
-  elements.navigation.hidden = false;
-  elements.next.classList.toggle('disabled', currentNumber === pdf.numPages);
+  [elements.next, elements.nextEdge].forEach(element =>
+    element.classList.toggle('disabled', currentNumber === pdf.numPages)
+  );
+  [elements.previous, elements.previousEdge].forEach(element =>
+    element.classList.toggle('disabled', currentNumber === 1)
+  );
   elements.number.textContent = currentNumber;
-  elements.previous.classList.toggle('disabled', currentNumber === 1);
   elements.total.textContent = pdf.numPages;
 };
 

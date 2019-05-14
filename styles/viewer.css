@@ -54,6 +54,14 @@
   top: 0;
 }
 
+#viewer-edges > a {
+  bottom: 0;
+  max-width: 320px;
+  position: absolute;
+  top: 0;
+  width: 50%;
+}
+
 #viewer-message {
   --horizontal-margin: 1em;
   align-items: center;
@@ -81,10 +89,23 @@
   font-size: 1.2em;
 }
 
+#viewer-next-edge {
+  right: 0;
+}
+#viewer-next-edge:not(.disabled) {
+  cursor: e-resize;
+}
+
 #viewer-numbers {
   --font-size: 0.9em;
   font-family: monospace;
   font-size: var(--font-size);
   position: relative;
   top: calc((1em - var(--font-size)) / -2);
+}
+#viewer-previous-edge {
+  left: 0;
+}
+#viewer-previous-edge:not(.disabled) {
+  cursor: w-resize;
 }
