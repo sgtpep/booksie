@@ -1,5 +1,5 @@
 .viewer-action {
-  --delay: 0.2s;
+  --delay: 150ms;
   display: inline-block;
   text-align: center;
   transition: var(--delay) color, var(--delay) text-shadow;
