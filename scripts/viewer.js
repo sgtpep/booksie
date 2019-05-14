@@ -57,10 +57,10 @@ const debounce = (func, delay, immediate = false) => {
   let timeout;
   return function() {
     const debounced = immediate && !timeout;
-    const next = () => func.apply(this, arguments);
+    const call = () => func.apply(this, arguments);
     clearTimeout(timeout);
-    timeout = setTimeout(next, delay);
-    debounced && next();
+    timeout = setTimeout(call, delay);
+    debounced && call();
   };
 };
 
