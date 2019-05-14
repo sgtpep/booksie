@@ -69,6 +69,8 @@ const debounce = (func, delay, immediate = false) => {
   };
 };
 
+const displayNextPage = () => displayPage(currentNumber + 1);
+
 const displayPage = number => {
   if (numberValid(number)) {
     currentNumber = number;
@@ -81,6 +83,8 @@ const displayPage = number => {
     });
   }
 };
+
+const displayPreviousPage = () => displayPage(currentNumber - 1);
 
 const listenBooksClick = () =>
   document.querySelector('.books').addEventListener('click', event => {
@@ -103,9 +107,9 @@ const listenViewerClick = () =>
     event.target === elements.close
       ? closeViewer()
       : [elements.next, elements.nextEdge].includes(event.target)
-      ? displayPage(currentNumber + 1)
+      ? displayNextPage()
       : [elements.previous, elements.previousEdge].includes(event.target)
-      ? displayPage(currentNumber - 1)
+      ? displayPreviousPage()
       : undefined
   );
 
@@ -143,9 +147,9 @@ const onHashChange = (event = { newURL: location.href }) => {
 
 const onKeyDown = event =>
   event.key === 'ArrowLeft'
-    ? displayPage(currentNumber - 1)
+    ? displayPreviousPage()
     : event.key === 'ArrowRight'
-    ? displayPage(currentNumber + 1)
+    ? displayNextPage()
     : event.key === 'Escape'
     ? closeViewer()
     : undefined;
