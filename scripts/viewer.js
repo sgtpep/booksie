@@ -3,6 +3,7 @@ let currentPage;
 let loadingTask;
 let onResizeDebounced;
 let pdf;
+let prerenderTask;
 let renderTask;
 
 const elements = {
@@ -140,6 +141,19 @@ const openViewer = url => {
   loadPDFJS(() => loadDocument(url));
 };
 
+const preloadPage = (number, onPreload = () => {}) =>
+  numberValid(number) &&
+  (currentPage.transport.pageCache[number - 1]
+    ? onPreload()
+    : pdf.getPage(number).then(page => {
+        prerenderTask && prerenderTask.cancel();
+        prerenderTask = page.render({
+          canvasContext: document.createElement('canvas').getContext('2d'),
+          viewport: page.getViewport(1),
+        });
+        prerenderTask.promise.then(() => onPreload(), () => {});
+      }));
+
 const renderPage = page => {
   renderTask && renderTask.cancel();
   const viewport = calculateViewport(page);
@@ -153,8 +167,8 @@ const renderPage = page => {
   });
   renderTask.promise.then(
     () => {
-      elements.message.textContent = '';
       replaceCanvas(canvas);
+      showMessage('');
       updateNavigation();
     },
     () => {}
@@ -178,6 +192,7 @@ const showPage = number => {
       if (page.pageNumber === currentNumber) {
         currentPage = page;
         renderPage(page);
+        preloadPage(currentNumber + 1, () => preloadPage(currentNumber + 2));
       }
     });
   }
@@ -189,12 +204,11 @@ const unlistenViewerEvents = () => {
 };
 
 const updateNavigation = () => {
+  elements.navigation.hidden = false;
   elements.next.classList.toggle('disabled', currentNumber === pdf.numPages);
   elements.number.textContent = currentNumber;
   elements.previous.classList.toggle('disabled', currentNumber === 1);
   elements.total.textContent = pdf.numPages;
-  currentPage.transport.pageCache.length === 1 &&
-    (elements.navigation.hidden = false);
 };
 
 export default () => {
