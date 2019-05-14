@@ -99,13 +99,9 @@ const loadDocument = url => {
       pdf = loadedPDF;
       showPage(1);
     },
-    error =>
-      (elements.message.textContent = `Loading error: ${error.message.replace(
-        /\.$/,
-        ''
-      )}.`)
+    error => showMessage(`Loading error: ${error.message.replace(/\.$/, '')}.`)
   );
-  elements.message.textContent = 'Loading...';
+  showMessage('Loading...');
 };
 
 const loadPDFJS = onLoad => {
@@ -170,6 +166,10 @@ const replaceCanvas = canvas => {
   elements.canvas.parentElement.removeChild(elements.canvas);
   elements.canvas = canvas;
 };
+
+const showMessage = message =>
+  elements.message.textContent === message ||
+  (elements.message.textContent = message);
 
 const showPage = number => {
   if (numberValid(number)) {
