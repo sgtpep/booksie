@@ -3,7 +3,6 @@ let currentPage;
 let loadingTask;
 let onResizeDebounced;
 let pdf;
-let prerenderTask;
 let renderTask;
 
 const elements = {
@@ -32,12 +31,13 @@ const clearCanvas = () =>
     .clearRect(0, 0, elements.canvas.width, elements.canvas.height);
 
 const closeViewer = () => {
-  elements.viewer.hidden = true;
+  clearCanvas();
   document.body.removeAttribute('style');
-  unlistenViewerEvents();
+  elements.navigation.hidden = true;
+  elements.viewer.hidden = true;
+  history.pushState(null, null, location.href.replace(/#.*$/, ''));
   setTimeout(() => loadingTask && loadingTask.destroy());
-  location.hash === '#' ||
-    history.pushState(null, null, location.href.replace(/#.*$/, ''));
+  unlistenViewerEvents();
 };
 
 const createCanvas = (width, height) => {
@@ -56,11 +56,11 @@ const createCanvas = (width, height) => {
 const debounce = (func, delay, immediate = false) => {
   let timeout;
   return function() {
-    const call = immediate && !timeout;
+    const debounced = immediate && !timeout;
     const next = () => func.apply(this, arguments);
     clearTimeout(timeout);
     timeout = setTimeout(next, delay);
-    call && next();
+    debounced && next();
   };
 };
 
@@ -73,16 +73,14 @@ const listenBooksClick = () =>
     }
   });
 
-const listenHashChange = () => addEventListener('hashchange', onHashChange);
-
 const listenViewerClick = () =>
   elements.viewer.addEventListener('click', event =>
     event.target.id === 'viewer-close'
       ? closeViewer()
       : event.target.id === 'viewer-next'
-      ? loadPage(currentNumber + 1)
+      ? showPage(currentNumber + 1)
       : event.target.id === 'viewer-previous'
-      ? loadPage(currentNumber - 1)
+      ? showPage(currentNumber - 1)
       : undefined
   );
 
@@ -94,12 +92,12 @@ const listenViewerEvents = () => {
 
 const loadDocument = url => {
   window['pdfjs-dist/build/pdf'].GlobalWorkerOptions.workerSrc =
-    'vendor/pdf.worker.min.js';
+    'pdfjs/pdf.worker.min.js';
   loadingTask = window['pdfjs-dist/build/pdf'].getDocument(url);
   loadingTask.promise.then(
     loadedPDF => {
       pdf = loadedPDF;
-      loadPage(1);
+      showPage(1);
     },
     error =>
       (elements.message.textContent = `Loading error: ${error.message.replace(
@@ -116,24 +114,12 @@ const loadPDFJS = onLoad => {
   } else {
     var script = document.createElement('script');
     script.addEventListener('load', onLoad);
-    script.src = 'vendor/pdf.min.js';
+    script.src = 'pdfjs/pdf.min.js';
     document.body.appendChild(script);
   }
 };
 
-const loadPage = (number, preload = false) => {
-  if (pdf && number >= 1 && number <= pdf.numPages) {
-    preload || (currentNumber = number);
-    pdf.getPage(number).then(page => {
-      if (page.pageNumber === currentNumber && !preload) {
-        currentPage = page;
-        renderPage(page);
-      } else if (page.pageNumber === currentNumber + 1 && preload) {
-        renderPage(page, true);
-      }
-    });
-  }
-};
+const numberValid = number => pdf && number >= 1 && number <= pdf.numPages;
 
 const onHashChange = (event = { newURL: location.href }) => {
   const hash = event.newURL.replace(/^.+?(#|$)/, '');
@@ -142,9 +128,9 @@ const onHashChange = (event = { newURL: location.href }) => {
 
 const onKeyDown = event =>
   event.key === 'ArrowLeft'
-    ? loadPage(currentNumber - 1)
+    ? showPage(currentNumber - 1)
     : event.key === 'ArrowRight'
-    ? loadPage(currentNumber + 1)
+    ? showPage(currentNumber + 1)
     : event.key === 'Escape'
     ? closeViewer()
     : undefined;
@@ -152,42 +138,49 @@ const onKeyDown = event =>
 const onResize = () => currentPage && renderPage(currentPage);
 
 const openViewer = url => {
-  clearCanvas();
-  elements.navigation.hidden = true;
-  elements.viewer.hidden = false;
   document.body.style.overflow = 'hidden';
+  elements.viewer.hidden = false;
   listenViewerEvents();
   loadPDFJS(() => loadDocument(url));
 };
 
-const renderPage = (page, preload = false) => {
-  ((preload ? prerenderTask : renderTask) || { cancel: () => {} }).cancel();
+const renderPage = page => {
+  renderTask && renderTask.cancel();
   const viewport = calculateViewport(page);
-  const newCanvas = createCanvas(
+  const canvas = createCanvas(
     Math.round(viewport.width),
     Math.round(viewport.height)
   );
-  const task = page.render({
-    canvasContext: newCanvas.getContext('2d'),
+  renderTask = page.render({
+    canvasContext: canvas.getContext('2d'),
     viewport,
   });
-  task.promise.then(
+  renderTask.promise.then(
     () => {
-      if (!preload) {
-        elements.canvas.parentElement.insertBefore(newCanvas, elements.canvas);
-        elements.canvas.parentElement.removeChild(elements.canvas);
-        elements.canvas = newCanvas;
-        page.transport.pageCache[page.pageNumber] ||
-          loadPage(page.pageNumber + 1, true);
-        updateNavigation();
-        page.transport.pageCache.length === 1 &&
-          (elements.navigation.hidden = false);
-        elements.message.textContent = '';
-      }
+      elements.message.textContent = '';
+      replaceCanvas(canvas);
+      updateNavigation();
     },
     () => {}
   );
-  preload ? (prerenderTask = task) : (renderTask = task);
+};
+
+const replaceCanvas = canvas => {
+  elements.canvas.parentElement.insertBefore(canvas, elements.canvas);
+  elements.canvas.parentElement.removeChild(elements.canvas);
+  elements.canvas = canvas;
+};
+
+const showPage = number => {
+  if (numberValid(number)) {
+    currentNumber = number;
+    pdf.getPage(number).then(page => {
+      if (page.pageNumber === currentNumber) {
+        currentPage = page;
+        renderPage(page);
+      }
+    });
+  }
 };
 
 const unlistenViewerEvents = () => {
@@ -200,11 +193,13 @@ const updateNavigation = () => {
   elements.number.textContent = currentNumber;
   elements.previous.classList.toggle('disabled', currentNumber === 1);
   elements.total.textContent = pdf.numPages;
+  currentPage.transport.pageCache.length === 1 &&
+    (elements.navigation.hidden = false);
 };
 
 export default () => {
+  addEventListener('hashchange', onHashChange);
   listenBooksClick();
-  listenHashChange();
   listenViewerClick();
   onHashChange();
 };

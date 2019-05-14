@@ -81,7 +81,7 @@
   font-size: 1.2em;
 }
 
-#viewer-pages {
+#viewer-numbers {
   --font-size: 0.9em;
   font-family: monospace;
   font-size: var(--font-size);
