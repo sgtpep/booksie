@@ -1,6 +1,7 @@
 let clientX;
 let currentNumber;
 let currentPage;
+let hidingTimeout;
 let loadingTask;
 let onResizeDebounced;
 let pdf;
@@ -21,6 +22,10 @@ const elements = {
   total: document.getElementById('viewer-total'),
   viewer: document.getElementById('viewer'),
 };
+
+const hidingDelay = parseFloat(
+  getComputedStyle(elements.canvas).getPropertyValue('--delay')
+);
 
 const calculateViewport = page => {
   const { height, width } = page.getViewport(1);
@@ -222,7 +227,13 @@ const renderPage = page => {
 
 const replaceCanvas = canvas => {
   elements.canvas.parentElement.insertBefore(canvas, elements.canvas);
-  elements.canvas.parentElement.removeChild(elements.canvas);
+  elements.canvas.classList.add('hiding');
+  clearTimeout(hidingTimeout);
+  hidingTimeout = setTimeout(
+    canvas => canvas.parentElement.removeChild(canvas),
+    hidingDelay,
+    elements.canvas
+  );
   elements.canvas = canvas;
 };
 

@@ -42,9 +42,14 @@
 }
 
 #viewer > canvas {
+  --delay: 150ms;
   left: 0;
   position: absolute;
   top: 0;
+  transition: var(--delay) opacity;
+}
+#viewer > canvas.hiding {
+  opacity: 0;
 }
 
 #viewer-close {
