@@ -7,6 +7,7 @@ let onResizeDebounced;
 let pdf;
 let prerenderTask;
 let renderTask;
+let rendering;
 
 const elements = {
   canvas: document.querySelector('#viewer > canvas'),
@@ -78,7 +79,7 @@ const debounce = (func, delay, immediate = false) => {
 const displayNextPage = () => displayPage(currentNumber + 1);
 
 const displayPage = number => {
-  if (numberValid(number)) {
+  if (numberValid(number) && !rendering) {
     currentNumber = number;
     pdf.getPage(number).then(page => {
       if (page.pageNumber === currentNumber) {
@@ -210,6 +211,7 @@ const renderPage = page => {
     Math.round(viewport.width),
     Math.round(viewport.height)
   );
+  rendering = true;
   renderTask = page.render({
     canvasContext: canvas.getContext('2d'),
     viewport,
@@ -220,8 +222,9 @@ const renderPage = page => {
       showMessage('');
       showNavigation();
       updateNavigation();
+      rendering = false;
     },
-    () => {}
+    () => (rendering = false)
   );
 };
 
