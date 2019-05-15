@@ -29,6 +29,7 @@ const hidingDelay = parseFloat(
 );
 
 const calculateViewport = page => {
+  updatePageView(page);
   const { height, width } = page.getViewport(1);
   return page.getViewport(
     height / width > elements.viewer.clientHeight / elements.viewer.clientWidth
@@ -248,6 +249,8 @@ const showNavigation = (shown = true) =>
     element => element.hidden === !shown || (element.hidden = !shown)
   );
 
+const sourceName = () => location.hash.replace(/^#/, '').split('/')[0];
+
 const updateNavigation = () => {
   [elements.next, elements.nextEdge].forEach(element =>
     element.classList.toggle('disabled', currentNumber === pdf.numPages)
@@ -257,6 +260,19 @@ const updateNavigation = () => {
   );
   elements.number.textContent = currentNumber;
   elements.total.textContent = pdf.numPages;
+};
+
+const updatePageView = page => {
+  if (!page._viewUpdated) {
+    const name = sourceName();
+    if (['pratham-books', 'room-to-read', 'storyweaver'].includes(name)) {
+      page.view[0] += 35;
+      page.view[1] += 13;
+      page.view[2] -= 10;
+      page.view[3] -= 9;
+    }
+    page._viewUpdated = true;
+  }
 };
 
 export default () => {
