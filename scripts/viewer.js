@@ -154,6 +154,13 @@ const loadPDFJS = onLoad => {
 
 const numberValid = number => pdf && number >= 1 && number <= pdf.numPages;
 
+const offsetView = (view, top, right, bottom, left) => {
+  view[0] += left;
+  view[1] += bottom;
+  view[2] -= right;
+  view[3] -= top;
+};
+
 const onDragStart = event => {
   event.preventDefault();
   clientX = eventClientX(event);
@@ -262,10 +269,13 @@ const updatePageView = page => {
   if (!page._viewUpdated) {
     const name = sourceName();
     if (['pratham-books', 'room-to-read', 'storyweaver'].includes(name)) {
-      page.view[0] += 35;
-      page.view[1] += 13;
-      page.view[2] -= 10;
-      page.view[3] -= 9;
+      offsetView(page.view, 9, 10, 13, 35);
+    } else if (name === 'storybooks-canada') {
+      page.pageNumber === 1
+        ? offsetView(page.view, 35, 60, 194, 17)
+        : page.pageNumber === pdf.numPages
+        ? offsetView(page.view, 45, 30, 120, 30)
+        : offsetView(page.view, 45, 45, 240, 45);
     }
     page._viewUpdated = true;
   }
