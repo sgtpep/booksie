@@ -97,14 +97,10 @@ const displayPreviousPage = () => displayPage(currentNumber - 1);
 const eventClientX = event =>
   (event.changedTouches ? event.changedTouches[0] : event).clientX;
 
-const listenBooksClick = () =>
-  document.querySelector('.books').addEventListener('click', event => {
-    const book = event.target.closest('.book');
-    if (book) {
-      event.preventDefault();
-      location = `#${book.pathname.replace(/^\/(.+)\..+$/, '$1')}`;
-    }
-  });
+const updateBookHrefs = () =>
+  [...document.querySelectorAll('.book')].forEach(
+    book => (book.href = `#${book.pathname.replace(/^\/(.+)\..+$/, '$1')}`)
+  );
 
 const listenGlobalEvents = (listen = true) => {
   onResizeDebounced || (onResizeDebounced = debounce(onResize, 150));
@@ -277,8 +273,8 @@ const updatePageView = page => {
 
 export default () => {
   addEventListener('hashchange', onHashChange);
-  listenBooksClick();
   listenViewerClick();
   listenViewerDragEvents();
   onHashChange();
+  updateBookHrefs();
 };
