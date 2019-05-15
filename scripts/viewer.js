@@ -44,13 +44,11 @@ const clearCanvas = () =>
     .clearRect(0, 0, elements.canvas.width, elements.canvas.height);
 
 const closeViewer = () => {
-  clearCanvas();
   document.body.removeAttribute('style');
   elements.viewer.hidden = true;
   history.pushState(null, null, location.href.replace(/#.*$/, ''));
   listenGlobalEvents(false);
   setTimeout(() => loadingTask && loadingTask.destroy());
-  showNavigation(false);
 };
 
 const createCanvas = (width, height) => {
@@ -130,6 +128,7 @@ const listenViewerDragEvents = () => {
 const loadDocument = url => {
   window['pdfjs-dist/build/pdf'].GlobalWorkerOptions.workerSrc =
     'pdfjs/pdf.worker.min.js';
+  loadingTask && loadingTask.destroy()
   loadingTask = window['pdfjs-dist/build/pdf'].getDocument(url);
   loadingTask.promise.then(
     loadedPDF => {
@@ -189,10 +188,12 @@ const onKeyDown = event =>
 const onResize = () => currentPage && renderPage(currentPage);
 
 const openViewer = url => {
+  clearCanvas();
   document.body.style.overflow = 'hidden';
   elements.viewer.hidden = false;
   listenGlobalEvents();
   loadPDFJS(() => loadDocument(url));
+  showNavigation(false);
 };
 
 const preloadPage = number =>
