@@ -17,6 +17,7 @@ a.book {
 }
 
 .book > :first-child {
+  background-size: cover;
   padding-top: 100%;
 }
 

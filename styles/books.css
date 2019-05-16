@@ -13,12 +13,20 @@
   }
 }
 
-.books > span {
+.books > span,
+.books > .book {
   margin-left: var(--horizontal-margin);
   margin-right: var(--horizontal-margin);
-  width: var(--cover-size);
+  width: 128px;
+}
+@media (min-width: 768px) {
+  .books > span,
+  .books > .book {
+    width: var(--cover-size);
+  }
 }
 
 .books > .book {
-  margin: var(--vertical-margin) var(--horizontal-margin);
+  margin-bottom: var(--vertical-margin);
+  margin-top: var(--vertical-margin);
 }
