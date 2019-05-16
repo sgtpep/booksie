@@ -299,9 +299,9 @@ const updateTitle = url => {
     )}"]`
   );
   book &&
-    (document.title = `${book.querySelector('strong').textContent} by ${
+    (document.title = `${book.querySelector('strong').textContent} (by ${
       book.querySelector('small').textContent
-    }`);
+    })`);
 };
 
 export default () => {
