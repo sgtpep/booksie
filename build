@@ -148,15 +148,26 @@ const generateBook = book =>
     ),
   });
 
-const generateBooks = () =>
-  fetchBooks()
-    .map((book, index) => ({
-      ...book,
-      offset: (index % spriteSize) * coverSize,
-      sprite: Math.floor(index / spriteSize),
-    }))
+const generateBooks = source => {
+  const books = fetchBooks();
+  let startIndex;
+  return books
+    .filter(book => book.source === source)
+    .map((book, index) => {
+      startIndex === undefined &&
+        (startIndex = books.findIndex(
+          foundBook =>
+            foundBook.source === source && foundBook.slug === book.slug
+        ));
+      return {
+        ...book,
+        offset: ((startIndex + index) % spriteSize) * coverSize,
+        sprite: Math.floor((startIndex + index) / spriteSize),
+      };
+    })
     .map(book => generateBook(book).trim())
     .join('');
+};
 
 const generateCoversStyle = () =>
   Array.from(Array(Math.ceil(fetchBooks().length / spriteSize)))
@@ -224,7 +235,7 @@ const generateIndex = () =>
 
 const generateMain = () =>
   readInclude('main', {
-    books: generateBooks(),
+    sourceBooks: generateSourceBooks(),
     viewer: readInclude('viewer'),
   });
 
@@ -247,6 +258,17 @@ ${fs
   )
   .join('\n\n')}
 </style>`;
+
+const generateSourceBooks = () =>
+  Object.keys(sourceNames)
+    .sort()
+    .map(source =>
+      readInclude('source-books', {
+        books: generateBooks(source),
+        source: sourceNames[source],
+      })
+    )
+    .join('\n');
 
 const main = () => {
   buildCovers();
