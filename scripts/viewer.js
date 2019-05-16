@@ -45,7 +45,7 @@ const clearCanvas = () =>
     .clearRect(0, 0, elements.canvas.width, elements.canvas.height);
 
 const closeViewer = () => {
-  document.body.removeAttribute('style');
+  document.documentElement.classList.remove('viewing');
   elements.viewer.hidden = true;
   listenGlobalEvents(false);
   redirectHome();
@@ -161,10 +161,7 @@ const offsetView = (view, top, right, bottom, left) => {
   view[3] -= top;
 };
 
-const onDragStart = event => {
-  event.preventDefault();
-  clientX = eventClientX(event);
-};
+const onDragStart = event => (clientX = eventClientX(event));
 
 const onDragStop = event => {
   const difference = eventClientX(event) - clientX;
@@ -190,7 +187,7 @@ const onResize = () => currentPage && renderPage(currentPage);
 
 const openViewer = url => {
   clearCanvas();
-  document.body.style.overflow = 'hidden';
+  document.documentElement.classList.add('viewing');
   elements.viewer.hidden = false;
   listenGlobalEvents();
   loadPDFJS(() => loadDocument(url));
