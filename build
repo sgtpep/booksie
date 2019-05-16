@@ -171,7 +171,7 @@ const generateBooks = source => {
         ));
       return {
         ...book,
-        offset: ((startIndex + index) % spriteSize) * coverSize,
+        offset: ((startIndex + index) % spriteSize) * 100,
         sprite: Math.floor((startIndex + index) / spriteSize),
       };
     })
