@@ -128,7 +128,7 @@ const listenViewerDragEvents = () => {
 const loadDocument = url => {
   window['pdfjs-dist/build/pdf'].GlobalWorkerOptions.workerSrc =
     'pdfjs/pdf.worker.min.js';
-  loadingTask && loadingTask.destroy()
+  loadingTask && loadingTask.destroy();
   loadingTask = window['pdfjs-dist/build/pdf'].getDocument(url);
   loadingTask.promise.then(
     loadedPDF => {
