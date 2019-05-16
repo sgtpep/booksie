@@ -120,10 +120,10 @@ const listenViewerClick = () =>
   );
 
 const listenViewerDragEvents = () => {
-  viewer.addEventListener('mousedown', onDragStart);
-  viewer.addEventListener('mouseup', onDragStop);
-  viewer.addEventListener('touchend', onDragStop);
-  viewer.addEventListener('touchstart', onDragStart);
+  elements.viewer.addEventListener('mousedown', onDragStart);
+  elements.viewer.addEventListener('mouseup', onDragStop);
+  elements.viewer.addEventListener('touchend', onDragStop);
+  elements.viewer.addEventListener('touchstart', onDragStart);
 };
 
 const loadDocument = url => {
