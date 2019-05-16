@@ -78,6 +78,9 @@ const debounce = (func, delay, immediate = false) => {
 
 const displayNextPage = () => displayPage(currentNumber + 1);
 
+const displayNextPageOrClose = () =>
+  currentNumber === pdf.numPages ? closeViewer() : displayNextPage();
+
 const displayPage = number => {
   if (numberValid(number) && !rendering) {
     currentNumber = number;
@@ -166,7 +169,7 @@ const onDragStart = event => (clientX = eventClientX(event));
 const onDragStop = event => {
   const difference = eventClientX(event) - clientX;
   Math.abs(difference) >= 100 &&
-    (difference > 0 ? displayPreviousPage() : displayNextPage());
+    (difference > 0 ? displayPreviousPage() : displayNextPageOrClose());
 };
 
 const onHashChange = (event = { newURL: location.href }) => {
@@ -178,7 +181,7 @@ const onKeyDown = event =>
   event.key === 'ArrowLeft'
     ? displayPreviousPage()
     : event.key === 'ArrowRight'
-    ? displayNextPage()
+    ? displayNextPageOrClose()
     : event.key === 'Escape'
     ? closeViewer()
     : undefined;
