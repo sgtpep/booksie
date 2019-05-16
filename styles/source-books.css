@@ -8,8 +8,9 @@
   position: sticky;
   text-align: center;
   top: 0;
+  transition: 150ms box-shadow;
   z-index: 1000;
 }
 .source-books > h2.sticky {
-  box-shadow: 0 0.0625em 0.25em rgba(0, 0, 0, 0.25);
+  box-shadow: 0 -0.25em white, 0 0.0625em 0.25em rgba(0, 0, 0, 0.25);
 }
