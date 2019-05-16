@@ -33,12 +33,13 @@ const sourceNames = {
 };
 
 const buildCovers = (scale = 1) => {
-  const output = distributionPath(
-    'covers',
+  const covers = distributionPath('covers');
+  const outputMask = path.join(
+    covers,
     `%d${scale === 1 ? '' : `@${scale}x`}.jpg`
   );
   scale === 1 || process.env.CI
-    ? (fs.existsSync(output.replace('%d', '0')) && !process.env.CI) ||
+    ? (fs.existsSync(outputMask.replace('%d', '0')) && !process.env.CI) ||
       executeCommand(
         [
           'montage',
@@ -51,29 +52,38 @@ const buildCovers = (scale = 1) => {
           '80%',
           '-tile',
           `1x${spriteSize}`,
-          makeDirectories(output),
+          makeDirectories(outputMask),
         ],
         { env: { MAGICK_TEMPORARY_PATH: cachePath() } }
       )
     : fs
-        .readdirSync(path.dirname(output), { withFileTypes: true })
-        .filter(dirent => dirent.isFile())
-        .forEach(dirent =>
-          symlinkFile(
-            dirent.name,
-            output.replace('%d', path.basename(dirent.name, '.jpg'))
-          )
-        );
-  const regExp = new RegExp(
-    path
-      .basename(output)
-      .replace('%d', '\\d+')
-      .replace('.', '\\.')
-  );
+        .readdirSync(covers)
+        .filter(filename => !/@\d+x\.jpg$/.test(filename))
+        .forEach(filename => {
+          const output = outputMask.replace(
+            '%d',
+            path.basename(filename, '.jpg')
+          );
+          fs.existsSync(output) ||
+            executeCommand([
+              'convert',
+              '-resize',
+              `${scale * 100}%`,
+              path.join(covers, filename),
+              output,
+            ]);
+        });
   return fs
-    .readdirSync(path.dirname(output))
-    .filter(filename => regExp.test(filename))
-    .map(filename => path.join(path.dirname(output), filename));
+    .readdirSync(covers)
+    .filter(filename =>
+      new RegExp(
+        path
+          .basename(outputMask)
+          .replace('%d', '\\d+')
+          .replace('.', '\\.')
+      ).test(filename)
+    )
+    .map(filename => path.join(covers, filename));
 };
 
 const buildIndex = () =>
