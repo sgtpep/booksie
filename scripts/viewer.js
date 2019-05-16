@@ -1,3 +1,4 @@
+const title = document.title;
 let clientX;
 let currentNumber;
 let currentPage;
@@ -46,8 +47,8 @@ const clearCanvas = () =>
 const closeViewer = () => {
   document.body.removeAttribute('style');
   elements.viewer.hidden = true;
-  history.pushState(null, null, location.href.replace(/#.*$/, ''));
   listenGlobalEvents(false);
+  redirectHome();
   setTimeout(() => loadingTask && loadingTask.destroy());
 };
 
@@ -194,6 +195,7 @@ const openViewer = url => {
   listenGlobalEvents();
   loadPDFJS(() => loadDocument(url));
   showNavigation(false);
+  updateTitle(url);
 };
 
 const preloadPage = number =>
@@ -207,6 +209,13 @@ const preloadPage = number =>
     });
     prerenderTask.promise.catch(() => {});
   });
+
+const redirectHome = () => {
+  if (location.hash.replace(/^#/, '')) {
+    history.pushState(null, null, location.href.replace(/#.*$/, ''));
+    document.title = title;
+  }
+};
 
 const renderPage = page => {
   renderTask && renderTask.cancel();
@@ -280,6 +289,19 @@ const updatePageView = page => {
     }
     page._viewUpdated = true;
   }
+};
+
+const updateTitle = url => {
+  const book = document.querySelector(
+    `.book[href="${url}"], .book[href="#${new URL(url).pathname.replace(
+      /^\/(.+)\.\w+$/,
+      '$1'
+    )}"]`
+  );
+  book &&
+    (document.title = `${book.querySelector('strong').textContent} by ${
+      book.querySelector('small').textContent
+    }`);
 };
 
 export default () => {
