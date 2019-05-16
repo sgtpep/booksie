@@ -101,7 +101,7 @@ const eventClientX = event =>
 
 const updateBookHrefs = () =>
   [...document.querySelectorAll('.book')].forEach(
-    book => (book.href = `#${book.pathname.replace(/^\/(.+)\..+$/, '$1')}`)
+    book => (book.href = `#book/${book.pathname.replace(/^\/(.+)\..+$/, '$1')}`)
   );
 
 const listenGlobalEvents = (listen = true) => {
@@ -109,6 +109,11 @@ const listenGlobalEvents = (listen = true) => {
   [['keydown', onKeyDown], ['resize', onResizeDebounced]].map(args =>
     (listen ? addEventListener : removeEventListener)(...args)
   );
+};
+
+const listenHashChange = () => {
+  addEventListener('hashchange', onHashChange);
+  onHashChange();
 };
 
 const listenViewerClick = () =>
@@ -174,7 +179,12 @@ const onDragStop = event => {
 
 const onHashChange = (event = { newURL: location.href }) => {
   const hash = event.newURL.replace(/^.+?(#|$)/, '');
-  hash ? openViewer(`https://data.booksie.org/${hash}.pdf`) : closeViewer();
+  hash.startsWith('book/') &&
+    (hash
+      ? openViewer(
+          `https://data.booksie.org/${hash.replace(/^book\//, '')}.pdf`
+        )
+      : closeViewer());
 };
 
 const onKeyDown = event =>
@@ -293,7 +303,7 @@ const updatePageView = page => {
 
 const updateTitle = url => {
   const book = document.querySelector(
-    `.book[href="${url}"], .book[href="#${new URL(url).pathname.replace(
+    `.book[href="${url}"], .book[href="#book/${new URL(url).pathname.replace(
       /^\/(.+)\.\w+$/,
       '$1'
     )}"]`
@@ -305,9 +315,8 @@ const updateTitle = url => {
 };
 
 export default () => {
-  addEventListener('hashchange', onHashChange);
+  listenHashChange();
   listenViewerClick();
   listenViewerDragEvents();
-  onHashChange();
   updateBookHrefs();
 };

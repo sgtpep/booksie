@@ -245,7 +245,8 @@ const generateIndex = () =>
 
 const generateMain = () =>
   readInclude('main', {
-    sourceBooks: generateSourceBooks(),
+    books: generateSourceBooks(),
+    sources: generateSources(),
     viewer: readInclude('viewer'),
   });
 
@@ -275,10 +276,19 @@ const generateSourceBooks = () =>
     .map(source =>
       readInclude('source-books', {
         books: generateBooks(source),
-        source: sourceNames[source],
+        source,
+        sourceName: sourceNames[source],
       })
     )
     .join('\n');
+
+const generateSources = () =>
+  readInclude('sources', {
+    links: Object.keys(sourceNames)
+      .sort()
+      .map(source => `<a href="#${source}">${sourceNames[source]}</a>`)
+      .join(', '),
+  });
 
 const main = () => {
   buildCovers();
