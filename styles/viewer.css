@@ -24,37 +24,26 @@ html.viewing > body {
 .viewer-osd {
   --border-radius: 0.375em;
   --height: 2rem;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -webkit-user-select: none;
   background-color: rgba(0, 0, 0, 0.5);
   color: var(--color);
   height: var(--height);
   line-height: var(--height);
   position: absolute;
-  user-select: none;
 }
 
 #viewer {
   --color: whitesmoke;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
   background-color: black;
   bottom: 0;
   left: 0;
   position: fixed;
   right: 0;
   top: 0;
+  user-select: none;
   z-index: 1000;
-}
-
-#viewer > canvas {
-  --delay: 150ms;
-  left: 0;
-  position: absolute;
-  top: 0;
-  transition: var(--delay) opacity;
-}
-#viewer > canvas.hiding {
-  opacity: 0;
 }
 
 #viewer-close {
@@ -113,6 +102,18 @@ html.viewing > body {
   position: relative;
   top: calc((1em - var(--font-size)) / -2);
 }
+
+#viewer-pages > * {
+  --delay: 150ms;
+  left: 0;
+  position: absolute;
+  top: 0;
+  transition: var(--delay) opacity;
+}
+#viewer-pages > .fading {
+  opacity: 0;
+}
+
 #viewer-previous-edge {
   left: 0;
 }
