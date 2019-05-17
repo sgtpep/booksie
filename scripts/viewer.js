@@ -203,7 +203,6 @@ const onKeyDown = event =>
 
 const onResize = () => {
   cleanupURLs();
-  renderTask && renderTask.cancel();
   displayPage(currentNumber);
 };
 
@@ -235,6 +234,9 @@ const renderPage = (number, onRender = () => {}) => {
             const canvas = document.createElement('canvas');
             canvas.height = Math.round(viewport.height);
             canvas.width = Math.round(viewport.width);
+            renderTask &&
+              renderTask._internalRenderTask.pageNumber === number &&
+              renderTask.cancel();
             renderTask = page.render({
               canvasContext: canvas.getContext('2d'),
               viewport,
