@@ -306,8 +306,8 @@ const replaceTokens = (string, replacements) =>
   Object.entries(replacements).reduce(
     (string, [token, replacement]) =>
       string
-        .replace(new RegExp(`^ +(?=\\{${token}})`, 'gm'), '')
-        .replace(new RegExp(`\\{${token}}`, 'g'), replacement),
+        .replace(new RegExp(`^ +(?=<!--${token}-->)`, 'gm'), '')
+        .replace(new RegExp(`<!--${token}-->`, 'g'), replacement),
     string
   );
 
