@@ -136,17 +136,22 @@ const listenViewerDragEvents = () => {
 };
 
 const loadDocument = url => {
-  unloadDocument();
-  window['pdfjs-dist/build/pdf'].GlobalWorkerOptions.workerSrc =
-    'pdfjs/pdf.worker.min.js';
-  (loadingTask = window['pdfjs-dist/build/pdf'].getDocument(url)).promise.then(
-    loadedPDF => {
-      pdf = loadedPDF;
-      displayPage(1);
-    },
-    error => showMessage(`Loading error: ${error.message.replace(/\.$/, '')}.`)
-  );
   showMessage('Loading...');
+  loadPDFJS(() => {
+    unloadDocument();
+    window['pdfjs-dist/build/pdf'].GlobalWorkerOptions.workerSrc =
+      'pdfjs/pdf.worker.min.js';
+    (loadingTask = window['pdfjs-dist/build/pdf'].getDocument(
+      url
+    )).promise.then(
+      loadedPDF => {
+        pdf = loadedPDF;
+        displayPage(1);
+      },
+      error =>
+        showMessage(`Loading error: ${error.message.replace(/\.$/, '')}.`)
+    );
+  });
 };
 
 const loadPDFJS = onLoad => {
@@ -203,7 +208,7 @@ const onResize = () => {
 };
 
 const openViewer = url => {
-  loadPDFJS(() => loadDocument(url));
+  loadDocument(url);
   showViewer();
   updateTitle(url);
 };
