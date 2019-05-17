@@ -215,7 +215,12 @@ const generateDevelopmentStyle = () =>
     .join('\n');
 
 const generateFooter = () =>
-  readInclude('footer', { year: new Date().getFullYear() }).trim();
+  readInclude('footer', {
+    script: process.env.CI
+      ? generateProductionScript()
+      : generateDevelopmentScript(),
+    year: new Date().getFullYear(),
+  }).trim();
 
 const generateHead = () =>
   readInclude('head', {
@@ -224,9 +229,6 @@ const generateHead = () =>
     description:
       'Booksie: an open catalog of free picture storybooks for children instantly available for reading.',
     name: 'Booksie',
-    script: process.env.CI
-      ? generateProductionScript()
-      : generateDevelopmentScript(),
     style: process.env.CI
       ? generateProductionStyle()
       : generateDevelopmentStyle(),
