@@ -250,7 +250,7 @@ const generateMain = () =>
     viewer: readInclude('viewer'),
   });
 
-const generateProductionScript = () => `<script>
+const generateProductionScript = () => `<script defer>
 ${executeCommand([
   'rollup',
   'scripts/index.js',
