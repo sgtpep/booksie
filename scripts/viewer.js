@@ -278,7 +278,7 @@ const resetRendering = () => {
   urls = [];
 };
 
-const sourceName = () => location.hash.replace(/^#/, '').split('/')[0];
+const sourceName = () => location.hash.replace(/^#book\//, '').split('/')[0];
 
 const toggleGlobalListners = adding =>
   [
