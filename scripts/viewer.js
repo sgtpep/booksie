@@ -58,7 +58,7 @@ const debounce = (func, delay, immediate = false) => {
 const displayNextPage = () => displayPage(currentNumber + 1);
 
 const displayNextPageOrClose = () =>
-  pdf && currentNumber === pdf.numPages ? closeViewer() : displayNextPage();
+  currentNumber === pdf.numPages ? closeViewer() : displayNextPage();
 
 const displayPage = number => {
   if (numberValid(number)) {
@@ -157,7 +157,7 @@ const loadPDFJS = onLoad => {
   }
 };
 
-const numberValid = number => number >= 1 && pdf && number <= pdf.numPages;
+const numberValid = number => number >= 1 && number <= pdf.numPages;
 
 const offsetView = (view, top, right, bottom, left) => {
   view[0] += left;
@@ -231,7 +231,7 @@ const renderPage = number => {
     ? onPageRender(number, urls[number])
     : renderNeeded() &&
       !rendering() &&
-      pdf &&
+      pdf.getPage &&
       pdf.getPage(number).then(
         page => {
           if (renderNeeded() && !rendering()) {
@@ -292,7 +292,7 @@ const toggleViewer = shown => {
 const unloadDocument = () => {
   cleanupURLs();
   loadingTask && loadingTask.destroy();
-  pdf = undefined;
+  pdf = {};
 };
 
 const updateBookHrefs = () =>
@@ -308,16 +308,13 @@ const updateMessage = text => {
 const updateNumber = number => {
   currentNumber = number;
   ['#viewer-next', '#viewer-next-edge'].forEach(selector =>
-    queryElement(selector).classList.toggle(
-      'disabled',
-      pdf && number === pdf.numPages
-    )
+    queryElement(selector).classList.toggle('disabled', number === pdf.numPages)
   );
   ['#viewer-previous', '#viewer-previous-edge'].forEach(selector =>
     queryElement(selector).classList.toggle('disabled', number === 1)
   );
   queryElement('#viewer-number').textContent = number;
-  queryElement('#viewer-total').textContent = pdf && pdf.numPages;
+  queryElement('#viewer-total').textContent = pdf.numPages;
   showNavigation();
 };
 
@@ -329,7 +326,7 @@ const updatePageView = page => {
     } else if (name === 'storybooks-canada') {
       page.pageNumber === 1
         ? offsetView(page.view, 35, 60, 194, 17)
-        : pdf && page.pageNumber === pdf.numPages
+        : page.pageNumber === pdf.numPages
         ? offsetView(page.view, 45, 30, 120, 30)
         : offsetView(page.view, 45, 45, 240, 45);
     }
