@@ -203,6 +203,7 @@ const onKeyDown = event =>
 
 const onResize = () => {
   cleanupURLs();
+  renderTask && renderTask.cancel();
   displayPage(currentNumber);
 };
 
@@ -224,12 +225,18 @@ const redirectHome = () => {
 
 const renderPage = (number, onRender = () => {}) => {
   const previousURLs = urls;
+  const renderNeeded = () => urls === previousURLs;
   urls[number]
     ? onRender(urls[number])
     : pdf &&
       pdf.getPage(number).then(
         page => {
-          if (urls === previousURLs) {
+          if (
+            renderNeeded() &&
+            !(
+              renderTask && renderTask._internalRenderTask.pageNumber === number
+            )
+          ) {
             const viewport = calculateViewport(page);
             const canvas = document.createElement('canvas');
             canvas.height = Math.round(viewport.height);
@@ -243,9 +250,9 @@ const renderPage = (number, onRender = () => {}) => {
             });
             renderTask.promise.then(
               () =>
-                urls === previousURLs &&
+                renderNeeded() &&
                 canvas.toBlob(blob => {
-                  if (urls === previousURLs) {
+                  if (renderNeeded()) {
                     onRender((urls[number] = URL.createObjectURL(blob)));
                     const nextNumber = number + 1;
                     renderTask._internalRenderTask.pageNumber === nextNumber ||
