@@ -65,7 +65,7 @@ const displayPage = number => {
     updateNumber(number);
     if (!urls[number]) {
       hidePages();
-      showMessage('Loading...');
+      updateMessage('Loading...');
     }
     renderPage(number);
   }
@@ -128,7 +128,7 @@ const listenViewerDragEvents = () => {
 };
 
 const loadDocument = url => {
-  showMessage('Loading...');
+  updateMessage('Loading...');
   loadPDFJS(() => {
     unloadDocument();
     window['pdfjs-dist/build/pdf'].GlobalWorkerOptions.workerSrc =
@@ -141,7 +141,7 @@ const loadDocument = url => {
         displayPage(1);
       },
       error =>
-        showMessage(`Loading error: ${error.message.replace(/\.$/, '')}.`)
+        updateMessage(`Loading error: ${error.message.replace(/\.$/, '')}.`)
     );
   });
 };
@@ -197,7 +197,7 @@ const onPageRender = (number, url) =>
   number === currentNumber &&
   createImage(url, image => {
     replacePage(image);
-    showMessage('');
+    updateMessage('');
   });
 
 const onResize = () => {
@@ -273,11 +273,6 @@ const replacePage = newImage => {
   }
 };
 
-const showMessage = text => {
-  const message = queryElement('#viewer-message');
-  message.textContent === text || (message.textContent = text);
-};
-
 const showNavigation = (shown = true) =>
   ['#viewer-edges', '#viewer-navigation'].forEach(selector => {
     const element = queryElement(selector);
@@ -294,8 +289,6 @@ const toggleViewer = shown => {
   showNavigation(!shown);
 };
 
-const sourceName = () => location.hash.replace(/^#/, '').split('/')[0];
-
 const unloadDocument = () => {
   cleanupURLs();
   loadingTask && loadingTask.destroy();
@@ -306,6 +299,11 @@ const updateBookHrefs = () =>
   [...document.querySelectorAll('.book')].forEach(
     book => (book.href = `#book/${book.pathname.replace(/^\/(.+)\..+$/, '$1')}`)
   );
+
+const updateMessage = text => {
+  const message = queryElement('#viewer-message');
+  message.textContent === text || (message.textContent = text);
+};
 
 const updateNumber = number => {
   currentNumber = number;
