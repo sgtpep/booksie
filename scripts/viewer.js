@@ -62,7 +62,7 @@ const displayNextPageOrClose = () =>
 
 const displayPage = number => {
   if (numberValid(number)) {
-    updateNumber(number);
+    updateNavigation(number);
     if (!urls[number]) {
       hidePages();
       updateMessage('Loading...');
@@ -87,15 +87,6 @@ const hidePages = () =>
         ))
     );
   });
-
-const listenGlobalEvents = (listen = true) =>
-  [
-    ['keydown', onKeyDown],
-    [
-      'resize',
-      onResizeDebounced || (onResizeDebounced = debounce(onResize, 150)),
-    ],
-  ].map(args => (listen ? addEventListener : removeEventListener)(...args));
 
 const listenHashChange = () => {
   addEventListener('hashchange', onHashChange);
@@ -273,20 +264,29 @@ const replacePage = newImage => {
   }
 };
 
-const showNavigation = (shown = true) =>
+const sourceName = () => location.hash.replace(/^#/, '').split('/')[0];
+
+const toggleGlobalListners = adding =>
+  [
+    ['keydown', onKeyDown],
+    [
+      'resize',
+      onResizeDebounced || (onResizeDebounced = debounce(onResize, 150)),
+    ],
+  ].map(args => (adding ? addEventListener : removeEventListener)(...args));
+
+const toggleNavigation = shown =>
   ['#viewer-edges', '#viewer-navigation'].forEach(selector => {
     const element = queryElement(selector);
     element.hidden === !shown || (element.hidden = !shown);
   });
 
-const sourceName = () => location.hash.replace(/^#/, '').split('/')[0];
-
 const toggleViewer = shown => {
   document.documentElement.classList.toggle('viewing', shown);
   hidePages();
-  listenGlobalEvents(shown);
   queryElement('#viewer').hidden = !shown;
-  showNavigation(!shown);
+  toggleGlobalListners(shown);
+  toggleNavigation(!shown);
 };
 
 const unloadDocument = () => {
@@ -305,7 +305,7 @@ const updateMessage = text => {
   message.textContent === text || (message.textContent = text);
 };
 
-const updateNumber = number => {
+const updateNavigation = number => {
   currentNumber = number;
   ['#viewer-next', '#viewer-next-edge'].forEach(selector =>
     queryElement(selector).classList.toggle('disabled', number === pdf.numPages)
@@ -315,7 +315,7 @@ const updateNumber = number => {
   );
   queryElement('#viewer-number').textContent = number;
   queryElement('#viewer-total').textContent = pdf.numPages;
-  showNavigation();
+  toggleNavigation(true);
 };
 
 const updatePageView = page => {
