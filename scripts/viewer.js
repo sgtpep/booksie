@@ -28,7 +28,7 @@ const cleanupURLs = () => {
 const closeViewer = () => {
   redirectHome();
   setTimeout(() => unloadDocument());
-  showViewer(false);
+  toggleViewer(false);
 };
 
 const createImage = (url, onLoad) => {
@@ -208,7 +208,7 @@ const onResize = () => {
 
 const openViewer = url => {
   loadDocument(url);
-  showViewer();
+  toggleViewer(true);
   updateTitle(url);
 };
 
@@ -284,7 +284,9 @@ const showNavigation = (shown = true) =>
     element.hidden === !shown || (element.hidden = !shown);
   });
 
-const showViewer = (shown = true) => {
+const sourceName = () => location.hash.replace(/^#/, '').split('/')[0];
+
+const toggleViewer = shown => {
   document.documentElement.classList.toggle('viewing', shown);
   hidePages();
   listenGlobalEvents(shown);
