@@ -3,10 +3,12 @@ const title = (typeof document === 'undefined' ? {} : document).title;
 let clientX;
 let currentNumber;
 let loadingTask;
+let numberQueue;
 let onResizeDebounced;
 let pageDelay;
 let pdf;
 let renderTask;
+let rendering;
 let urls;
 
 const calculateViewport = page => {
@@ -18,11 +20,6 @@ const calculateViewport = page => {
       ? viewer.clientHeight / height
       : viewer.clientWidth / width
   );
-};
-
-const cleanupURLs = () => {
-  urls && urls.forEach(url => URL.revokeObjectURL(url));
-  urls = [];
 };
 
 const closeViewer = () => {
@@ -58,10 +55,13 @@ const debounce = (func, delay, immediate = false) => {
 const displayNextPage = () => displayPage(currentNumber + 1);
 
 const displayNextPageOrClose = () =>
-  currentNumber === pdf.numPages ? closeViewer() : displayNextPage();
+  currentNumber && currentNumber === pdf.numPages
+    ? closeViewer()
+    : displayNextPage();
 
 const displayPage = number => {
   if (numberValid(number)) {
+    currentNumber = number;
     updateNavigation(number);
     if (!urls[number]) {
       hidePages();
@@ -130,6 +130,7 @@ const loadDocument = url => {
       loadedPDF => {
         pdf = loadedPDF;
         displayPage(1);
+        resetQueue();
       },
       error =>
         updateMessage(`Loading error: ${error.message.replace(/\.$/, '')}.`)
@@ -184,16 +185,9 @@ const onKeyDown = event =>
     ? closeViewer()
     : undefined;
 
-const onPageRender = (number, url) =>
-  number === currentNumber &&
-  createImage(url, image => {
-    replacePage(image);
-    updateMessage('');
-  });
-
 const onResize = () => {
-  cleanupURLs();
-  renderTask && renderTask.cancel();
+  resetQueue();
+  resetRendering();
   displayPage(currentNumber);
 };
 
@@ -214,44 +208,47 @@ const redirectHome = () => {
 };
 
 const renderPage = number => {
-  const previousURLs = urls;
-  const renderNeeded = () => urls === previousURLs;
-  const rendering = (pageNumber = number) =>
-    renderTask && renderTask._internalRenderTask.pageNumber === pageNumber;
-  urls[number]
-    ? onPageRender(number, urls[number])
-    : renderNeeded() &&
-      !rendering() &&
-      pdf.getPage &&
+  if (urls[number]) {
+    updatePage(urls[number]);
+  } else if (rendering) {
+    const index = numberQueue.indexOf(number);
+    index === -1 ||
+      (numberQueue = [
+        ...numberQueue.slice(index),
+        ...numberQueue.slice(0, index).reverse(),
+      ]);
+  } else {
+    const previousURLs = urls;
+    rendering = true;
+    pdf.getPage &&
       pdf.getPage(number).then(
         page => {
-          if (renderNeeded() && !rendering()) {
-            const viewport = calculateViewport(page);
-            const canvas = document.createElement('canvas');
-            canvas.height = Math.round(viewport.height);
-            canvas.width = Math.round(viewport.width);
-            renderTask = page.render({
-              canvasContext: canvas.getContext('2d'),
-              viewport,
-            });
-            renderTask.promise.then(
-              () =>
-                canvas.toBlob(blob => {
-                  onPageRender(
-                    number,
-                    (urls[number] = URL.createObjectURL(blob))
-                  );
-                  const nextNumber = number + 1;
-                  urls[nextNumber] ||
-                    rendering(nextNumber) ||
-                    (numberValid(nextNumber) && renderPage(nextNumber));
-                }),
-              () => {}
-            );
-          }
+          const viewport = calculateViewport(page);
+          const canvas = document.createElement('canvas');
+          canvas.height = Math.round(viewport.height);
+          canvas.width = Math.round(viewport.width);
+          renderTask = page.render({
+            canvasContext: canvas.getContext('2d'),
+            viewport,
+          });
+          renderTask.promise.then(
+            () =>
+              canvas.toBlob(blob => {
+                if (urls === previousURLs) {
+                  urls[number] = URL.createObjectURL(blob);
+                  number === currentNumber && updatePage(urls[number]);
+                }
+                rendering = false;
+                const index = numberQueue.indexOf(number);
+                index === -1 || numberQueue.splice(index, 1);
+                numberQueue.length && renderPage(numberQueue.shift());
+              }),
+            () => {}
+          );
         },
         () => {}
       );
+  }
 };
 
 const replacePage = newImage => {
@@ -262,6 +259,23 @@ const replacePage = newImage => {
     newImage.classList.add('fading');
     setTimeout(() => newImage.classList.remove('fading'));
   }
+};
+
+const resetQueue = () =>
+  (numberQueue = [
+    ...Array.from(Array(pdf.numPages - currentNumber + 1).keys()).map(
+      number => number + currentNumber
+    ),
+    ...Array.from(Array(currentNumber - 1).keys())
+      .map(number => number + 1)
+      .reverse(),
+  ]);
+
+const resetRendering = () => {
+  renderTask && renderTask.cancel();
+  rendering = false;
+  urls && urls.forEach(url => URL.revokeObjectURL(url));
+  urls = [];
 };
 
 const sourceName = () => location.hash.replace(/^#/, '').split('/')[0];
@@ -290,9 +304,9 @@ const toggleViewer = shown => {
 };
 
 const unloadDocument = () => {
-  cleanupURLs();
   loadingTask && loadingTask.destroy();
   pdf = {};
+  resetRendering();
 };
 
 const updateBookHrefs = () =>
@@ -306,7 +320,6 @@ const updateMessage = text => {
 };
 
 const updateNavigation = number => {
-  currentNumber = number;
   ['#viewer-next', '#viewer-next-edge'].forEach(selector =>
     queryElement(selector).classList.toggle('disabled', number === pdf.numPages)
   );
@@ -317,6 +330,12 @@ const updateNavigation = number => {
   queryElement('#viewer-total').textContent = pdf.numPages;
   toggleNavigation(true);
 };
+
+const updatePage = url =>
+  createImage(url, image => {
+    replacePage(image);
+    updateMessage('');
+  });
 
 const updatePageView = page => {
   if (!page._viewUpdated) {
