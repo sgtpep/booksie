@@ -67,15 +67,7 @@ const displayPage = number => {
       hidePages();
       showMessage('Loading...');
     }
-    renderPage(
-      number,
-      url =>
-        currentNumber === number &&
-        createImage(url, image => {
-          replacePage(image);
-          showMessage('');
-        })
-    );
+    renderPage(number);
   }
 };
 
@@ -201,6 +193,13 @@ const onKeyDown = event =>
     ? closeViewer()
     : undefined;
 
+const onPageRender = (number, url) =>
+  number === currentNumber &&
+  createImage(url, image => {
+    replacePage(image);
+    showMessage('');
+  });
+
 const onResize = () => {
   cleanupURLs();
   renderTask && renderTask.cancel();
@@ -223,42 +222,38 @@ const redirectHome = () => {
   }
 };
 
-const renderPage = (number, onRender = () => {}) => {
+const renderPage = number => {
   const previousURLs = urls;
   const renderNeeded = () => urls === previousURLs;
+  const rendering = (pageNumber = number) =>
+    renderTask && renderTask._internalRenderTask.pageNumber === pageNumber;
   urls[number]
-    ? onRender(urls[number])
-    : pdf &&
+    ? onPageRender(number, urls[number])
+    : renderNeeded() &&
+      !rendering() &&
+      pdf &&
       pdf.getPage(number).then(
         page => {
-          if (
-            renderNeeded() &&
-            !(
-              renderTask && renderTask._internalRenderTask.pageNumber === number
-            )
-          ) {
+          if (renderNeeded() && !rendering()) {
             const viewport = calculateViewport(page);
             const canvas = document.createElement('canvas');
             canvas.height = Math.round(viewport.height);
             canvas.width = Math.round(viewport.width);
-            renderTask &&
-              renderTask._internalRenderTask.pageNumber === number &&
-              renderTask.cancel();
             renderTask = page.render({
               canvasContext: canvas.getContext('2d'),
               viewport,
             });
             renderTask.promise.then(
               () =>
-                renderNeeded() &&
                 canvas.toBlob(blob => {
-                  if (renderNeeded()) {
-                    onRender((urls[number] = URL.createObjectURL(blob)));
-                    const nextNumber = number + 1;
-                    renderTask._internalRenderTask.pageNumber === nextNumber ||
-                      urls[nextNumber] ||
-                      (numberValid(nextNumber) && renderPage(nextNumber));
-                  }
+                  onPageRender(
+                    number,
+                    (urls[number] = URL.createObjectURL(blob))
+                  );
+                  const nextNumber = number + 1;
+                  urls[nextNumber] ||
+                    rendering(nextNumber) ||
+                    (numberValid(nextNumber) && renderPage(nextNumber));
                 }),
               () => {}
             );
