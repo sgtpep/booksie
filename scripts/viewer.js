@@ -5,10 +5,10 @@ let currentNumber;
 let loadingTask;
 let numberQueue;
 let onResizeDebounced;
-let pageDelay;
 let pdf;
 let renderTask;
 let rendering;
+let transitionEndName;
 let urls;
 
 const calculateViewport = page => {
@@ -76,17 +76,25 @@ const displayPreviousPage = () => displayPage(currentNumber - 1);
 const eventClientX = event =>
   (event.changedTouches ? event.changedTouches[0] : event).clientX;
 
-const hidePages = () =>
+const hidePages = () => {
+  transitionEndName ||
+    (transitionEndName = (Object.entries({
+      transition: 'transitionend',
+      MozTransition: 'transitionend',
+      WebkitTransition: 'webkitTransitionEnd',
+      OTransition: 'otransitionend',
+    }).find(([property, type]) => property in document.body.style) || [])[1]);
+  const remove = element =>
+    element.parentElement && element.parentElement.removeChild(element);
   [...queryElement('#viewer-pages').children].forEach(image => {
-    image.classList.add('fading');
-    setTimeout(
-      () => image.parentElement && image.parentElement.removeChild(image),
-      pageDelay ||
-        (pageDelay = parseFloat(
-          getComputedStyle(image).getPropertyValue('--delay')
-        ))
-    );
+    if (transitionEndName) {
+      image.classList.add('fading');
+      image.addEventListener(transitionEndName, () => remove(image));
+    } else {
+      remove(image);
+    }
   });
+};
 
 const listenHashChange = () => {
   addEventListener('hashchange', onHashChange);
