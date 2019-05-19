@@ -147,7 +147,9 @@ const fetchBooks = () =>
     (process.env.CI ? memoize : cache)(fetchURL)(
       'https://data.booksie.org/books.json'
     )
-  ).sort((a, b) => -a.added.localeCompare(b.added));
+  )
+    .sort((a, b) => a.source.localeCompare(b.source))
+    .sort((a, b) => -a.added.localeCompare(b.added));
 
 const generateBook = book =>
   readInclude('book', {
