@@ -262,6 +262,7 @@ const replacePage = newImage => {
 };
 
 const resetQueue = () =>
+  pdf.numPages &&
   (numberQueue = [
     ...Array.from(Array(pdf.numPages - currentNumber + 1).keys()).map(
       number => number + currentNumber
