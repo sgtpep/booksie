@@ -57,7 +57,7 @@ const debounce = (func, delay, immediate = false) => {
 const displayNextPage = () => displayPage(currentNumber + 1);
 
 const displayNextPageOrClose = () =>
-  currentNumber && currentNumber === pdf.numPages
+  currentNumber && pdf && currentNumber === pdf.numPages
     ? closeViewer()
     : displayNextPage();
 
@@ -159,7 +159,7 @@ const loadPDFJS = onLoad => {
   }
 };
 
-const numberValid = number => number >= 1 && number <= pdf.numPages;
+const numberValid = number => number >= 1 && pdf && number <= pdf.numPages;
 
 const offsetView = (view, top, right, bottom, left) => {
   view[0] += left;
@@ -230,7 +230,7 @@ const renderPage = number => {
   } else {
     const previousURLs = urls;
     rendering = true;
-    pdf.getPage &&
+    pdf &&
       pdf.getPage(number).then(
         page => {
           const viewport = calculateViewport(page);
@@ -272,7 +272,7 @@ const replacePage = newImage => {
 };
 
 const resetQueue = () =>
-  pdf.numPages &&
+  pdf &&
   (numberQueue = [
     ...Array.from(Array(pdf.numPages - currentNumber + 1).keys()).map(
       number => number + currentNumber
@@ -316,7 +316,7 @@ const toggleViewer = shown => {
 
 const unloadDocument = () => {
   loadingTask && loadingTask.destroy();
-  pdf = {};
+  pdf = undefined;
   resetRendering();
 };
 
@@ -332,13 +332,16 @@ const updateMessage = text => {
 
 const updateNavigation = number => {
   ['#viewer-next', '#viewer-next-edge'].forEach(selector =>
-    queryElement(selector).classList.toggle('disabled', number === pdf.numPages)
+    queryElement(selector).classList.toggle(
+      'disabled',
+      pdf && number === pdf.numPages
+    )
   );
   ['#viewer-previous', '#viewer-previous-edge'].forEach(selector =>
     queryElement(selector).classList.toggle('disabled', number === 1)
   );
   queryElement('#viewer-number').textContent = number;
-  queryElement('#viewer-total').textContent = pdf.numPages;
+  queryElement('#viewer-total').textContent = pdf ? pdf.numPages : '';
   toggleNavigation(true);
 };
 
@@ -356,7 +359,7 @@ const updatePageView = page => {
     } else if (name === 'storybooks-canada') {
       page.pageNumber === 1
         ? offsetView(page.view, 35, 60, 194, 17)
-        : page.pageNumber === pdf.numPages
+        : pdf && page.pageNumber === pdf.numPages
         ? offsetView(page.view, 45, 30, 120, 30)
         : offsetView(page.view, 45, 45, 240, 45);
     }
