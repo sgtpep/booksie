@@ -16,9 +16,9 @@ const calculateViewport = page => {
   const { height, width } = page.getViewport(1);
   const viewer = queryElement('#viewer');
   return page.getViewport(
-    height / width > viewer.clientHeight / viewer.clientWidth
+    (height / width > viewer.clientHeight / viewer.clientWidth
       ? viewer.clientHeight / height
-      : viewer.clientWidth / width
+      : viewer.clientWidth / width) * devicePixelRatio
   );
 };
 
