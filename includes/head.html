@@ -21,4 +21,14 @@
     <!--coversStyle-->
   </style>
   <!--style-->
+  <script>
+    const updateBookHref = container =>
+      [...container.querySelectorAll('.book')].forEach(
+        book =>
+          (book.href = `#book/${book.pathname.replace(
+            /^\/(.+)\..+$/,
+            '$1'
+          )}`)
+      );
+  </script>
 </html>

@@ -320,11 +320,6 @@ const unloadDocument = () => {
   resetRendering();
 };
 
-const updateBookHrefs = () =>
-  [...document.querySelectorAll('.book')].forEach(
-    book => (book.href = `#book/${book.pathname.replace(/^\/(.+)\..+$/, '$1')}`)
-  );
-
 const updateMessage = text => {
   const message = queryElement('#viewer-message');
   message.textContent === text || (message.textContent = text);
@@ -384,5 +379,4 @@ export default () => {
   listenHashChange();
   listenViewerClick();
   listenViewerDragEvents();
-  updateBookHrefs();
 };
