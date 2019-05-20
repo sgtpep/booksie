@@ -55,10 +55,11 @@ html.viewing > body {
 
 #viewer-edges > a {
   bottom: 0;
-  max-width: 320px;
+  max-width: 50%;
+  min-width: 25%;
   position: absolute;
   top: 0;
-  width: 50%;
+  width: 320px;
 }
 
 #viewer-message {
