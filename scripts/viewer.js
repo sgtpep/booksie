@@ -30,14 +30,7 @@ const closeViewer = () => {
 
 const createImage = (url, onLoad) => {
   const image = new Image();
-  image.addEventListener('load', () => {
-    const viewer = queryElement('#viewer');
-    image.height === viewer.clientHeight &&
-      (image.style.left = `${(viewer.clientWidth - image.width) / 2}px`);
-    image.width === viewer.clientWidth &&
-      (image.style.top = `${(viewer.clientHeight - image.height) / 2}px`);
-    onLoad(image);
-  });
+  image.addEventListener('load', () => onLoad(image));
   image.addEventListener('dragstart', event => event.preventDefault());
   image.draggable = false;
   image.src = url;
