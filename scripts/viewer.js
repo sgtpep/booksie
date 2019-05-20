@@ -261,13 +261,13 @@ const renderPage = number => {
   }
 };
 
-const replacePage = newImage => {
+const replacePage = image => {
   hidePages();
   const pages = queryElement('#viewer-pages');
-  pages.insertAdjacentElement('afterbegin', newImage);
+  pages.insertAdjacentElement('afterbegin', image);
   if (pages.childElementCount === 1) {
-    newImage.classList.add('fading');
-    setTimeout(() => newImage.classList.remove('fading'));
+    image.classList.add('fading');
+    setTimeout(() => image.classList.remove('fading'));
   }
 };
 
