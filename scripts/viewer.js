@@ -38,7 +38,7 @@ const createImage = (url, onLoad) => {
       (image.style.top = `${(viewer.clientHeight - image.height) / 2}px`);
     onLoad(image);
   });
-  image.addEventListener('dragstart', event => event.preventDefault())
+  image.addEventListener('dragstart', event => event.preventDefault());
   image.draggable = false;
   image.src = url;
 };
@@ -252,7 +252,7 @@ const renderPage = number => {
                 const index = numberQueue.indexOf(number);
                 index === -1 || numberQueue.splice(index, 1);
                 numberQueue.length && renderPage(numberQueue.shift());
-              }),
+              }, 'image/jpeg'),
             () => {}
           );
         },
