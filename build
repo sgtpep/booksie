@@ -18,7 +18,7 @@ const {
 } = require('.');
 
 const coverSize = 192;
-const spriteSize = 100;
+const spriteSize = 10;
 
 const sourceNames = {
   'book-dash': 'Book Dash',
@@ -51,7 +51,7 @@ const buildCovers = (scale = 1) => {
           '-quality',
           '80%',
           '-tile',
-          `1x${spriteSize}`,
+          `${spriteSize}x${spriteSize}`,
           makeDirectories(outputMask),
         ],
         { env: { MAGICK_TEMPORARY_PATH: cachePath() } }
@@ -171,10 +171,12 @@ const generateBooks = source => {
           foundBook =>
             foundBook.source === source && foundBook.slug === book.slug
         ));
+      const absoluteIndex = startIndex + index;
       return {
         ...book,
-        offset: ((startIndex + index) % spriteSize) * 100,
-        sprite: Math.floor((startIndex + index) / spriteSize),
+        left: `${-(absoluteIndex % spriteSize) * 100}%`,
+        sprite: Math.floor(absoluteIndex / spriteSize ** 2),
+        top: `${-Math.floor(absoluteIndex / spriteSize) * 100}%`,
       };
     })
     .map(book => generateBook(book).trim())
