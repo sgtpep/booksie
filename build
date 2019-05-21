@@ -187,7 +187,7 @@ const generateBooks = source => {
 };
 
 const generateCoversStyle = () =>
-  Array.from(Array(Math.ceil(fetchBooks().length / spriteSize)))
+  Array.from(Array(Math.ceil(fetchBooks().length / spriteSize ** 2)))
     .map((value, index) => {
       const imageURL = (scale = 1) =>
         `url(covers/${index}${scale === 1 ? '' : `@${scale}x`}.jpg)`;
