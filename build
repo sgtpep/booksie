@@ -148,8 +148,8 @@ const fetchBooks = () =>
       'https://data.booksie.org/books.json'
     )
   )
-    .sort((a, b) => a.source.localeCompare(b.source))
-    .sort((a, b) => -a.added.localeCompare(b.added));
+    .sort((a, b) => -a.added.localeCompare(b.added))
+    .sort((a, b) => a.source.localeCompare(b.source));
 
 const generateBook = book =>
   readInclude('book', {
