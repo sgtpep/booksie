@@ -19,8 +19,8 @@ const {
 
 const coverScales = [1, 2];
 const coverSize = 192;
-const spriteHeight = 30;
-const spriteWidth = 1;
+const spriteHeight = 3;
+const spriteWidth = 7;
 
 const sourceNames = {
   'book-dash': 'Book Dash',
