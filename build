@@ -61,7 +61,7 @@ const buildCovers = scale => {
       )
     : fs
         .readdirSync(covers)
-        .filter(filename => !/@\d+x\.jpg$/.test(filename))
+        .filter(filename => !/@.+?x\.jpg$/.test(filename))
         .forEach(filename => {
           const output = outputMask.replace(
             '%d',
