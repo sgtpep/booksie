@@ -17,7 +17,13 @@ a.book {
 }
 
 .book > :first-child {
+  background-size: calc(var(--reduced-cover-size) * var(--sprite-size));
   padding-top: 100%;
+}
+@media (min-width: 768px) {
+  .book > :first-child {
+    background-size: inherit;
+  }
 }
 
 .book > :last-child {

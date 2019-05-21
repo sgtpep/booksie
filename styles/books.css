@@ -17,7 +17,7 @@
 .books > .book {
   margin-left: var(--horizontal-margin);
   margin-right: var(--horizontal-margin);
-  width: 128px;
+  width: var(--reduced-cover-size);
 }
 @media (min-width: 768px) {
   .books > span,
