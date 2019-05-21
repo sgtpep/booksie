@@ -19,7 +19,8 @@ const {
 
 const coverScales = [1, 2];
 const coverSize = 192;
-const spriteSize = 10;
+const spriteHeight = 30;
+const spriteWidth = 1;
 
 const sourceNames = {
   'book-dash': 'Book Dash',
@@ -54,7 +55,7 @@ const buildCovers = scale => {
           '-quality',
           '80%',
           '-tile',
-          `${spriteSize}x${spriteSize}`,
+          `${spriteWidth}x${spriteHeight}`,
           makeDirectories(outputMask),
         ],
         { env: { MAGICK_TEMPORARY_PATH: cachePath() } }
@@ -177,9 +178,9 @@ const generateBooks = source => {
       const absoluteIndex = startIndex + index;
       return {
         ...book,
-        left: `${-(absoluteIndex % spriteSize) * 100}%`,
-        sprite: Math.floor(absoluteIndex / spriteSize ** 2),
-        top: `${-Math.floor(absoluteIndex / spriteSize) * 100}%`,
+        left: `${-(absoluteIndex % spriteWidth) * 100}%`,
+        sprite: Math.floor(absoluteIndex / (spriteWidth * spriteHeight)),
+        top: `${-Math.floor(absoluteIndex / spriteWidth) * 100}%`,
       };
     })
     .map(book => generateBook(book).trim())
@@ -187,7 +188,9 @@ const generateBooks = source => {
 };
 
 const generateCoversStyle = () =>
-  Array.from(Array(Math.ceil(fetchBooks().length / spriteSize ** 2)))
+  Array.from(
+    Array(Math.ceil(fetchBooks().length / (spriteWidth * spriteHeight)))
+  )
     .map((value, index) => {
       const imageURL = (scale = 1) =>
         `url(covers/${index}${scale === 1 ? '' : `@${scale}x`}.jpg)`;
@@ -233,7 +236,8 @@ const generateHead = () =>
     description:
       'Booksie: an open catalog of free picture storybooks for children instantly available for reading.',
     name: 'Booksie',
-    spriteSize,
+    spriteHeight,
+    spriteWidth,
     style: process.env.CI
       ? generateProductionStyle()
       : generateDevelopmentStyle(),
