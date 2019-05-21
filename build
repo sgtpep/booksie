@@ -17,6 +17,7 @@ const {
   symlinkFile,
 } = require('.');
 
+const coverScales = [1, 2];
 const coverSize = 192;
 const spriteSize = 10;
 
@@ -32,7 +33,9 @@ const sourceNames = {
   storyweaver: 'StoryWeaver',
 };
 
-const buildCovers = (scale = 1) => {
+const buildAllCovers = () => coverScales.forEach(scale => buildCovers(scale));
+
+const buildCovers = scale => {
   const covers = distributionPath('covers');
   const outputMask = path.join(
     covers,
@@ -185,21 +188,18 @@ const generateBooks = source => {
 
 const generateCoversStyle = () =>
   Array.from(Array(Math.ceil(fetchBooks().length / spriteSize)))
-    .map((value, index) =>
-      `
+    .map((value, index) => {
+      const imageURL = (scale = 1) =>
+        `url(covers/${index}${scale === 1 ? '' : `@${scale}x`}.jpg)`;
+      const images = coverScales.map(scale => `${imageURL(scale)} ${scale}x`);
+      return `
 .cover-${index} {
-  background-image: url(covers/${index}.jpg);
-  background-image: -webkit-image-set(
-    url(covers/${index}.jpg) 1x,
-    url(covers/${index}@2x.jpg) 2x
-  );
-  background-image: image-set(
-    url(covers/${index}.jpg) 1x,
-    url(covers/${index}@2x.jpg) 2x
-  );
+  background-image: ${imageURL()};
+  background-image: -webkit-image-set(${images.join(', ')});
+  background-image: image-set(${images.join(', ')});
 }
-`.trim()
-    )
+`.trim();
+    })
     .join('\n');
 
 const generateDevelopmentScript = () => {
