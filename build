@@ -295,8 +295,7 @@ const generateSources = () =>
   });
 
 const main = () => {
-  buildCovers();
-  buildCovers(2);
+  buildAllCovers();
   buildIndex();
   copyImages();
   copyPDFJSFiles();
