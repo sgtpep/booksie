@@ -23,9 +23,10 @@
   <!--style-->
   <script>
     const updateBookHref = container =>
-      [...container.querySelectorAll('.book')].forEach(
-        book =>
-          (book.href = `#book/${book.pathname.replace(
+      [...container.children].forEach(
+        element =>
+          element.href &&
+          (element.href = `#book/${element.pathname.replace(
             /^\/(.+)\..+$/,
             '$1'
           )}`)
