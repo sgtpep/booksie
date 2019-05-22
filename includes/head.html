@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="scriptless" lang="en">
   <link href="images/favicon.png" rel="icon" />
   <meta charset="utf-8" />
   <meta
@@ -25,6 +25,8 @@
   </style>
   <!--style-->
   <script>
+    document.documentElement.classList.remove('scriptless');
+
     const updateBookHref = container =>
       [...container.children].forEach(
         element =>

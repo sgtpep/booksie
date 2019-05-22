@@ -196,7 +196,7 @@ const generateCoversStyle = () =>
         `url(covers/${index}${scale === 1 ? '' : `@${scale}x`}.jpg)`;
       const images = coverScales.map(scale => `${imageURL(scale)} ${scale}x`);
       return `
-.cover-${index} {
+.cover-${index}, html.scriptless .cover[data-cover="${index}"] {
   background-image: ${imageURL()};
   background-image: -webkit-image-set(${images.join(', ')});
   background-image: image-set(${images.join(', ')});

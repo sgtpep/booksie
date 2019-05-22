@@ -16,17 +16,6 @@ a.book {
   text-decoration: none;
 }
 
-.book > :first-child {
-  background-size: calc(var(--reduced-cover-size) * var(--sprite-width))
-    calc(var(--reduced-cover-size) * var(--sprite-height));
-  padding-top: 100%;
-}
-@media (min-width: 768px) {
-  .book > :first-child {
-    background-size: inherit;
-  }
-}
-
 .book > :last-child {
   border-top: 1px solid rgba(0, 0, 0, 0.125);
   font-size: 90%;
