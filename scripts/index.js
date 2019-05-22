@@ -1,7 +1,7 @@
 import lazyLoading from './lazy-loading.js';
-import stickyClass from './sticky-class.js';
+import stickyElements from './sticky-elements.js';
 import viewer from './viewer.js';
 
 lazyLoading();
-stickyClass();
+stickyElements();
 viewer();
