@@ -1,0 +1,8 @@
+.source-description {
+  --horizontal-padding: 0.5em;
+  --vertical-margin: 0.5em;
+  margin: var(--vertical-margin) auto;
+  max-width: 40em;
+  padding-left: var(--horizontal-padding);
+  padding-right: var(--horizontal-padding);
+}
