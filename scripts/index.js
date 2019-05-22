@@ -1,5 +1,5 @@
-import stickyHeadings from './sticky-headings.js';
+import stickyClass from './sticky-class.js';
 import viewer from './viewer.js';
 
-stickyHeadings();
+stickyClass();
 viewer();
