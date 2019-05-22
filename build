@@ -3,6 +3,7 @@ const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
 const rollup = require('rollup');
+const sources = require('./sources');
 const {
   assert,
   cachePath,
@@ -21,18 +22,6 @@ const coverScales = [1, 2];
 const coverSize = 192;
 const spriteHeight = 3;
 const spriteWidth = 7;
-
-const sourceNames = {
-  'book-dash': 'Book Dash',
-  'paul-choy': 'Paul Choy',
-  'pratham-books': 'Pratham Books',
-  'room-to-read': 'Room to Read',
-  'storybooks-canada': 'Storybooks Canada',
-  bookbot: 'Bookbot',
-  icharacter: 'iCharacter',
-  rubbishbooks: 'Rubbish Books',
-  storyweaver: 'StoryWeaver',
-};
 
 const buildAllCovers = () => coverScales.forEach(scale => buildCovers(scale));
 
@@ -158,10 +147,7 @@ const fetchBooks = () =>
 const generateBook = book =>
   readInclude('book', {
     ...book,
-    sourceName: assert(
-      sourceNames[book.source],
-      `Unknow source ${book.source}`
-    ),
+    sourceName: assert(sources[book.source], `Unknow source ${book.source}`).name,
   });
 
 const generateBooks = source => {
@@ -280,22 +266,22 @@ ${fs
 </style>`;
 
 const generateSourceBooks = () =>
-  Object.keys(sourceNames)
+  Object.keys(sources)
     .sort()
     .map(source =>
       readInclude('source-books', {
+        ...sources[source],
         books: generateBooks(source),
         source,
-        sourceName: sourceNames[source],
       })
     )
     .join('\n');
 
 const generateSources = () =>
   readInclude('sources', {
-    links: Object.keys(sourceNames)
+    links: Object.keys(sources)
       .sort()
-      .map(source => `<a href="#${source}">${sourceNames[source]}</a>`)
+      .map(source => `<a href="#${source}">${sources[source].name}</a>`)
       .join(', '),
   });
 
