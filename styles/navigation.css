@@ -1,6 +1,6 @@
-.sources {
+.navigation {
   --horizontal-padding: 1em;
-  --vertical-margin: 1.5em;
+  --vertical-margin: 1em;
   margin-bottom: var(--vertical-margin);
   margin-top: var(--vertical-margin);
   padding-left: var(--horizontal-padding);
@@ -8,10 +8,10 @@
   text-align: center;
 }
 
-.sources > a {
+.navigation > a {
   color: #1f69c0;
   font-weight: bold;
 }
-.sources > a:not(:hover) {
+.navigation > a:not(:hover) {
   text-decoration: none;
 }

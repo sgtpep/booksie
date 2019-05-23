@@ -247,8 +247,16 @@ const generateIndex = () =>
 const generateMain = () =>
   readInclude('main', {
     books: generateSourceBooks(),
-    sources: generateSources(),
+    navigation: generateNavigation(),
     viewer: readInclude('viewer'),
+  });
+
+const generateNavigation = () =>
+  readInclude('navigation', {
+    links: Object.keys(sources)
+      .sort()
+      .map(source => `<a href="#${source}">${sourceData(source).name}</a>`)
+      .join(', '),
   });
 
 const generateProductionScript = () => `<script defer>
@@ -303,14 +311,6 @@ const generateSourceLinks = () => {
     ...(links.length === Object.keys(sources).length ? [] : ['etc']),
   ].join(', ');
 };
-
-const generateSources = () =>
-  readInclude('sources', {
-    links: Object.keys(sources)
-      .sort()
-      .map(source => `<a href="#${source}">${sourceData(source).name}</a>`)
-      .join(', '),
-  });
 
 const main = () => {
   buildAllCovers();
