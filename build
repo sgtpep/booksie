@@ -112,6 +112,11 @@ const copyPDFJSFiles = () =>
     )
   );
 
+const dataURI = file =>
+  `data:${mimeType(file)};base64,${Buffer.from(fs.readFileSync(file)).toString(
+    'base64'
+  )}`;
+
 const downloadCovers = () => {
   const books = fetchBooks().map(book => ({
     ...book,
@@ -270,12 +275,19 @@ const generateSourceBooks = () =>
     .sort()
     .map(source =>
       readInclude('source-books', {
-        ...sources[source],
         books: generateBooks(source),
         source,
+        sourceDescription: generateSourceDescription(source),
+        sourceName: sourceData(source).name,
       })
     )
     .join('\n');
+
+const generateSourceDescription = source =>
+  readInclude('source-description', {
+    image: sourceImage(source),
+    ...sourceData(source),
+  });
 
 const generateSources = () =>
   readInclude('sources', {
@@ -291,6 +303,15 @@ const main = () => {
   copyImages();
   copyPDFJSFiles();
 };
+
+const mimeType = file =>
+  file.endsWith('.jpg')
+    ? 'image/jpeg'
+    : file.endsWith('.png')
+    ? 'image/png'
+    : file.endsWith('.svg')
+    ? 'image/svg+xml'
+    : undefined;
 
 const readInclude = (name, replacements = {}) =>
   replaceTokens(
@@ -308,5 +329,14 @@ const replaceTokens = (string, replacements) =>
   );
 
 const sourceData = source => assert(sources[source], `Unknow source ${source}`);
+
+const sourceImage = source => {
+  const filename = fs
+    .readdirSync('images/sources')
+    .find(filename => filename.startsWith(`${source}.`));
+  return filename
+    ? `<img src="${dataURI(path.join('images/sources', filename))}">`
+    : '';
+};
 
 require.main === module && main();
