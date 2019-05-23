@@ -147,7 +147,7 @@ const fetchBooks = () =>
 const generateBook = book =>
   readInclude('book', {
     ...book,
-    sourceName: assert(sources[book.source], `Unknow source ${book.source}`).name,
+    sourceName: sourceData(book.source).name,
   });
 
 const generateBooks = source => {
@@ -281,7 +281,7 @@ const generateSources = () =>
   readInclude('sources', {
     links: Object.keys(sources)
       .sort()
-      .map(source => `<a href="#${source}">${sources[source].name}</a>`)
+      .map(source => `<a href="#${source}">${sourceData(source).name}</a>`)
       .join(', '),
   });
 
@@ -306,5 +306,7 @@ const replaceTokens = (string, replacements) =>
         .replace(new RegExp(`<!--${token}-->`, 'g'), replacement),
     string
   );
+
+const sourceData = source => assert(sources[source], `Unknow source ${source}`);
 
 require.main === module && main();
