@@ -217,6 +217,7 @@ const generateFooter = () =>
     script: process.env.CI
       ? generateProductionScript()
       : generateDevelopmentScript(),
+    sources: generateSourceLinks(),
     year: new Date().getFullYear(),
   }).trim();
 
@@ -288,6 +289,20 @@ const generateSourceDescription = source =>
     image: sourceImage(source),
     ...sourceData(source),
   });
+
+const generateSourceLinks = () => {
+  const links = Object.keys(sources)
+    .sort()
+    .filter(source => sources[source].homepage)
+    .map(
+      source =>
+        `<a href="${sources[source].homepage}">${sources[source].name}</a>`
+    );
+  return [
+    ...links,
+    ...(links.length === Object.keys(sources).length ? [] : ['etc']),
+  ].join(', ');
+};
 
 const generateSources = () =>
   readInclude('sources', {
