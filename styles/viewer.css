@@ -62,7 +62,8 @@ html.viewing > body {
   width: 320px;
 }
 
-#viewer-message {
+#viewer-error,
+#viewer-loading {
   --horizontal-margin: 1em;
   align-items: center;
   bottom: 0;
@@ -76,6 +77,10 @@ html.viewing > body {
   position: absolute;
   right: 0;
   top: 0;
+}
+
+#viewer-loading[hidden] {
+  display: none;
 }
 
 #viewer-navigation {

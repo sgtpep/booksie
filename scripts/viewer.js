@@ -60,7 +60,7 @@ const displayPage = number => {
     updateNavigation(number);
     if (!urls[number]) {
       hidePages();
-      updateMessage('Loading...');
+      toggleLoading(true);
     }
     renderPage(number);
   }
@@ -122,7 +122,8 @@ const listenViewerDragEvents = () => {
 };
 
 const loadDocument = url => {
-  updateMessage('Loading...');
+  toggleLoading(true);
+  updateError('');
   loadPDFJS(() => {
     unloadDocument();
     window['pdfjs-dist/build/pdf'].GlobalWorkerOptions.workerSrc =
@@ -135,8 +136,10 @@ const loadDocument = url => {
         displayPage(1);
         resetQueue();
       },
-      error =>
-        updateMessage(`Loading error: ${error.message.replace(/\.$/, '')}.`)
+      error => {
+        toggleLoading(false);
+        updateError(`Loading error: ${error.message.replace(/\.$/, '')}.`);
+      }
     );
   });
 };
@@ -293,18 +296,21 @@ const toggleGlobalListners = adding =>
     ],
   ].map(args => (adding ? addEventListener : removeEventListener)(...args));
 
-const toggleNavigation = shown =>
+const toggleLoading = visible =>
+  (queryElement('#viewer-loading').hidden = !visible);
+
+const toggleNavigation = visible =>
   ['#viewer-edges', '#viewer-navigation'].forEach(selector => {
     const element = queryElement(selector);
-    element.hidden === !shown || (element.hidden = !shown);
+    element.hidden === !visible || (element.hidden = !visible);
   });
 
-const toggleViewer = shown => {
-  document.documentElement.classList.toggle('viewing', shown);
+const toggleViewer = visible => {
+  document.documentElement.classList.toggle('viewing', visible);
   hidePages();
-  queryElement('#viewer').hidden = !shown;
-  toggleGlobalListners(shown);
-  toggleNavigation(!shown);
+  queryElement('#viewer').hidden = !visible;
+  toggleGlobalListners(visible);
+  toggleNavigation(!visible);
 };
 
 const unloadDocument = () => {
@@ -313,10 +319,7 @@ const unloadDocument = () => {
   resetRendering();
 };
 
-const updateMessage = text => {
-  const message = queryElement('#viewer-message');
-  message.textContent === text || (message.textContent = text);
-};
+const updateError = text => (queryElement('#viewer-error').textContent = text);
 
 const updateNavigation = number => {
   ['#viewer-next', '#viewer-next-edge'].forEach(selector =>
@@ -336,7 +339,7 @@ const updateNavigation = number => {
 const updatePage = url =>
   createImage(url, image => {
     replacePage(image);
-    updateMessage('');
+    toggleLoading(false);
   });
 
 const updatePageView = page => {
