@@ -9,6 +9,6 @@
     background-size: inherit;
   }
 }
-.cover:not([class*=' cover-']) {
+html:not(.scriptless) .cover:not([class*=' cover-']) {
   opacity: 0;
 }
