@@ -97,11 +97,11 @@ const cache = func => (...args) => {
   return JSON.parse(fs.readFileSync(cache, 'utf8'));
 };
 
-const copyImages = () => {
-  const target = distributionPath('images');
+const copyAssets = () => {
+  const target = distributionPath('assets');
   process.env.CI
-    ? copyDirectory('images', target)
-    : symlinkFile('../images', target);
+    ? copyDirectory('assets', target)
+    : symlinkFile('../assets', target);
 };
 
 const copyPDFJSFiles = () =>
@@ -239,7 +239,8 @@ const generateHead = () =>
       .match(/(?<= fqdn: ).+/)}/`,
   }).replace('</html>\n', '');
 
-const generateHeader = () => readInclude('header');
+const generateHeader = () =>
+  readInclude('header', { logo: dataURI('images/logo.svg') });
 
 const generateIndex = () =>
   generateHead() + generateHeader() + generateMain() + generateFooter();
@@ -318,7 +319,7 @@ const generateSourceLinks = () => {
 const main = () => {
   buildAllCovers();
   buildIndex();
-  copyImages();
+  copyAssets();
   copyPDFJSFiles();
 };
 
@@ -350,9 +351,11 @@ const sourceData = source => assert(sources[source], `Unknow source ${source}`);
 
 const sourceLogo = source => {
   const filename = fs
-    .readdirSync('logos')
+    .readdirSync('images/sources')
     .find(filename => filename.startsWith(`${source}.`));
-  return filename ? `<img src="${dataURI(path.join('logos', filename))}">` : '';
+  return filename
+    ? `<img src="${dataURI(path.join('images/sources', filename))}">`
+    : '';
 };
 
 require.main === module && main();
