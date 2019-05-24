@@ -293,11 +293,11 @@ const generateSourceBooks = () =>
     .join('\n');
 
 const generateSourceDescription = source => {
-  const image = sourceImage(source);
   const { description } = sourceData(source);
+  const logo = sourceLogo(source);
   return (
-    (description || image) &&
-    readInclude('source-description', { image, description })
+    (description || logo) &&
+    readInclude('source-description', { description, logo })
   );
 };
 
@@ -348,13 +348,11 @@ const replaceTokens = (string, replacements) =>
 
 const sourceData = source => assert(sources[source], `Unknow source ${source}`);
 
-const sourceImage = source => {
+const sourceLogo = source => {
   const filename = fs
-    .readdirSync('images/sources')
+    .readdirSync('logos')
     .find(filename => filename.startsWith(`${source}.`));
-  return filename
-    ? `<img src="${dataURI(path.join('images/sources', filename))}">`
-    : '';
+  return filename ? `<img src="${dataURI(path.join('logos', filename))}">` : '';
 };
 
 require.main === module && main();
