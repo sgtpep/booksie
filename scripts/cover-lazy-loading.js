@@ -1,5 +1,24 @@
+const coverPreloaded = {};
+
 const addCoverClass = cover =>
   cover.classList.add(`cover-${cover.dataset.cover}`);
+
+const preloadCover = cover => {
+  if (!coverPreloaded[cover.dataset.cover]) {
+    coverPreloaded[cover.dataset.cover] = true;
+    const image = new Image();
+    image.addEventListener('load', () =>
+      [
+        ...document.querySelectorAll(
+          `.cover[data-cover="${cover.dataset.cover}"]`
+        ),
+      ].forEach(cover => addCoverClass(cover))
+    );
+    image.src = `covers/${cover.dataset.cover}${
+      devicePixelRatio > 1 ? '@2x' : ''
+    }.jpg`;
+  }
+};
 
 export default () => {
   const covers = [...document.querySelectorAll('.cover')];
@@ -8,7 +27,7 @@ export default () => {
       entries =>
         entries.forEach(entry => {
           if (entry.isIntersecting) {
-            addCoverClass(entry.target);
+            preloadCover(entry.target);
             observer.unobserve(entry.target);
           }
         }),
