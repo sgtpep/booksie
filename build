@@ -292,11 +292,14 @@ const generateSourceBooks = () =>
     )
     .join('\n');
 
-const generateSourceDescription = source =>
-  readInclude('source-description', {
-    image: sourceImage(source),
-    ...sourceData(source),
-  });
+const generateSourceDescription = source => {
+  const image = sourceImage(source);
+  const { description } = sourceData(source);
+  return (
+    (description || image) &&
+    readInclude('source-description', { image, description })
+  );
+};
 
 const generateSourceLinks = () => {
   const links = Object.keys(sources)
