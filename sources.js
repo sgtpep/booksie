@@ -36,8 +36,8 @@ module.exports = {
     name: 'Room to Read',
   },
   rubbishbooks: {
-    description: '',
-    homepage: '',
+    description: null,
+    homepage: null,
     name: 'Rubbish Books',
   },
   'storybooks-canada': {
