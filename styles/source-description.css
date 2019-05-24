@@ -1,22 +1,22 @@
 .source-description {
-  --horizontal-padding: 0.5em;
+  --horizontal-padding: 1em;
+  align-items: center;
+  display: flex;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 100%;
   padding-left: var(--horizontal-padding);
   padding-right: var(--horizontal-padding);
-  text-align: center;
-}
-
-.source-description > p {
-  margin: 0.5em auto;
-  max-width: 30em;
+  width: 40em;
 }
 
 .source-description > img {
-  --height: 60px;
-  max-width: 100%;
+  --width: 150px;
+  margin-right: 1em;
+  max-height: 60px;
+  max-width: var(--width);
 }
-.source-description > img[src^='data:image/svg+xml;'] {
-  height: var(--height);
-}
-.source-description > img:not([src^='data:image/svg+xml;']) {
-  max-height: var(--height);
+
+.source-description > :last-child {
+  flex: 1;
 }
