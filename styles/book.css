@@ -17,7 +17,6 @@ a.book {
 }
 
 .book > :last-child {
-  background-color: white;
   border-top: 1px solid rgba(0, 0, 0, 0.125);
   font-size: 90%;
   padding: 0.357em 0.5em;

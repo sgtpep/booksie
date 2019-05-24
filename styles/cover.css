@@ -2,13 +2,9 @@
   background-size: calc(var(--reduced-cover-size) * var(--sprite-width))
     calc(var(--reduced-cover-size) * var(--sprite-height));
   padding-top: 100%;
-  transition: 150ms opacity;
 }
 @media (min-width: 768px) {
   .cover {
     background-size: inherit;
   }
-}
-.cover:not([class*=' cover-']) {
-  opacity: 0;
 }
