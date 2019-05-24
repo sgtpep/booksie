@@ -354,7 +354,9 @@ const sourceLogo = source => {
     .readdirSync('images/sources')
     .find(filename => filename.startsWith(`${source}.`));
   return filename
-    ? `<img src="${dataURI(path.join('images/sources', filename))}">`
+    ? `<img alt="${
+        sourceData(filename.replace(/\..+?$/, '')).name
+      }" src="${dataURI(path.join('images/sources', filename))}">`
     : '';
 };
 
