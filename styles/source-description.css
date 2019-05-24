@@ -1,22 +1,26 @@
 .source-description {
   --horizontal-padding: 1em;
-  align-items: center;
-  display: flex;
+  --logo-width: 150px;
   margin-left: auto;
   margin-right: auto;
   max-width: 100%;
   padding-left: var(--horizontal-padding);
   padding-right: var(--horizontal-padding);
+  position: relative;
   width: 40em;
 }
 
-.source-description > img {
-  --width: 150px;
-  margin-right: 1em;
-  max-height: 60px;
-  max-width: var(--width);
+.source-description > :last-child {
+  margin-left: var(--logo-width);
+  padding-left: 1em;
 }
 
-.source-description > :last-child {
-  flex: 1;
+.source-description img {
+  -webkit-transform: translateY(-50%);
+  max-height: calc(var(--logo-width) / 2.5);
+  max-width: var(--logo-width);
+  position: absolute;
+  right: calc(100% - var(--logo-width) - var(--horizontal-padding));
+  top: 50%;
+  transform: translateY(-50%);
 }

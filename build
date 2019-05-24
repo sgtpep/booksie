@@ -82,7 +82,7 @@ const buildCovers = scale => {
 const buildIndex = () =>
   fs.writeFileSync(
     makeDirectories(distributionPath('index.html')),
-    generateIndex()
+    replaceImages(generateIndex())
   );
 
 const cache = func => (...args) => {
@@ -111,11 +111,6 @@ const copyPDFJSFiles = () =>
       distributionPath('pdfjs', filename)
     )
   );
-
-const dataURI = file =>
-  `data:${mimeType(file)};base64,${Buffer.from(fs.readFileSync(file)).toString(
-    'base64'
-  )}`;
 
 const downloadCovers = () => {
   const books = fetchBooks().map(book => ({
@@ -239,8 +234,7 @@ const generateHead = () =>
       .match(/(?<= fqdn: ).+/)}/`,
   }).replace('</html>\n', '');
 
-const generateHeader = () =>
-  readInclude('header', { logo: dataURI('images/logo.svg') });
+const generateHeader = () => readInclude('header');
 
 const generateIndex = () =>
   generateHead() + generateHeader() + generateMain() + generateFooter();
@@ -323,19 +317,16 @@ const main = () => {
   copyPDFJSFiles();
 };
 
-const mimeType = file =>
-  file.endsWith('.jpg')
-    ? 'image/jpeg'
-    : file.endsWith('.png')
-    ? 'image/png'
-    : file.endsWith('.svg')
-    ? 'image/svg+xml'
-    : undefined;
-
 const readInclude = (name, replacements = {}) =>
   replaceTokens(
     fs.readFileSync(path.join('includes', `${name}.html`), 'utf8'),
     replacements
+  );
+
+const replaceImages = html =>
+  html.replace(
+    /<img .+?\/>/gs,
+    '<img class="lazy-loading" /><noscript>$&</noscript>'
   );
 
 const replaceTokens = (string, replacements) =>
@@ -351,13 +342,13 @@ const sourceData = source => assert(sources[source], `Unknow source ${source}`);
 
 const sourceLogo = source => {
   const filename = fs
-    .readdirSync('images/sources')
+    .readdirSync('assets/sources')
     .find(filename => filename.startsWith(`${source}.`));
   return filename
     ? `<img alt="${
         sourceData(filename.replace(/\..+?$/, '')).name
-      }" src="${dataURI(path.join('images/sources', filename))}">`
-    : '';
+      }" src="assets/sources/${filename}"/>`
+    : null;
 };
 
 require.main === module && main();

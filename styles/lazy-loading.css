@@ -1,0 +1,12 @@
+img.lazy-loading {
+  transition: 150ms opacity;
+}
+img.lazy-loading:not([src]) {
+  visibility: hidden;
+}
+img.lazy-loading:not(.loaded) {
+  opacity: 0;
+}
+html.scriptless img.lazy-loading {
+  display: none;
+}
