@@ -83,6 +83,13 @@ html.viewing > body {
   display: none;
 }
 
+#viewer-loading > svg {
+  --size: 1.375em;
+  height: var(--size);
+  margin-right: 0.5em;
+  width: var(--size);
+}
+
 #viewer-navigation {
   border-top-left-radius: var(--border-radius);
   bottom: 0;

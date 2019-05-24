@@ -124,24 +124,26 @@ const listenViewerDragEvents = () => {
 const loadDocument = url => {
   toggleLoading(true);
   updateError('');
-  loadPDFJS(() => {
-    unloadDocument();
-    window['pdfjs-dist/build/pdf'].GlobalWorkerOptions.workerSrc =
-      'pdfjs/pdf.worker.min.js';
-    (loadingTask = window['pdfjs-dist/build/pdf'].getDocument(
-      url
-    )).promise.then(
-      loadedPDF => {
-        pdf = loadedPDF;
-        displayPage(1);
-        resetQueue();
-      },
-      error => {
-        toggleLoading(false);
-        updateError(`Loading error: ${error.message.replace(/\.$/, '')}.`);
-      }
-    );
-  });
+  setTimeout(() =>
+    loadPDFJS(() => {
+      unloadDocument();
+      window['pdfjs-dist/build/pdf'].GlobalWorkerOptions.workerSrc =
+        'pdfjs/pdf.worker.min.js';
+      (loadingTask = window['pdfjs-dist/build/pdf'].getDocument(
+        url
+      )).promise.then(
+        loadedPDF => {
+          pdf = loadedPDF;
+          displayPage(1);
+          resetQueue();
+        },
+        error => {
+          toggleLoading(false);
+          updateError(`Loading error: ${error.message.replace(/\.$/, '')}.`);
+        }
+      );
+    })
+  );
 };
 
 const loadPDFJS = onLoad => {

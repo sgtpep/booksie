@@ -243,7 +243,7 @@ const generateMain = () =>
   readInclude('main', {
     books: generateSourceBooks(),
     navigation: generateNavigation(),
-    viewer: readInclude('viewer'),
+    viewer: generateViewer(),
   });
 
 const generateNavigation = () =>
@@ -309,6 +309,9 @@ const generateSourceLinks = () => {
     ...(links.length === Object.keys(sources).length ? [] : ['etc']),
   ].join(', ');
 };
+
+const generateViewer = () =>
+  readInclude('viewer', { spinner: fs.readFileSync('images/spinner.svg') });
 
 const main = () => {
   buildAllCovers();
