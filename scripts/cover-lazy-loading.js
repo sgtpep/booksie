@@ -3,7 +3,7 @@ const coverPreloaded = {};
 const addCoverClass = cover =>
   cover.classList.add(`cover-${cover.dataset.cover}`);
 
-const preloadCover = cover => {
+const loadCover = cover => {
   if (!coverPreloaded[cover.dataset.cover]) {
     coverPreloaded[cover.dataset.cover] = true;
     const image = new Image();
@@ -27,8 +27,8 @@ export default () => {
       entries =>
         entries.forEach(entry => {
           if (entry.isIntersecting) {
-            preloadCover(entry.target);
             observer.unobserve(entry.target);
+            loadCover(entry.target);
           }
         }),
       { rootMargin: '500% 0%' }
