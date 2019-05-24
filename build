@@ -334,7 +334,10 @@ const replaceTokens = (string, replacements) =>
     (string, [token, replacement]) =>
       string
         .replace(new RegExp(`^ +(?=<!--${token}-->)`, 'gm'), '')
-        .replace(new RegExp(`<!--${token}-->`, 'g'), replacement),
+        .replace(
+          new RegExp(`<!--${token}-->`, 'g'),
+          [null, undefined].includes(replacement) ? '' : replacement
+        ),
     string
   );
 
