@@ -27,6 +27,7 @@ a.book {
   font-weight: bold;
   height: 5em;
   position: absolute;
+  right: 0;
   text-align: center;
   transform: translate(50%, 50%) rotate(-45deg);
   width: 100%;
