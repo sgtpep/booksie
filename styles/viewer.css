@@ -33,6 +33,7 @@ html.viewing > body {
 
 #viewer {
   --color: whitesmoke;
+  --duration: 150ms;
   -moz-user-select: none;
   -ms-user-select: none;
   -webkit-user-select: none;
@@ -42,8 +43,14 @@ html.viewing > body {
   position: fixed;
   right: 0;
   top: 0;
+  transition: opacity var(--duration), visibility var(--duration);
   user-select: none;
   z-index: 1000;
+}
+#viewer[hidden] {
+  display: block;
+  opacity: 0;
+  visibility: hidden;
 }
 
 #viewer-close {
