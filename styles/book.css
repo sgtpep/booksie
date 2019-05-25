@@ -4,7 +4,7 @@
   box-shadow: 0 0.0625em 0.25em rgba(0, 0, 0, 0.25);
   display: block;
   overflow: hidden;
-  transition: var(--delay) box-shadow, var(--delay) opacity;
+  transition: box-shadow var(--delay), opacity var(--delay);
   width: var(--cover-size);
 }
 .book:hover {

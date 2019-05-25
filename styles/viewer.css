@@ -7,7 +7,7 @@ html.viewing > body {
   --delay: 150ms;
   display: inline-block;
   text-align: center;
-  transition: var(--delay) color, var(--delay) text-shadow;
+  transition: color var(--delay), text-shadow var(--delay);
   width: var(--height);
 }
 .viewer-action:hover {

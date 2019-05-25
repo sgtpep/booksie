@@ -2,7 +2,7 @@
   background-size: calc(var(--reduced-cover-size) * var(--sprite-width))
     calc(var(--reduced-cover-size) * var(--sprite-height));
   padding-top: 100%;
-  transition: 150ms opacity;
+  transition: opacity 150ms;
 }
 @media (min-width: 768px) {
   .cover {
