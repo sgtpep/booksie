@@ -237,7 +237,8 @@ const generateHead = () =>
       .match(/(?<= fqdn: ).+/)}/`,
   }).replace('</html>\n', '');
 
-const generateHeader = () => readInclude('header');
+const generateHeader = () =>
+  readInclude('header', { number: fetchBooks().length });
 
 const generateIndex = () =>
   generateHead() + generateHeader() + generateMain() + generateFooter();
