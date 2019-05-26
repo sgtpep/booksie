@@ -176,12 +176,8 @@ const onDragStop = event => {
 
 const onHashChange = (event = { newURL: location.href }) => {
   const hash = event.newURL.replace(/^.+?(#|$)/, '');
-  hash.startsWith('book/') &&
-    (hash
-      ? openViewer(
-          `https://data.booksie.org/${hash.replace(/^book\//, '')}.pdf`
-        )
-      : closeViewer());
+  hash.includes('/') &&
+    (hash ? openViewer(`https://data.booksie.org/${hash}.pdf`) : closeViewer());
 };
 
 const onKeyDown = event =>
@@ -287,7 +283,7 @@ const resetRendering = () => {
   urls = [];
 };
 
-const sourceName = () => location.hash.replace(/^#book\//, '').split('/')[0];
+const sourceName = () => location.hash.replace(/^#/, '').split('/')[0];
 
 const toggleGlobalListners = adding =>
   [
@@ -362,7 +358,7 @@ const updatePageView = page => {
 
 const updateTitle = url => {
   const book = document.querySelector(
-    `.book[href="${url}"], .book[href="#book/${new URL(url).pathname.replace(
+    `.book[href="${url}"], .book[href="#${new URL(url).pathname.replace(
       /^\/(.+)\.\w+$/,
       '$1'
     )}"]`

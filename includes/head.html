@@ -31,10 +31,7 @@
       [...container.children].forEach(
         element =>
           element.href &&
-          (element.href = `#book/${element.pathname.replace(
-            /^\/(.+)\..+$/,
-            '$1'
-          )}`)
+          (element.href = `#${element.pathname.replace(/^\/(.+)\..+$/, '$1')}`)
       );
   </script>
 </html>
