@@ -18,11 +18,6 @@ const {
   symlinkFile,
 } = require('.');
 
-const coverScales = [1, 2];
-const coverSize = 192;
-const spriteHeight = 3;
-const spriteWidth = 7;
-
 const buildAllCovers = () => coverScales.forEach(scale => buildCovers(scale));
 
 const buildCovers = scale => {
@@ -111,6 +106,10 @@ const copyPDFJSFiles = () =>
       distributionPath('pdfjs', filename)
     )
   );
+
+const coverScales = [1, 2];
+
+const coverSize = 192;
 
 const downloadCovers = () => {
   const books = fetchBooks().map(book => ({
@@ -360,5 +359,9 @@ const sourceLogo = source => {
       }" src="assets/sources/${filename}"/>`
     : null;
 };
+
+const spriteHeight = 3;
+
+const spriteWidth = 7;
 
 require.main === module && main();

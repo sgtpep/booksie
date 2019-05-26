@@ -1,7 +1,7 @@
-const coverPreloaded = {};
-
 const addCoverClass = cover =>
   cover.classList.add(`cover-${cover.dataset.cover}`);
+
+const coverPreloaded = {};
 
 const loadCover = cover => {
   if (!coverPreloaded[cover.dataset.cover]) {

@@ -1,5 +1,3 @@
-const elements = {};
-const title = (typeof document === 'undefined' ? {} : document).title;
 let clientX;
 let currentNumber;
 let loadingTask;
@@ -67,6 +65,8 @@ const displayPage = number => {
 };
 
 const displayPreviousPage = () => displayPage(currentNumber - 1);
+
+const elements = {};
 
 const eventClientX = event =>
   (event.changedTouches ? event.changedTouches[0] : event).clientX;
@@ -284,6 +284,8 @@ const resetRendering = () => {
 };
 
 const sourceName = () => location.hash.replace(/^#/, '').split('/')[0];
+
+const title = (typeof document === 'undefined' ? {} : document).title;
 
 const toggleGlobalListners = adding =>
   [

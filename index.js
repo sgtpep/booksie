@@ -3,9 +3,6 @@ const os = require('os');
 const path = require('path');
 const { execFileSync } = require('child_process');
 
-const userAgent =
-  'Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/60.0';
-
 const assert = (value, message) => {
   if (!value) {
     throw new Error(message);
@@ -144,6 +141,9 @@ const unpackArchive = (archive, directory) => {
   ]);
   return directory;
 };
+
+const userAgent =
+  'Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/60.0';
 
 module.exports = {
   assert,
