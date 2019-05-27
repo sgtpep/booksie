@@ -150,7 +150,7 @@ const generateBook = book =>
       Date.now() - Date.parse(book.added) < 1000 * 60 * 60 * 24 * 10
         ? ' new'
         : '',
-    sourceName: sourceData(book.source).name,
+    sourceName: sources.find(source => source.id === book.source).name,
   });
 
 const generateBooks = source => {
@@ -252,9 +252,8 @@ const generateMain = () =>
 
 const generateNavigation = () =>
   readInclude('navigation', {
-    links: Object.keys(sources)
-      .sort()
-      .map(source => `<a href="#${source}">${sourceData(source).name}</a>`)
+    links: sources
+      .map(source => `<a href="#${source.id}">${source.name}</a>`)
       .join(', '),
   });
 
@@ -279,20 +278,19 @@ ${fs
 </style>`;
 
 const generateSourceBooks = () =>
-  Object.keys(sources)
-    .sort()
+  sources
     .map(source =>
       readInclude('source-books', {
-        books: generateBooks(source),
-        source,
-        sourceDescription: generateSourceDescription(source),
-        sourceName: sourceData(source).name,
+        books: generateBooks(source.id),
+        source: source.id,
+        sourceDescription: generateSourceDescription(source.id),
+        sourceName: source.name,
       })
     )
     .join('\n');
 
 const generateSourceDescription = source => {
-  const { description } = sourceData(source);
+  const { description } = sources.find(sourceItem => sourceItem.id === source);
   const logo = sourceLogo(source);
   return (
     (description || logo) &&
@@ -301,17 +299,12 @@ const generateSourceDescription = source => {
 };
 
 const generateSourceLinks = () => {
-  const links = Object.keys(sources)
-    .sort()
-    .filter(source => sources[source].homepage)
-    .map(
-      source =>
-        `<a href="${sources[source].homepage}">${sources[source].name}</a>`
-    );
-  return [
-    ...links,
-    ...(links.length === Object.keys(sources).length ? [] : ['etc']),
-  ].join(', ');
+  const links = sources
+    .filter(source => source.homepage)
+    .map(source => `<a href="${source.homepage}">${source.name}</a>`);
+  return [...links, ...(links.length === sources.length ? [] : ['etc'])].join(
+    ', '
+  );
 };
 
 const generateViewer = () =>
@@ -348,15 +341,14 @@ const replaceTokens = (string, replacements) =>
     string
   );
 
-const sourceData = source => assert(sources[source], `Unknow source ${source}`);
-
 const sourceLogo = source => {
   const filename = fs
     .readdirSync('assets/sources')
     .find(filename => filename.startsWith(`${source}.`));
   return filename
     ? `<img alt="${
-        sourceData(filename.replace(/\..+?$/, '')).name
+        sources.find(source => source.id === filename.replace(/\..+?$/, ''))
+          .name
       }" src="assets/sources/${filename}"/>`
     : null;
 };
