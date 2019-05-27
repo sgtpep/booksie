@@ -181,9 +181,9 @@ const onHashChange = (event = { newURL: location.href }) => {
 };
 
 const onKeyDown = event =>
-  event.key === 'ArrowLeft'
+  event.key === 'ArrowLeft' || (event.key === ' ' && event.shiftKey)
     ? displayPreviousPage()
-    : event.key === 'ArrowRight'
+    : event.key === 'ArrowRight' || (event.key === ' ' && !event.shiftKey)
     ? displayNextPageOrClose()
     : event.key === 'Escape'
     ? closeViewer()
