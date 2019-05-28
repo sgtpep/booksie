@@ -4,15 +4,15 @@ footer {
   padding: 2em 1em;
 }
 
+footer > * {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 960px;
+}
+
 footer a {
   color: #fa9dc8;
 }
 footer a:not(:hover) {
   text-decoration: none;
-}
-
-footer > div {
-  margin-left: auto;
-  margin-right: auto;
-  max-width: 960px;
 }

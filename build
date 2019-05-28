@@ -210,14 +210,16 @@ const generateDevelopmentStyle = () =>
     })
     .join('\n');
 
-const generateFooter = () =>
-  readInclude('footer', {
+const generateFooter = () => {
+  const firstYear = 2019;
+  const year = new Date().getFullYear();
+  return readInclude('footer', {
     script: process.env.CI
       ? generateProductionScript()
       : generateDevelopmentScript(),
-    sources: generateSourceLinks(),
-    year: new Date().getFullYear(),
+    years: year === firstYear ? year : `${firstYear}—${year}`,
   }).trim();
+};
 
 const generateHead = () =>
   readInclude('head', {
