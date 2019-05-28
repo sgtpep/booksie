@@ -292,20 +292,19 @@ const generateSourceBooks = () =>
     .join('\n');
 
 const generateSourceDescription = source => {
-  const { description } = sources.find(sourceItem => sourceItem.id === source);
+  const { description, homepage } = sources.find(
+    sourceItem => sourceItem.id === source
+  );
   const logo = sourceLogo(source);
   return (
     (description || logo) &&
-    readInclude('source-description', { description, logo })
-  );
-};
-
-const generateSourceLinks = () => {
-  const links = sources
-    .filter(source => source.homepage)
-    .map(source => `<a href="${source.homepage}">${source.name}</a>`);
-  return [...links, ...(links.length === sources.length ? [] : ['etc'])].join(
-    ', '
+    readInclude('source-description', {
+      description,
+      homepage: (Array.isArray(homepage) ? homepage : [homepage])
+        .map(homepage => `<a href="${homepage}">${homepage}</a>`)
+        .join(', '),
+      logo,
+    })
   );
 };
 
