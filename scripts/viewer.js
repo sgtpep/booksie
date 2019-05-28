@@ -72,6 +72,20 @@ const eventClientX = event =>
   (event.changedTouches ? event.changedTouches[0] : event).clientX;
 
 const hidePages = () => {
+  const remove = element =>
+    element.parentElement && element.parentElement.removeChild(element);
+  [...queryElement('#viewer-pages').children].forEach(image => {
+    image.classList.add('fading');
+    listenTransitionEnd(image, () => remove(image));
+  });
+};
+
+const listenHashChange = () => {
+  addEventListener('hashchange', onHashChange);
+  onHashChange();
+};
+
+const listenTransitionEnd = (element, onTransitionEnd) => {
   transitionEndName ||
     (transitionEndName = (Object.entries({
       transition: 'transitionend',
@@ -79,21 +93,9 @@ const hidePages = () => {
       WebkitTransition: 'webkitTransitionEnd',
       OTransition: 'otransitionend',
     }).find(([property, type]) => property in document.body.style) || [])[1]);
-  const remove = element =>
-    element.parentElement && element.parentElement.removeChild(element);
-  [...queryElement('#viewer-pages').children].forEach(image => {
-    if (transitionEndName) {
-      image.classList.add('fading');
-      image.addEventListener(transitionEndName, () => remove(image));
-    } else {
-      remove(image);
-    }
-  });
-};
-
-const listenHashChange = () => {
-  addEventListener('hashchange', onHashChange);
-  onHashChange();
+  transitionEndName
+    ? element.addEventListener(transitionEndName, onTransitionEnd)
+    : onTransitionEnd();
 };
 
 const listenViewerClick = () =>
