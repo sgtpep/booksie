@@ -185,8 +185,7 @@ const onHashChange = (event = { newURL: location.href }) => {
     (hash ? openViewer(`https://data.booksie.org/${hash}.pdf`) : closeViewer());
 };
 
-const onKeyDown = event => {
-  event.preventDefault();
+const onKeyDown = event =>
   event.key === 'ArrowLeft' || (event.key === ' ' && event.shiftKey)
     ? displayPreviousPage()
     : event.key === 'ArrowRight' || (event.key === ' ' && !event.shiftKey)
@@ -194,7 +193,6 @@ const onKeyDown = event => {
     : event.key === 'Escape'
     ? closeViewer()
     : undefined;
-};
 
 const onResize = () => {
   resetQueue();
