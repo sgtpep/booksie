@@ -7,13 +7,13 @@
   },
   {
     "description": "Bookbot has a mission to address the worldwide issue of shockingly low literacy levels.",
-    "homepage": "https://www.bookbotkids.com/",
+    "homepage": "https://www.bookbotkits.com/phonics-books",
     "id": "bookbot",
     "name": "Bookbot"
   },
   {
     "description": "iCharacter creates books, music and videos for children that focus on character building topics.",
-    "homepage": "https://www.icharacter.org/",
+    "homepage": ["https://www.icharacter.org/", "https://www.kidible.eu/"],
     "id": "icharacter",
     "name": "iCharacter"
   },
