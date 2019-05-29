@@ -1,0 +1,3 @@
+#!/bin/sh
+set -eu
+rm -fr cache/fetchURL:*a dist/covers
