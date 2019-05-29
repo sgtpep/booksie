@@ -351,7 +351,10 @@ const updatePageView = page => {
   if (!page._viewUpdated) {
     const name = sourceName();
     if (['pratham-books', 'room-to-read', 'storyweaver'].includes(name)) {
-      offsetView(page.view, 9, 10, 13, 35);
+      const { height, width } = page.getViewport(1);
+      height < width
+        ? offsetView(page.view, 9, 9, 13, 34)
+        : offsetView(page.view, 9, 9, 19, 34);
     } else if (name === 'storybooks-canada') {
       page.pageNumber === 1
         ? offsetView(page.view, 35, 60, 194, 17)
