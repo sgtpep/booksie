@@ -242,8 +242,25 @@ const generateHead = () =>
 const generateHeader = () =>
   readInclude('header', { number: fetchBooks().length });
 
+const generateHomepage = homepage =>
+  (Array.isArray(homepage) ? homepage : [homepage])
+    .map(homepage => `<a href="${homepage}">${homepage}</a>`)
+    .join(', ');
+
 const generateIndex = () =>
   generateHead() + generateHeader() + generateMain() + generateFooter();
+
+const generateLicense = license =>
+  license &&
+  `License: <a href="${assert(
+    license === 'cc-by-4.0'
+      ? 'https://creativecommons.org/licenses/by/4.0/'
+      : undefined,
+    `Unknown license ${license}`
+  )}">${assert(
+    license === 'cc-by-4.0' ? 'CC BY 4.0' : undefined,
+    `Unknown license ${license}`
+  )}</a>`;
 
 const generateMain = () =>
   readInclude('main', {
@@ -291,21 +308,14 @@ const generateSourceBooks = () =>
     )
     .join('\n');
 
-const generateSourceDescription = source => {
-  const { description, homepage } = sources.find(
-    sourceItem => sourceItem.id === source
-  );
-  const logo = sourceLogo(source);
-  return (
-    (description || logo) &&
-    readInclude('source-description', {
-      description,
-      homepage: (Array.isArray(homepage) ? homepage : [homepage])
-        .map(homepage => `<a href="${homepage}">${homepage}</a>`)
-        .join(', '),
-      logo,
-    })
-  );
+const generateSourceDescription = id => {
+  const source = sources.find(sourceItem => sourceItem.id === id);
+  return readInclude('source-description', {
+    description: source.description,
+    homepage: generateHomepage(source.homepage),
+    license: generateLicense(source.license),
+    logo: sourceLogo(id),
+  });
 };
 
 const generateViewer = () =>

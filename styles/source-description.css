@@ -52,3 +52,15 @@
 .source-description a {
   color: #1f69c0;
 }
+
+.source-description-license:empty {
+  display: none;
+}
+@media (min-width: 768px) {
+  .source-description-license {
+    float: right;
+  }
+  .source-description > .source-description-license {
+    margin-top: 0;
+  }
+}
