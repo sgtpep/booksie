@@ -12,6 +12,7 @@ footer > * {
 
 footer a {
   color: #fa9dc8;
+  font-weight: bold;
 }
 footer a:not(:hover) {
   text-decoration: none;
