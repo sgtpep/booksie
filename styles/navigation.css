@@ -10,8 +10,4 @@
 
 .navigation > a {
   color: #1f69c0;
-  font-weight: bold;
-}
-.navigation > a:not(:hover) {
-  text-decoration: none;
 }

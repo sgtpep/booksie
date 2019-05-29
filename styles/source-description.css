@@ -51,8 +51,4 @@
 
 .source-description a {
   color: #1f69c0;
-  font-weight: bold;
-}
-.source-description a:not(:hover) {
-  text-decoration: none;
 }

@@ -1,0 +1,6 @@
+a {
+  font-weight: bold;
+}
+a:not(:hover) {
+  text-decoration: none;
+}
