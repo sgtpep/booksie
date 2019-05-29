@@ -1,6 +1,6 @@
 export default () =>
   addEventListener(
-    'click',
+    'touchend',
     event =>
       !event.target.hostname ||
       event.target.hostname === location.hostname ||
