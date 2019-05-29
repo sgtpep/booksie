@@ -2,13 +2,13 @@
   --horizontal-padding: 1em;
   margin-left: auto;
   margin-right: auto;
-  max-width: 40em;
+  max-width: 768px;
   padding-left: var(--horizontal-padding);
   padding-right: var(--horizontal-padding);
 }
 @media (min-width: 480px) {
   .source-description {
-    --logo-width: 150px;
+    --logo-width: 120px;
     position: relative;
   }
 }
@@ -30,9 +30,9 @@
 .source-description > img,
 .source-description > noscript > img {
   display: block;
+  height: 50px;
   margin-left: auto;
   margin-right: auto;
-  max-height: 60px;
   max-width: 100%;
 }
 @media (min-width: 480px) {
@@ -41,7 +41,7 @@
     -webkit-transform: translate(-50%, -50%);
     height: auto;
     left: calc(var(--logo-width) / 2 + var(--horizontal-padding));
-    max-height: calc(var(--logo-width) / 2.5);
+    max-height: calc(var(--logo-width) / 2);
     max-width: var(--logo-width);
     position: absolute;
     top: 50%;
