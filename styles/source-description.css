@@ -47,10 +47,6 @@
   }
 }
 
-.source-description a {
-  color: #1f69c0;
-}
-
 .source-description-license:empty {
   display: none;
 }
