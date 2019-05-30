@@ -66,10 +66,28 @@ const displayPage = number => {
 
 const displayPreviousPage = () => displayPage(currentNumber - 1);
 
+const documentURL = (source, slug) =>
+  `https://data.booksie.org/${source}/${slug}.pdf`;
+
 const elements = {};
 
 const eventClientX = event =>
   (event.changedTouches ? event.changedTouches[0] : event).clientX;
+
+const generateBookTitle = (source, slug) => {
+  const book = document.querySelector(
+    `.book[href="${documentURL(
+      source,
+      slug
+    )}"], .book[href="#${source}/${slug}"]`
+  );
+  return (
+    book &&
+    `${book.querySelector('strong').textContent} (by ${
+      book.querySelector('small').textContent
+    })`
+  );
+};
 
 const hidePages = () => {
   const remove = element =>
@@ -123,7 +141,7 @@ const listenViewerDragEvents = () => {
   viewer.addEventListener('touchstart', onDragStart);
 };
 
-const loadDocument = url => {
+const loadDocument = (source, slug) => {
   toggleLoading(true);
   updateError('');
   setTimeout(() =>
@@ -132,7 +150,7 @@ const loadDocument = url => {
       window['pdfjs-dist/build/pdf'].GlobalWorkerOptions.workerSrc =
         'pdfjs/pdf.worker.min.js';
       (loadingTask = window['pdfjs-dist/build/pdf'].getDocument(
-        url
+        documentURL(source, slug)
       )).promise.then(
         loadedPDF => {
           pdf = loadedPDF;
@@ -181,8 +199,7 @@ const onDragStop = event => {
 
 const onHashChange = (event = { newURL: location.href }) => {
   const hash = event.newURL.replace(/^.+?(#|$)/, '');
-  hash.includes('/') &&
-    (hash ? openViewer(`https://data.booksie.org/${hash}.pdf`) : closeViewer());
+  hash.includes('/') && (hash ? openViewer(...hash.split('/')) : closeViewer());
 };
 
 const onKeyDown = event =>
@@ -200,10 +217,10 @@ const onResize = () => {
   displayPage(currentNumber);
 };
 
-const openViewer = url => {
-  loadDocument(url);
+const openViewer = (source, slug) => {
+  loadDocument(source, slug);
   toggleViewer(true);
-  updateTitle(url);
+  updateTitle(source, slug);
 };
 
 const queryElement = selector =>
@@ -366,17 +383,9 @@ const updatePageView = page => {
   }
 };
 
-const updateTitle = url => {
-  const book = document.querySelector(
-    `.book[href="${url}"], .book[href="#${new URL(url).pathname.replace(
-      /^\/(.+)\.\w+$/,
-      '$1'
-    )}"]`
-  );
-  book &&
-    (document.title = `${book.querySelector('strong').textContent} (by ${
-      book.querySelector('small').textContent
-    })`);
+const updateTitle = (source, slug) => {
+  const title = generateBookTitle(source, slug);
+  title && (document.title = title);
 };
 
 export default () => {
