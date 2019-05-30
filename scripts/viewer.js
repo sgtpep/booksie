@@ -224,9 +224,20 @@ const onKeyDown = event =>
     : undefined;
 
 const onResize = () => {
-  resetQueue();
-  resetRendering();
-  displayPage(currentNumber);
+  const image = queryElement('#viewer-pages').firstElementChild;
+  const viewer = queryElement('#viewer');
+  if (
+    !image ||
+    (image.height === viewer.clientHeight &&
+      image.width > viewer.clientWidth) ||
+    (image.width === viewer.clientWidth &&
+      image.height > viewer.clientHeight) ||
+    (image.height < viewer.clientHeight && image.width < viewer.clientWidth)
+  ) {
+    resetQueue();
+    resetRendering();
+    displayPage(currentNumber);
+  }
 };
 
 const openViewer = (source, slug) => {
