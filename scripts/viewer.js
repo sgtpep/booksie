@@ -160,6 +160,7 @@ const loadDocument = (source, slug) => {
           pdf = loadedPDF;
           displayPage(1);
           resetQueue();
+          updateProgress(size, size);
         },
         error => {
           toggleLoading(false);
