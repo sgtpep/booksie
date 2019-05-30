@@ -17,8 +17,6 @@
   --vertical-margin: 0.25em;
   margin-bottom: var(--vertical-margin);
   margin-top: var(--vertical-margin);
-  overflow-wrap: break-word;
-  word-wrap: break-word;
 }
 @media (min-width: 480px) {
   .source-description > :not(img):not(noscript) {
