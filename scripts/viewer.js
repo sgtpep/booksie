@@ -133,6 +133,18 @@ const listenViewerClick = () =>
       : undefined
   );
 
+const listenViewerDoubleClick = () => {
+  const viewer = queryElement('#viewer');
+  viewer.addEventListener(
+    'dblclick',
+    event =>
+      event.target.classList.contains('viewer-edge') ||
+      (document.fullscreenElement === viewer
+        ? document.exitFullscreen()
+        : viewer.requestFullscreen())
+  );
+};
+
 const listenViewerDragEvents = () => {
   const viewer = queryElement('#viewer');
   viewer.addEventListener('mousedown', onDragStart);
@@ -395,5 +407,6 @@ const updateTitle = (source, slug) => {
 export default () => {
   listenHashChange();
   listenViewerClick();
+  listenViewerDoubleClick();
   listenViewerDragEvents();
 };
