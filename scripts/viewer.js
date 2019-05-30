@@ -142,7 +142,7 @@ const listenViewerDragEvents = () => {
 };
 
 const loadDocument = (source, slug) => {
-  toggleLoading(true);
+  toggleLoading(true, generateBookTitle(source, slug));
   updateError('');
   setTimeout(() =>
     loadPDFJS(() => {
@@ -318,8 +318,12 @@ const toggleGlobalListners = adding =>
     ],
   ].map(args => (adding ? addEventListener : removeEventListener)(...args));
 
-const toggleLoading = visible =>
-  (queryElement('#viewer-loading').hidden = !visible);
+const toggleLoading = (visible, title = undefined) => {
+  const loading = queryElement('#viewer-loading');
+  loading.hidden = !visible;
+  (visible && title === undefined) ||
+    (loading.lastElementChild.textContent = title || '');
+};
 
 const toggleNavigation = visible =>
   ['#viewer-edges', '#viewer-navigation'].forEach(selector => {

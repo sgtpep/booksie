@@ -93,6 +93,10 @@ a.viewer-action {
   display: none;
 }
 
+#viewer-loading > span:not(:empty) {
+  margin-left: 0.2em;
+}
+
 #viewer-loading > svg {
   --size: 1.375em;
   height: var(--size);
