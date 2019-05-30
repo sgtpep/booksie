@@ -230,7 +230,7 @@ const onResize = () => {
       image.width > viewer.clientWidth) ||
     (image.width === viewer.clientWidth &&
       image.height > viewer.clientHeight) ||
-    (image.height < viewer.clientHeight && image.width < viewer.clientWidth)
+    (image.height !== viewer.clientHeight && image.width !== viewer.clientWidth)
   ) {
     resetQueue();
     resetRendering();
