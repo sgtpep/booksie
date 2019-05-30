@@ -222,15 +222,14 @@ const onKeyDown = event =>
     : undefined;
 
 const onResize = () => {
-  const image = queryElement('#viewer-pages').firstElementChild;
+  const image = queryElement('#viewer-pages').firstElementChild || {};
+  const height = image.naturalHeight / devicePixelRatio;
+  const width = image.naturalWidth / devicePixelRatio;
   const viewer = queryElement('#viewer');
   if (
-    !image ||
-    (image.height === viewer.clientHeight &&
-      image.width > viewer.clientWidth) ||
-    (image.width === viewer.clientWidth &&
-      image.height > viewer.clientHeight) ||
-    (image.height !== viewer.clientHeight && image.width !== viewer.clientWidth)
+    (height === viewer.clientHeight && width > viewer.clientWidth) ||
+    (width === viewer.clientWidth && height > viewer.clientHeight) ||
+    (height !== viewer.clientHeight && width !== viewer.clientWidth)
   ) {
     resetQueue();
     resetRendering();
