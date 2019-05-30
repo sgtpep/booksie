@@ -167,8 +167,10 @@ const loadDocument = (source, slug) => {
         }
       );
       const size = queryBook(source, slug).dataset.size;
-      loadingTask.onProgress = progress =>
-        updateProgress(progress.loaded, size);
+      loadingTask.onProgress = throttle(
+        progress => updateProgress(progress.loaded, size),
+        150
+      );
     })
   );
 };
@@ -362,6 +364,17 @@ const toggleViewer = visible => {
   queryElement('#viewer').hidden = !visible;
   toggleGlobalListners(visible);
   toggleNavigation(!visible);
+};
+
+const throttle = (func, delay) => {
+  let previousTime = 0;
+  return (...args) => {
+    const time = new Date().getTime();
+    if (time - previousTime > delay) {
+      previousTime = time;
+      return func(...args);
+    }
+  };
 };
 
 const unloadDocument = () => {
