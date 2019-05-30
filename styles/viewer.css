@@ -20,6 +20,9 @@ html.viewing > body {
 .viewer-action:not(.disabled) {
   cursor: pointer;
 }
+a.viewer-action {
+  color: var(--color);
+}
 
 .viewer-osd {
   --border-radius: 0.375em;
