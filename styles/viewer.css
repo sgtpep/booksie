@@ -111,10 +111,6 @@ a.viewer-action {
   display: none;
 }
 
-#viewer-loading > span:not(:empty) {
-  margin-left: 0.2em;
-}
-
 #viewer-loading > svg {
   --size: 1.375em;
   height: var(--size);
@@ -150,4 +146,10 @@ a.viewer-action {
 }
 #viewer-pages > .fading {
   opacity: 0;
+}
+
+#viewer-title {
+  bottom: auto;
+  font-size: inherit;
+  top: 0.5em;
 }

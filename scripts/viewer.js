@@ -330,11 +330,9 @@ const toggleGlobalListners = adding =>
     ],
   ].map(args => (adding ? addEventListener : removeEventListener)(...args));
 
-const toggleLoading = (visible, title = undefined) => {
-  const loading = queryElement('#viewer-loading');
-  loading.hidden = !visible;
-  (visible && title === undefined) ||
-    (loading.lastElementChild.textContent = title || '');
+const toggleLoading = (visible, title = '') => {
+  queryElement('#viewer-loading').hidden = !visible;
+  (visible && !title) || (queryElement('#viewer-title').textContent = title);
 };
 
 const toggleNavigation = visible =>
