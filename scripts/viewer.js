@@ -34,14 +34,11 @@ const createImage = (url, onLoad) => {
   image.src = url;
 };
 
-const debounce = (func, delay, immediate = false) => {
+const debounce = (func, delay) => {
   let timeout;
-  return function() {
-    const debounced = immediate && !timeout;
-    const call = () => func.apply(this, arguments);
+  return (...args) => {
     clearTimeout(timeout);
-    timeout = setTimeout(call, delay);
-    debounced && call();
+    timeout = setTimeout(() => func(...args), delay);
   };
 };
 
