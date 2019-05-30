@@ -18,3 +18,20 @@
 .source-books > h2.sticky {
   box-shadow: 0 -0.25em white, 0 0.0625em 0.25em rgba(0, 0, 0, 0.25);
 }
+
+.source-books > h2 > a {
+  display: none;
+}
+@media (min-width: 480px) {
+  .source-books > h2 > a {
+    display: block;
+    position: absolute;
+    right: 0.25em;
+    text-align: center;
+    text-decoration: none;
+    width: 1.5em;
+  }
+}
+.source-books > h2:not(.sticky) > a {
+  display: none;
+}
