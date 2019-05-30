@@ -75,12 +75,7 @@ const eventClientX = event =>
   (event.changedTouches ? event.changedTouches[0] : event).clientX;
 
 const generateBookTitle = (source, slug) => {
-  const book = document.querySelector(
-    `.book[href="${documentURL(
-      source,
-      slug
-    )}"], .book[href="#${source}/${slug}"]`
-  );
+  const book = queryBook(source, slug);
   return (
     book &&
     `${book.querySelector('strong').textContent} (by ${
@@ -174,6 +169,9 @@ const loadDocument = (source, slug) => {
           updateError(`Loading error: ${error.message.replace(/\.$/, '')}.`);
         }
       );
+      const size = queryBook(source, slug).dataset.size;
+      loadingTask.onProgress = progress =>
+        updateProgress(progress.loaded, size);
     })
   );
 };
@@ -245,6 +243,14 @@ const openViewer = (source, slug) => {
   toggleViewer(true);
   updateTitle(source, slug);
 };
+
+const queryBook = (source, slug) =>
+  document.querySelector(
+    `.book[href="${documentURL(
+      source,
+      slug
+    )}"], .book[href="#${source}/${slug}"]`
+  );
 
 const queryElement = selector =>
   elements[selector] || (elements[selector] = document.querySelector(selector));
@@ -343,6 +349,7 @@ const toggleGlobalListners = adding =>
 
 const toggleLoading = (visible, title = '') => {
   queryElement('#viewer-loading').hidden = !visible;
+  visible || updateProgress();
   (visible && !title) || (queryElement('#viewer-title').textContent = title);
 };
 
@@ -407,6 +414,12 @@ const updatePageView = page => {
     page._viewUpdated = true;
   }
 };
+
+const updateProgress = (loaded = undefined, total = undefined) =>
+  (queryElement('#viewer-progress').firstElementChild.textContent =
+    loaded === undefined && total === undefined
+      ? ''
+      : `${Math.min(Math.round((loaded / total) * 100), 100)}%`);
 
 const updateTitle = (source, slug) => {
   const title = generateBookTitle(source, slug);

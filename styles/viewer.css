@@ -146,6 +146,21 @@ a.viewer-action {
   opacity: 0;
 }
 
+#viewer-progress {
+  margin-left: 0.25em;
+  position: relative;
+}
+
+#viewer-progress::before {
+  content: '';
+  display: inline-block;
+}
+
+#viewer-progress > span {
+  left: 0;
+  position: absolute;
+}
+
 #viewer-title {
   bottom: auto;
   font-size: inherit;
