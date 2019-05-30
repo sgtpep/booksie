@@ -1,3 +1,9 @@
+#contact {
+  cursor: pointer;
+}
+#contact:hover {
+  text-decoration: underline;
+}
 html.scriptless #contact {
   display: none;
 }
