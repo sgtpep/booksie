@@ -118,16 +118,16 @@ const listenTransitionEnd = (element, onTransitionEnd) => {
 
 const listenViewerClick = () =>
   queryElement('#viewer').addEventListener('click', event =>
-    event.target === queryElement('#viewer-close')
+    event.target === queryElement('#viewer-action-close')
       ? closeViewer()
       : [
-          queryElement('#viewer-next'),
-          queryElement('#viewer-next-edge'),
+          queryElement('#viewer-action-next'),
+          queryElement('#viewer-edge-next'),
         ].includes(event.target)
       ? displayNextPage()
       : [
-          queryElement('#viewer-previous'),
-          queryElement('#viewer-previous-edge'),
+          queryElement('#viewer-action-previous'),
+          queryElement('#viewer-edge-previous'),
         ].includes(event.target)
       ? displayPreviousPage()
       : undefined
@@ -348,13 +348,13 @@ const unloadDocument = () => {
 const updateError = text => (queryElement('#viewer-error').textContent = text);
 
 const updateNavigation = number => {
-  ['#viewer-next', '#viewer-next-edge'].forEach(selector =>
+  ['#viewer-action-next', '#viewer-edge-next'].forEach(selector =>
     queryElement(selector).classList.toggle(
       'disabled',
       pdf && number === pdf.numPages
     )
   );
-  ['#viewer-previous', '#viewer-previous-edge'].forEach(selector =>
+  ['#viewer-action-previous', '#viewer-edge-previous'].forEach(selector =>
     queryElement(selector).classList.toggle('disabled', number === 1)
   );
   queryElement('#viewer-number').textContent = number;
