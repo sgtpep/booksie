@@ -1,0 +1,10 @@
+html.scriptless #random-book {
+  display: none;
+}
+
+#random-book > a {
+  cursor: pointer;
+}
+#random-book > a:hover {
+  text-decoration: underline;
+}
