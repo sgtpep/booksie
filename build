@@ -134,14 +134,16 @@ const downloadCovers = () => {
   return books.map(book => book.cover);
 };
 
-const fetchBooks = () =>
-  JSON.parse(
+const fetchBooks = () => {
+  const ids = sources.map(source => source.id);
+  return JSON.parse(
     (process.env.CI ? memoize : cache)(fetchURL)(
       'https://data.booksie.org/books.json'
     )
   )
     .sort((a, b) => -a.added.localeCompare(b.added))
-    .sort((a, b) => a.source.localeCompare(b.source));
+    .sort((a, b) => ids.indexOf(a.source) - ids.indexOf(b.source));
+};
 
 const generateBook = book =>
   readInclude('book', {
