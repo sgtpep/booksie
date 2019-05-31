@@ -110,6 +110,12 @@ a.viewer-action {
   cursor: w-resize;
 }
 
+#viewer-heading {
+  bottom: auto;
+  font-size: inherit;
+  top: 0.375em;
+}
+
 #viewer-loading > svg {
   --size: 1.375em;
   height: var(--size);
@@ -160,10 +166,4 @@ a.viewer-action {
 #viewer-progress > span {
   left: 0;
   position: absolute;
-}
-
-#viewer-title {
-  bottom: auto;
-  font-size: inherit;
-  top: 0.375em;
 }

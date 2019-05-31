@@ -358,7 +358,11 @@ const toggleGlobalListners = adding =>
 const toggleLoading = (visible, title = '') => {
   queryElement('#viewer-loading').hidden = !visible;
   visible || updateProgress();
-  (visible && !title) || (queryElement('#viewer-title').textContent = title);
+  if (title || !visible) {
+    const heading = queryElement('#viewer-heading');
+    heading.hidden = !title;
+    heading.textContent = title;
+  }
 };
 
 const toggleNavigation = visible =>
