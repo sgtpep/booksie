@@ -130,7 +130,7 @@ const listenViewerDoubleClick = () => {
   viewer.addEventListener(
     'dblclick',
     event =>
-      event.target.classList.contains('viewer-edge') ||
+      (event.target === viewer || event.target.tagName === 'IMG') &&
       (document.fullscreenElement === viewer
         ? document.exitFullscreen()
         : viewer.requestFullscreen())
@@ -146,8 +146,8 @@ const listenViewerDragEvents = () => {
 };
 
 const loadDocument = (source, slug) => {
+  toggleError(false);
   toggleLoading(true, generateBookTitle(source, slug));
-  updateError('');
   setTimeout(() =>
     loadPDFJS(() => {
       unloadDocument();
@@ -163,8 +163,11 @@ const loadDocument = (source, slug) => {
           updateProgress(size, size);
         },
         error => {
+          toggleError(
+            true,
+            `Loading error: ${error.message.replace(/\.$/, '')}.`
+          );
           toggleLoading(false);
-          updateError(`Loading error: ${error.message.replace(/\.$/, '')}.`);
         }
       );
       const size = queryBook(source, slug).dataset.size;
@@ -337,6 +340,12 @@ const sourceName = () => location.hash.replace(/^#/, '').split('/')[0];
 
 const title = (typeof document === 'undefined' ? {} : document).title;
 
+const toggleError = (visible, text = '') => {
+  const error = queryElement('#viewer-error');
+  error.hidden = !visible;
+  error.textContent = text;
+};
+
 const toggleGlobalListners = adding =>
   [
     ['keydown', onKeyDown],
@@ -382,8 +391,6 @@ const unloadDocument = () => {
   pdf = undefined;
   resetRendering();
 };
-
-const updateError = text => (queryElement('#viewer-error').textContent = text);
 
 const updateNavigation = number => {
   ['#viewer-action-next', '#viewer-edge-next'].forEach(selector =>

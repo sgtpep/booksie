@@ -48,6 +48,9 @@ a.viewer-action {
   right: 0;
   top: 0;
 }
+.viewer-message[hidden] {
+  display: none;
+}
 
 .viewer-osd {
   --border-radius: 0.375em;
@@ -105,10 +108,6 @@ a.viewer-action {
 }
 #viewer-edge-previous:not(.disabled) {
   cursor: w-resize;
-}
-
-#viewer-loading[hidden] {
-  display: none;
 }
 
 #viewer-loading > svg {
