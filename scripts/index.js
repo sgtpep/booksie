@@ -10,6 +10,6 @@ contact();
 coverLazyLoading();
 externalLinks();
 lazyLoading();
-randomization();
+randomization(() => coverLazyLoading());
 stickyElements();
 viewer();

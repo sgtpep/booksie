@@ -3,6 +3,17 @@ const addCoverClass = cover =>
 
 const coverPreloaded = {};
 
+const observer = new IntersectionObserver(
+  entries =>
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        observer.unobserve(entry.target);
+        loadCover(entry.target);
+      }
+    }),
+  { rootMargin: '500% 0%' }
+);
+
 const loadCover = cover => {
   if (!coverPreloaded[cover.dataset.cover]) {
     coverPreloaded[cover.dataset.cover] = true;
@@ -21,18 +32,9 @@ const loadCover = cover => {
 };
 
 export default () => {
+  observer.disconnect();
   const covers = [...document.querySelectorAll('.cover')];
   if (window.IntersectionObserver) {
-    const observer = new IntersectionObserver(
-      entries =>
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            observer.unobserve(entry.target);
-            loadCover(entry.target);
-          }
-        }),
-      { rootMargin: '500% 0%' }
-    );
     covers.forEach(cover => observer.observe(cover));
   } else {
     covers.forEach(cover => addCoverClass(cover));
