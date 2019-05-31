@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "booksie-data": "github:sgtpep/booksie#master",
+    "booksie-data": "github:sgtpep/booksie-data#master",
     "pdfjs-dist": "^2.0.943",
     "rollup": "^1.11.3"
   }
