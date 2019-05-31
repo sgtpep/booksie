@@ -1,0 +1,10 @@
+html.scriptless #randomization {
+  display: none;
+}
+
+#randomization > a {
+  cursor: pointer;
+}
+#randomization > a:hover {
+  text-decoration: underline;
+}
