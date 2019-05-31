@@ -199,10 +199,7 @@ const offsetView = (view, top, right, bottom, left) => {
   view[3] -= top;
 };
 
-const onDragStart = event => {
-  event.preventDefault();
-  clientX = eventClientX(event);
-};
+const onDragStart = event => (clientX = eventClientX(event));
 
 const onDragStop = event => {
   const difference = eventClientX(event) - clientX;
