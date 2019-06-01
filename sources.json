@@ -50,7 +50,10 @@
   },
   {
     "description": "Storybooks Canada is a free open educational resource that promotes literacy and language learning in homes, schools, and communities.",
-    "homepage": "https://www.storybookscanada.ca/",
+    "homepage": [
+      "https://www.storybookscanada.ca/",
+      "https://africanstorybook.org/"
+    ],
     "id": "storybooks-canada",
     "license": "cc-by-4.0",
     "name": "Storybooks Canada"
