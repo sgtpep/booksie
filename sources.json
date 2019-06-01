@@ -57,5 +57,12 @@
     "id": "storybooks-canada",
     "license": "cc-by-4.0",
     "name": "Storybooks Canada"
+  },
+  {
+    "description": "Let’s Read is an initiative of The Asia Foundation’s Books for Asia program that fosters young readers in Asia.",
+    "homepage": "https://reader.letsreadasia.org/",
+    "id": "lets-read",
+    "license": "cc-by-4.0",
+    "name": "Let's Read"
   }
 ]
