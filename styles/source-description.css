@@ -8,6 +8,7 @@
 }
 @media (min-width: 480px) {
   .source-description {
+    --logo-height: 60px;
     --logo-width: 120px;
     position: relative;
   }
@@ -39,7 +40,7 @@
     -webkit-transform: translate(-50%, -50%);
     height: auto;
     left: calc(var(--logo-width) / 2 + var(--horizontal-padding));
-    max-height: calc(var(--logo-width) / 2);
+    max-height: var(--logo-height);
     max-width: var(--logo-width);
     position: absolute;
     top: 50%;
