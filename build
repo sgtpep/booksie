@@ -254,15 +254,21 @@ const generateIndex = () =>
 
 const generateLicense = license =>
   license &&
-  `License: <a href="${assert(
-    license === 'cc-by-4.0'
-      ? 'https://creativecommons.org/licenses/by/4.0/'
-      : undefined,
-    `Unknown license ${license}`
-  )}">${assert(
-    license === 'cc-by-4.0' ? 'CC BY 4.0' : undefined,
-    `Unknown license ${license}`
-  )}</a>`;
+  `License${
+    Array.isArray(license) && license.length > 1 ? 's' : ''
+  }: ${(Array.isArray(license) ? license : [license])
+    .map(
+      license =>
+        `<a href="${assert(
+          license === 'CC BY 4.0'
+            ? 'https://creativecommons.org/licenses/by/4.0/'
+            : license === 'CC BY-NC 4.0'
+            ? 'https://creativecommons.org/licenses/by-nc/4.0/'
+            : undefined,
+          `Unknown license ${license}`
+        )}">${license}</a>`
+    )
+    .join(', ')}`;
 
 const generateMain = () =>
   readInclude('main', {

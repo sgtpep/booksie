@@ -3,7 +3,7 @@
     "description": "Book Dash gathers creative volunteers to create new African storybooks that anyone can freely print, translate and distribute.",
     "homepage": "https://bookdash.org/",
     "id": "book-dash",
-    "license": "cc-by-4.0",
+    "license": "CC BY 4.0",
     "name": "Book Dash"
   },
   {
@@ -31,21 +31,21 @@
     "description": "Room to Read is a non-profit organization for improving literacy and gender equality in education in the developing world.",
     "homepage": "https://www.roomtoread.org/",
     "id": "room-to-read",
-    "license": "cc-by-4.0",
+    "license": "CC BY 4.0",
     "name": "Room to Read"
   },
   {
     "description": "Designed to provide children with reading resources, StoryWeaver is a digital gateway to thousands of richly illustrated, open-licensed children's stories.",
     "homepage": "https://storyweaver.org.in/",
     "id": "storyweaver",
-    "license": "cc-by-4.0",
+    "license": "CC BY 4.0",
     "name": "StoryWeaver"
   },
   {
     "description": "Pratham Books is a nonprofit publisher introducing children to the joy of reading.",
     "homepage": "https://prathambooks.org/",
     "id": "pratham-books",
-    "license": "cc-by-4.0",
+    "license": "CC BY 4.0",
     "name": "Pratham Books"
   },
   {
@@ -55,14 +55,14 @@
       "https://africanstorybook.org/"
     ],
     "id": "storybooks-canada",
-    "license": "cc-by-4.0",
+    "license": "CC BY 4.0",
     "name": "Storybooks Canada"
   },
   {
     "description": "Let’s Read is an initiative of The Asia Foundation’s Books for Asia program that fosters young readers in Asia.",
     "homepage": "https://reader.letsreadasia.org/",
     "id": "lets-read",
-    "license": "cc-by-4.0",
+    "license": ["CC BY 4.0", "CC BY-NC 4.0"],
     "name": "Let's Read"
   }
 ]
