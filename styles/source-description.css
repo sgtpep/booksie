@@ -55,6 +55,7 @@
     float: right;
   }
   .source-description > .source-description-license {
+    margin-left: 0;
     margin-top: 0;
   }
 }
