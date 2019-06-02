@@ -14,6 +14,13 @@
     "name": "Bookbot"
   },
   {
+    "description": "cat and dog books are funny and easy to read. Learn only 200 words and start reading the books.",
+    "homepage": "http://cat-and-dog.org/",
+    "id": "cat-and-dog",
+    "license": null,
+    "name": "cat and dog"
+  },
+  {
     "description": "iCharacter creates books, music and videos for children that focus on character building topics.",
     "homepage": ["https://www.icharacter.org/", "https://www.kidible.eu/"],
     "id": "icharacter",
