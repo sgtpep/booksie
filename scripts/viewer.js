@@ -417,7 +417,11 @@ const updatePage = url =>
 const updatePageView = page => {
   if (!page._viewUpdated) {
     const name = sourceName();
-    if (['pratham-books', 'room-to-read', 'storyweaver'].includes(name)) {
+    if (name === 'lets-read') {
+      offsetView(page.view, 50, 50, 50, 50);
+    } else if (
+      ['pratham-books', 'room-to-read', 'storyweaver'].includes(name)
+    ) {
       const { height, width } = page.getViewport(1);
       height < width
         ? offsetView(page.view, 9, 10, 13, 34)
