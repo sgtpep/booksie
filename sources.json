@@ -71,5 +71,12 @@
     "id": "lets-read",
     "license": ["CC BY 4.0", "CC BY-NC 4.0"],
     "name": "Let's Read"
+  },
+  {
+    "description": "Creating high quality low-cost books for beginning readers.",
+    "homepage": "http://mustardseedbooks.org/",
+    "id": "mustard-seed-books",
+    "license": "CC BY-NC-SA 3.0",
+    "name": "Mustard Seed Books"
   }
 ]

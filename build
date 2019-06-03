@@ -335,7 +335,9 @@ const generateViewer = () =>
 
 const licenseURL = license =>
   assert(
-    license === 'CC BY 4.0'
+    license === 'CC BY-NC-SA 3.0'
+      ? 'https://creativecommons.org/licenses/by-nc-sa/3.0/'
+      : license === 'CC BY 4.0'
       ? 'https://creativecommons.org/licenses/by/4.0/'
       : license === 'CC BY-NC 4.0'
       ? 'https://creativecommons.org/licenses/by-nc/4.0/'
