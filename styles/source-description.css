@@ -8,6 +8,7 @@
 }
 @media (min-width: 480px) {
   .source-description {
+    --horizontal-padding: 1.5em;
     --logo-height: 60px;
     --logo-width: 120px;
     position: relative;
