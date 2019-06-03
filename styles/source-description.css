@@ -15,13 +15,15 @@
   }
 }
 
-.source-description > :not(img):not(noscript) {
+.source-description > * {
   --vertical-margin: 0.25em;
   margin-bottom: var(--vertical-margin);
   margin-top: var(--vertical-margin);
 }
+
 @media (min-width: 480px) {
-  .source-description > :not(img):not(noscript) {
+  .source-description > img ~ :not(.source-description-license),
+  .source-description > noscript ~ :not(.source-description-license) {
     margin-left: var(--logo-width);
     padding-left: 1em;
   }
@@ -57,7 +59,6 @@
     float: right;
   }
   .source-description > .source-description-license {
-    margin-left: 0;
     margin-top: 0;
   }
 }
