@@ -318,6 +318,7 @@ const generateSourceBooks = () =>
       books: generateNewBooks(),
       heading: 'New Arrivals',
       id: 'new',
+      sourceDescription: null,
     }),
     ...sources.map(source =>
       readInclude('source-books', {
