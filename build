@@ -258,17 +258,7 @@ const generateLicense = license =>
   `License${
     Array.isArray(license) && license.length > 1 ? 's' : ''
   }: ${(Array.isArray(license) ? license : [license])
-    .map(
-      license =>
-        `<a href="${assert(
-          license === 'CC BY 4.0'
-            ? 'https://creativecommons.org/licenses/by/4.0/'
-            : license === 'CC BY-NC 4.0'
-            ? 'https://creativecommons.org/licenses/by-nc/4.0/'
-            : undefined,
-          `Unknown license ${license}`
-        )}">${license}</a>`
-    )
+    .map(license => `<a href="${licenseURL(license)}">${license}</a>`)
     .join(', ')}`;
 
 const generateMain = () =>
@@ -342,6 +332,16 @@ const generateSourceDescription = id => {
 
 const generateViewer = () =>
   readInclude('viewer', { spinner: fs.readFileSync('images/spinner.svg') });
+
+const licenseURL = license =>
+  assert(
+    license === 'CC BY 4.0'
+      ? 'https://creativecommons.org/licenses/by/4.0/'
+      : license === 'CC BY-NC 4.0'
+      ? 'https://creativecommons.org/licenses/by-nc/4.0/'
+      : undefined,
+    `Unknown license ${license}`
+  );
 
 const main = () => {
   buildAllCovers();
