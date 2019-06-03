@@ -148,14 +148,11 @@ const fetchBooks = () => {
 const generateBook = book =>
   readInclude('book', {
     ...book,
-    newClass:
-      Date.now() - Date.parse(book.added) < 1000 * 60 * 60 * 24 * 10
-        ? ' new'
-        : '',
+    newClass: book.new ? ' new' : '',
     sourceName: sources.find(source => source.id === book.source).name,
   });
 
-const generateBooks = source => {
+const generateBookEntries = source => {
   const books = fetchBooks();
   let startIndex;
   return books
@@ -170,13 +167,17 @@ const generateBooks = source => {
       return {
         ...book,
         left: `${-(absoluteIndex % spriteWidth) * 100}%`,
+        new: Date.now() - Date.parse(book.added) < 1000 * 60 * 60 * 24 * 10,
         sprite: Math.floor(absoluteIndex / (spriteWidth * spriteHeight)),
         top: `${-Math.floor(absoluteIndex / spriteWidth) * 100}%`,
       };
-    })
+    });
+};
+
+const generateBooks = source =>
+  generateBookEntries(source)
     .map(book => generateBook(book).trim())
     .join('');
-};
 
 const generateCoversStyle = () =>
   Array.from(
@@ -284,6 +285,13 @@ const generateNavigation = () =>
       .join(', '),
   });
 
+const generateNewBooks = () =>
+  sources
+    .map(source => generateBookEntries(source.id).filter(entry => entry.new))
+    .flat()
+    .map(book => generateBook({ ...book, new: false }).trim())
+    .join('');
+
 const generateProductionScript = () => `<script defer>
 ${executeCommand([
   'rollup',
@@ -305,16 +313,21 @@ ${fs
 </style>`;
 
 const generateSourceBooks = () =>
-  sources
-    .map(source =>
+  [
+    readInclude('source-books', {
+      books: generateNewBooks(),
+      heading: 'New Arrivals',
+      id: 'new',
+    }),
+    ...sources.map(source =>
       readInclude('source-books', {
         books: generateBooks(source.id),
-        source: source.id,
+        heading: `Books by ${source.name}`,
+        id: source.id,
         sourceDescription: generateSourceDescription(source.id),
-        sourceName: source.name,
       })
-    )
-    .join('\n');
+    ),
+  ].join('\n');
 
 const generateSourceDescription = id => {
   const source = sources.find(sourceItem => sourceItem.id === id);
