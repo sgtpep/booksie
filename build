@@ -153,8 +153,8 @@ const generateBook = book =>
   });
 
 const generateBookEntries = source => {
-  const books = fetchBooks();
   let startIndex;
+  const books = fetchBooks();
   return books
     .filter(book => book.source === source)
     .map((book, index) => {

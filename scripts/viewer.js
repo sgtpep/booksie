@@ -11,8 +11,8 @@ let urls;
 
 const calculateViewport = page => {
   updatePageView(page);
-  const { height, width } = page.getViewport(1);
   const viewer = queryElement('#viewer');
+  const { height, width } = page.getViewport(1);
   return page.getViewport(
     (height / width > viewer.clientHeight / viewer.clientWidth
       ? viewer.clientHeight / height
@@ -230,8 +230,7 @@ const onKeyDown = event =>
 
 const onResize = () => {
   const image = queryElement('#viewer-pages').firstElementChild || {};
-  const height = image.naturalHeight / devicePixelRatio;
-  const width = image.naturalWidth / devicePixelRatio;
+  const [width, height] = [image.naturalWidth / devicePixelRatio, image.naturalHeight / devicePixelRatio];
   const viewer = queryElement('#viewer');
   if (
     (height === viewer.clientHeight && width > viewer.clientWidth) ||
@@ -279,13 +278,13 @@ const renderPage = number => {
         ...numberQueue.slice(0, index).reverse(),
       ]);
   } else {
-    const previousURLs = urls;
     rendering = true;
+    const previousURLs = urls;
     pdf &&
       pdf.getPage(number).then(
         page => {
-          const viewport = calculateViewport(page);
           const canvas = document.createElement('canvas');
+          const viewport = calculateViewport(page);
           canvas.height = Math.round(viewport.height);
           canvas.width = Math.round(viewport.width);
           renderTask = page.render({
