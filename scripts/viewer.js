@@ -137,9 +137,9 @@ const listenViewerDoubleClick = () => {
     'dblclick',
     event =>
       event.target.tagName === 'A' ||
-      (document.fullscreenElement === viewer
+      (document.fullscreenElement
         ? document.exitFullscreen()
-        : viewer.requestFullscreen())
+        : document.documentElement.requestFullscreen())
   );
 };
 
