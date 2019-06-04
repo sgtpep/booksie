@@ -130,7 +130,7 @@ const listenViewerDoubleClick = () => {
   viewer.addEventListener(
     'dblclick',
     event =>
-      (event.target === viewer || event.target.tagName === 'IMG') &&
+      event.target.tagName === 'A' ||
       (document.fullscreenElement === viewer
         ? document.exitFullscreen()
         : viewer.requestFullscreen())
