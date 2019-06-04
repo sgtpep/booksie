@@ -103,9 +103,15 @@ const listenTransitionEnd = (element, onTransitionEnd) => {
       WebkitTransition: 'webkitTransitionEnd',
       OTransition: 'otransitionend',
     }).find(([property, type]) => property in document.body.style) || [])[1]);
-  transitionEndName
-    ? element.addEventListener(transitionEndName, onTransitionEnd)
-    : onTransitionEnd();
+  if (transitionEndName) {
+    const listener = () => {
+      element.removeEventListener(transitionEndName, listener);
+      onTransitionEnd();
+    };
+    element.addEventListener(transitionEndName, listener);
+  } else {
+    onTransitionEnd();
+  }
 };
 
 const listenViewerClick = () =>
