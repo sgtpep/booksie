@@ -166,6 +166,7 @@ const loadDocument = (source, slug) => {
           pdf = loadedPDF;
           displayPage(1);
           resetQueue();
+          setTimeout(() => updateProgress(), 50);
           updateProgress(size, size);
         },
         error => {
