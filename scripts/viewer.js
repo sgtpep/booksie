@@ -420,7 +420,7 @@ const updatePageView = page => {
     if (name === 'lets-read') {
       offsetView(page.view, 50, 50, 50, 50);
     } else if (name === 'mustard-seed-books') {
-      offsetView(page.view, 20, 20, 20, 20);
+      offsetView(page.view, 10, 10, 10, 10);
     } else if (
       ['pratham-books', 'room-to-read', 'storyweaver'].includes(name)
     ) {
