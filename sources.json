@@ -28,6 +28,13 @@
     "name": "Paul Choy"
   },
   {
+    "description": "Creating high quality low-cost books for beginning readers.",
+    "homepage": "http://mustardseedbooks.org/",
+    "id": "mustard-seed-books",
+    "license": "CC BY-NC-SA 3.0",
+    "name": "Mustard Seed Books"
+  },
+  {
     "description": "Room to Read is a non-profit organization for improving literacy and gender equality in education in the developing world.",
     "homepage": "https://www.roomtoread.org/",
     "id": "room-to-read",
@@ -49,6 +56,13 @@
     "name": "Pratham Books"
   },
   {
+    "description": "Let’s Read is an initiative of The Asia Foundation’s Books for Asia program that fosters young readers in Asia.",
+    "homepage": "https://reader.letsreadasia.org/",
+    "id": "lets-read",
+    "license": ["CC BY 4.0", "CC BY-NC 4.0"],
+    "name": "Let's Read"
+  },
+  {
     "description": "Storybooks Canada is a free open educational resource that promotes literacy and language learning in homes, schools, and communities.",
     "homepage": [
       "https://www.storybookscanada.ca/",
@@ -57,19 +71,5 @@
     "id": "storybooks-canada",
     "license": "CC BY 4.0",
     "name": "Storybooks Canada"
-  },
-  {
-    "description": "Let’s Read is an initiative of The Asia Foundation’s Books for Asia program that fosters young readers in Asia.",
-    "homepage": "https://reader.letsreadasia.org/",
-    "id": "lets-read",
-    "license": ["CC BY 4.0", "CC BY-NC 4.0"],
-    "name": "Let's Read"
-  },
-  {
-    "description": "Creating high quality low-cost books for beginning readers.",
-    "homepage": "http://mustardseedbooks.org/",
-    "id": "mustard-seed-books",
-    "license": "CC BY-NC-SA 3.0",
-    "name": "Mustard Seed Books"
   }
 ]
