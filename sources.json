@@ -71,5 +71,12 @@
     "id": "storybooks-canada",
     "license": "CC BY 4.0",
     "name": "Storybooks Canada"
+  },
+  {
+    "description": "Word Scientists is a not-for-profit organization that provides a central place for educators to learn how to teach early reading with accompanying materials that can be used in their classroom.",
+    "homepage": "https://wordscientists.org/",
+    "id": "word-scientists",
+    "license": "CC BY-NC 4.0",
+    "name": "Word Scientists"
   }
 ]
