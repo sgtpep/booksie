@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
 const rollup = require('rollup');
@@ -7,6 +6,7 @@ const sources = require('./sources');
 const {
   assert,
   cachePath,
+  calculateMD5,
   copyDirectory,
   copyFile,
   distributionPath,
@@ -81,12 +81,7 @@ const buildIndex = () =>
   );
 
 const cache = func => (...args) => {
-  const cache = cachePath(
-    `${func.name}:${crypto
-      .createHash('md5')
-      .update(JSON.stringify(args))
-      .digest('hex')}`
-  );
+  const cache = cachePath(`${func.name}:${calculateMD5(JSON.stringify(args))}`);
   fs.existsSync(cache) ||
     fs.writeFileSync(makeDirectories(cache), JSON.stringify(func(...args)));
   return JSON.parse(fs.readFileSync(cache, 'utf8'));
