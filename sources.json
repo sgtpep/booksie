@@ -56,6 +56,13 @@
     "name": "Pratham Books"
   },
   {
+    "description": "3asafeer.com tries to build the reading habits as an integral part of kids' daily life by providing them with really interesting content.",
+    "homepage": "http://3asafeer.com/",
+    "id": "3asafeer",
+    "license": "CC BY-NC-SA 4.0",
+    "name": "3asafeer"
+  },
+  {
     "description": "Let’s Read is an initiative of The Asia Foundation’s Books for Asia program that fosters young readers in Asia.",
     "homepage": "https://reader.letsreadasia.org/",
     "id": "lets-read",
