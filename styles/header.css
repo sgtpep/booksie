@@ -1,5 +1,5 @@
 header {
-  background-color: #fcfcb4;
+  background-color: var(--background-color);
   box-shadow: 0 0.0625em 0.25em rgba(0, 0, 0, 0.25);
   padding: 1em 0.5em;
   text-align: center;

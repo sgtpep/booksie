@@ -18,10 +18,12 @@ const {
   symlinkFile,
 } = require('booksie-data');
 
+const backgroundColor = '#fcfcb4';
+
 const buildAllCovers = () => coverScales.forEach(scale => buildCovers(scale));
 
 const buildCovers = scale => {
-  const covers = distributionPath('covers');
+  const covers = distributionPath(coversPath);
   const outputMask = path.join(
     covers,
     `%d${scale === 1 ? '' : `@${scale}x`}.jpg`
@@ -69,6 +71,12 @@ const buildIndex = () =>
     replaceImages(generateIndex())
   );
 
+const buildManifest = () =>
+  fs.writeFileSync(
+    makeDirectories(distributionPath(manifest)),
+    JSON.stringify(generateManifest(), null, 2)
+  );
+
 const cache = func => (...args) => {
   const cache = cachePath(`${func.name}:${calculateMD5(JSON.stringify(args))}`);
   fs.existsSync(cache) ||
@@ -94,6 +102,11 @@ const copyPDFJSFiles = () =>
 const coverScales = [1, 2];
 
 const coverSize = 192;
+
+const coversPath = 'covers';
+
+const description =
+  'Booksie: an open catalog of free picture storybooks for children instantly available for reading.';
 
 const downloadCovers = () => {
   const books = fetchBooks().map(book => ({
@@ -173,7 +186,9 @@ const generateCoversStyle = () => {
   )
     .map((value, index) => {
       const imageURL = (scale = 1) =>
-        `url(covers/${index}${scale === 1 ? '' : `@${scale}x`}.jpg?${hash})`;
+        `url(${coversPath}/${index}${
+          scale === 1 ? '' : `@${scale}x`
+        }.jpg?${hash})`;
       const images = coverScales.map(scale => `${imageURL(scale)} ${scale}x`);
       return `
 .cover-${index}, html.scriptless .cover[data-cover="${index}"] {
@@ -215,11 +230,12 @@ const generateFooter = () => {
 
 const generateHead = () =>
   readInclude('head', {
+    backgroundColor,
     coverSize,
     coversStyle: generateCoversStyle(),
-    description:
-      'Booksie: an open catalog of free picture storybooks for children instantly available for reading.',
-    name: 'Booksie',
+    description,
+    name,
+    manifest,
     spriteHeight,
     spriteWidth,
     style: process.env.CI
@@ -256,6 +272,17 @@ const generateMain = () =>
     navigation: generateNavigation(),
     viewer: generateViewer(),
   });
+
+const generateManifest = () => ({
+  background_color: backgroundColor,
+  categories: ['books', 'education', 'kids'],
+  description,
+  display: 'standalone',
+  icons: [{ src: 'assets/logo.svg' }],
+  name,
+  serviceworker: { src: 'scripts/service-worker.js' },
+  theme_color: backgroundColor,
+});
 
 const generateNavigation = () =>
   readInclude('navigation', {
@@ -339,9 +366,14 @@ const licenseURL = license =>
 const main = () => {
   buildAllCovers();
   buildIndex();
+  buildManifest();
   copyAssets();
   copyPDFJSFiles();
 };
+
+const manifest = 'manifest.webmanifest';
+
+const name = 'Booksie';
 
 const readInclude = (name, replacements = {}) =>
   replaceTokens(
