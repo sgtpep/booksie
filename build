@@ -61,17 +61,6 @@ const buildCovers = scale => {
               output,
             ]);
         });
-  return fs
-    .readdirSync(covers)
-    .filter(filename =>
-      new RegExp(
-        path
-          .basename(outputMask)
-          .replace('%d', '\\d+')
-          .replace('.', '\\.')
-      ).test(filename)
-    )
-    .map(filename => path.join(covers, filename));
 };
 
 const buildIndex = () =>
