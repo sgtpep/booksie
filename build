@@ -163,13 +163,17 @@ const generateBooks = source =>
     .map(book => generateBook(book).trim())
     .join('');
 
-const generateCoversStyle = () =>
-  Array.from(
-    Array(Math.ceil(fetchBooks().length / (spriteWidth * spriteHeight)))
+const generateCoversStyle = () => {
+  const books = fetchBooks();
+  const hash = calculateMD5(
+    JSON.stringify(books.map(book => [book.source, book.slug]))
+  ).slice(0, 7);
+  return Array.from(
+    Array(Math.ceil(books.length / (spriteWidth * spriteHeight)))
   )
     .map((value, index) => {
       const imageURL = (scale = 1) =>
-        `url(covers/${index}${scale === 1 ? '' : `@${scale}x`}.jpg)`;
+        `url(covers/${index}${scale === 1 ? '' : `@${scale}x`}.jpg?${hash})`;
       const images = coverScales.map(scale => `${imageURL(scale)} ${scale}x`);
       return `
 .cover-${index}, html.scriptless .cover[data-cover="${index}"] {
@@ -180,6 +184,7 @@ const generateCoversStyle = () =>
 `.trim();
     })
     .join('\n');
+};
 
 const generateDevelopmentScript = () => {
   ['node_modules', 'scripts'].forEach(filename =>
