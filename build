@@ -278,9 +278,13 @@ const generateManifest = () => ({
   categories: ['books', 'education', 'kids'],
   description,
   display: 'standalone',
-  icons: [{ src: 'assets/logo.svg' }],
+  icons: [
+    { sizes: '192x192', src: 'assets/icon.png' },
+    { src: 'assets/icon.svg' },
+  ],
   name,
   serviceworker: { src: 'scripts/service-worker.js' },
+  short_name: name,
   theme_color: backgroundColor,
 });
 
