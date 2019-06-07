@@ -3,7 +3,12 @@
   --vertical-margin: 1em;
   margin-bottom: var(--vertical-margin);
   margin-top: var(--vertical-margin);
+  overflow: hidden;
   padding-left: var(--horizontal-padding);
   padding-right: var(--horizontal-padding);
   text-align: center;
+}
+
+.navigation > a {
+  white-space: nowrap;
 }
