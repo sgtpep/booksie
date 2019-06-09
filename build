@@ -303,6 +303,7 @@ const generateManifest = () => ({
   name,
   serviceworker: { src: 'service-worker.js' },
   short_name: name,
+  start_url: '.',
   theme_color: backgroundColor,
 });
 
