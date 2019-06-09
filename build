@@ -105,6 +105,14 @@ const copyPDFJSFiles = () =>
     )
   );
 
+const copyServiceWorker = () => {
+  const filename = 'service-worker.js';
+  const target = distributionPath(filename);
+  process.env.CI
+    ? copyFile(filename, target)
+    : symlinkFile(path.join('..', filename), target);
+};
+
 const coverScales = [1, 2];
 
 const coverSize = 192;
@@ -293,7 +301,7 @@ const generateManifest = () => ({
     { src: 'assets/icon.svg' },
   ],
   name,
-  serviceworker: { src: 'scripts/service-worker.js' },
+  serviceworker: { src: 'service-worker.js' },
   short_name: name,
   theme_color: backgroundColor,
 });
@@ -388,6 +396,7 @@ const main = () => {
   buildManifest();
   copyAssets();
   copyPDFJSFiles();
+  copyServiceWorker();
 };
 
 const manifest = 'manifest.webmanifest';

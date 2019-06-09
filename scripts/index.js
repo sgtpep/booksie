@@ -4,6 +4,7 @@ import externalLinks from './external-links.js';
 import lazyLoading from './lazy-loading.js';
 import menu from './menu.js';
 import randomization from './randomization.js';
+import serviceWorker from './service-worker.js';
 import stickyElements from './sticky-elements.js';
 import viewer from './viewer.js';
 
@@ -13,5 +14,6 @@ externalLinks();
 lazyLoading();
 menu();
 randomization(() => coverLazyLoading());
+serviceWorker();
 stickyElements();
 viewer();
