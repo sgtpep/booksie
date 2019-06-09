@@ -73,12 +73,7 @@ const eventClientX = event =>
 
 const generateBookTitle = (source, slug) => {
   const book = queryBook(source, slug);
-  return (
-    book &&
-    `${book.querySelector('strong').textContent} (by ${
-      book.querySelector('small').textContent
-    })`
-  );
+  return book && `${book.dataset.title} (by ${book.dataset.sourceName})`;
 };
 
 const hidePages = () => {
@@ -230,7 +225,10 @@ const onKeyDown = event =>
 
 const onResize = () => {
   const image = queryElement('#viewer-pages').firstElementChild || {};
-  const [width, height] = [image.naturalWidth / devicePixelRatio, image.naturalHeight / devicePixelRatio];
+  const [width, height] = [
+    image.naturalWidth / devicePixelRatio,
+    image.naturalHeight / devicePixelRatio,
+  ];
   const viewer = queryElement('#viewer');
   if (
     (height === viewer.clientHeight && width > viewer.clientWidth) ||
@@ -250,12 +248,7 @@ const openViewer = (source, slug) => {
 };
 
 const queryBook = (source, slug) =>
-  document.querySelector(
-    `.book[href="${documentURL(
-      source,
-      slug
-    )}"], .book[href="#${source}/${slug}"]`
-  );
+  document.querySelector(`.book[data-source="${source}"][data-slug="${slug}"]`);
 
 const queryElement = selector =>
   elements[selector] || (elements[selector] = document.querySelector(selector));

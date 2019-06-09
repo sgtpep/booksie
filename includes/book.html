@@ -1,17 +1,24 @@
-<a
+<div
   class="book<!--newClass-->"
   data-size="<!--size-->"
-  href="https://data.booksie.org/<!--source-->/<!--slug-->.pdf"
-  style="background-color: <!--background-->"
+  data-slug="<!--slug-->"
+  data-source-name="<!--sourceName-->"
+  data-source="<!--source-->"
+  data-title="<!--title-->"
 >
-  <div
-    class="cover"
-    data-cover="<!--sprite-->"
-    style="background-position: <!--left--> <!--top-->"
-  ></div>
-  <div>
-    <strong><!--title--></strong>
-    <br />
-    <small><!--sourceName--></small>
-  </div>
-</a>
+  <a
+    href="https://data.booksie.org/<!--source-->/<!--slug-->.pdf"
+    style="background-color: <!--background-->"
+  >
+    <div
+      class="cover"
+      data-cover="<!--sprite-->"
+      style="background-position: <!--left--> <!--top-->"
+    ></div>
+    <div>
+      <div><!--title--></div>
+      <div><!--sourceName--></div>
+    </div>
+  </a>
+  <!--menu-->
+</div>

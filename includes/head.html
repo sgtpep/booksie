@@ -33,8 +33,12 @@
     const updateBookHref = container =>
       [...container.children].forEach(
         element =>
-          element.href &&
-          (element.href = `#${element.pathname.replace(/^\/(.+)\..+$/, '$1')}`)
+          element.firstElementChild &&
+          element.firstElementChild.href &&
+          (element.firstElementChild.href = `#${element.firstElementChild.pathname.replace(
+            /^\/(.+)\..+$/,
+            '$1'
+          )}`)
       );
   </script>
 </html>
