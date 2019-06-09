@@ -324,14 +324,16 @@ ${fs
   .join('\n\n')}
 </style>`;
 
-const generateSourceBooks = () =>
-  [
-    readInclude('source-books', {
-      books: generateNewBooks(),
-      heading: 'New Arrivals',
-      id: 'new',
-      sourceDescription: null,
-    }),
+const generateSourceBooks = () => {
+  const newBooks = generateNewBooks();
+  return [
+    newBooks.length &&
+      readInclude('source-books', {
+        books: newBooks,
+        heading: 'New Arrivals',
+        id: 'new',
+        sourceDescription: null,
+      }),
     ...sources.map(source =>
       readInclude('source-books', {
         books: generateBooks(source.id),
@@ -340,7 +342,10 @@ const generateSourceBooks = () =>
         sourceDescription: generateSourceDescription(source.id),
       })
     ),
-  ].join('\n');
+  ]
+    .filter(Boolean)
+    .join('\n');
+};
 
 const generateSourceDescription = id => {
   const source = sources.find(sourceItem => sourceItem.id === id);
