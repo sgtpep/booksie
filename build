@@ -143,13 +143,16 @@ const fetchBooks = () => {
     .slice(0, process.env.CI ? Infinity : 100);
 };
 
-const generateBook = book =>
-  readInclude('book', {
+const generateBook = book => {
+  const source = sources.find(source => source.id === book.source);
+  return readInclude('book', {
     ...book,
+    copyrightPage: source.copyrightPage,
     menu: readInclude('menu'),
     newClass: book.new ? ' new' : '',
-    sourceName: sources.find(source => source.id === book.source).name,
+    sourceName: source.name,
   });
+};
 
 const generateBookEntries = source => {
   let startIndex;

@@ -71,6 +71,8 @@ const elements = {};
 const eventClientX = event =>
   (event.changedTouches ? event.changedTouches[0] : event).clientX;
 
+const extractHash = url => url.replace(/^.+?(#|$)/, '');
+
 const generateBookTitle = (source, slug) => {
   const book = queryBook(source, slug);
   return book && `${book.dataset.title} (by ${book.dataset.sourceName})`;
@@ -146,7 +148,7 @@ const listenViewerDragEvents = () => {
   viewer.addEventListener('touchstart', onDragStart);
 };
 
-const loadDocument = (source, slug) => {
+const loadDocument = (source, slug, copyright = false) => {
   toggleError(false);
   toggleLoading(true, generateBookTitle(source, slug));
   setTimeout(() =>
@@ -159,7 +161,14 @@ const loadDocument = (source, slug) => {
       )).promise.then(
         loadedPDF => {
           pdf = loadedPDF;
-          displayPage(1);
+          const copyrightPage = Number(book.dataset.copyrightPage);
+          displayPage(
+            copyright
+              ? copyrightPage > 0
+                ? copyrightPage
+                : pdf.numPages - copyrightPage + 1
+              : 1
+          );
           resetQueue();
           setTimeout(() => updateProgress(), 50);
           updateProgress(size, size);
@@ -172,7 +181,8 @@ const loadDocument = (source, slug) => {
           toggleLoading(false);
         }
       );
-      const size = queryBook(source, slug).dataset.size;
+      const book = queryBook(source, slug);
+      const size = Number(book.dataset.size);
       loadingTask.onProgress = throttle(
         progress => updateProgress(progress.loaded, size),
         150
@@ -209,9 +219,15 @@ const onDragStop = event => {
     (difference > 0 ? displayPreviousPage() : displayNextPageOrClose());
 };
 
-const onHashChange = (event = { newURL: location.href }) => {
-  const hash = event.newURL.replace(/^.+?(#|$)/, '');
-  hash.includes('/') && (hash ? openViewer(...hash.split('/')) : closeViewer());
+const onHashChange = (event = { newURL: location.href, oldURL: '' }) => {
+  const hash = extractHash(event.newURL);
+  const oldHash = extractHash(event.oldURL);
+  if (hash.includes('/')) {
+    const [source, slug, action] = hash.split('/');
+    openViewer(source, slug, action === 'copyright');
+  } else if (oldHash.includes('/')) {
+    closeViewer();
+  }
 };
 
 const onKeyDown = event =>
@@ -241,8 +257,8 @@ const onResize = () => {
   }
 };
 
-const openViewer = (source, slug) => {
-  loadDocument(source, slug);
+const openViewer = (source, slug, copyright = false) => {
+  loadDocument(source, slug, copyright);
   toggleViewer(true);
   updateTitle(source, slug);
 };
