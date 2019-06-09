@@ -84,6 +84,11 @@ const cache = func => (...args) => {
   return JSON.parse(fs.readFileSync(cache, 'utf8'));
 };
 
+const cacheBuster = () =>
+  memoize(calculateMD5)(
+    JSON.stringify(fetchBooks().map(book => [book.source, book.slug]))
+  ).slice(0, 7);
+
 const copyAssets = () => {
   const target = distributionPath('assets');
   process.env.CI
@@ -182,18 +187,15 @@ const generateBooks = source =>
     .join('');
 
 const generateCoversStyle = () => {
-  const books = fetchBooks();
-  const hash = calculateMD5(
-    JSON.stringify(books.map(book => [book.source, book.slug]))
-  ).slice(0, 7);
+  const buster = cacheBuster();
   return Array.from(
-    Array(Math.ceil(books.length / (spriteWidth * spriteHeight)))
+    Array(Math.ceil(fetchBooks().length / (spriteWidth * spriteHeight)))
   )
     .map((value, index) => {
       const imageURL = (scale = 1) =>
         `url(${coversPath}/${index}${
           scale === 1 ? '' : `@${scale}x`
-        }.jpg?${hash})`;
+        }.jpg?${buster})`;
       const images = coverScales.map(scale => `${imageURL(scale)} ${scale}x`);
       return `
 .cover-${index}, html.scriptless .cover[data-cover="${index}"] {
@@ -236,6 +238,7 @@ const generateFooter = () => {
 const generateHead = () =>
   readInclude('head', {
     backgroundColor,
+    cacheBuster: cacheBuster(),
     coverSize,
     coversStyle: generateCoversStyle(),
     description,
