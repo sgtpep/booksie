@@ -3,18 +3,20 @@ const cacheable = url =>
   (location.hostname === 'localhost' && /\.(css|js)$/.test(url));
 
 const listenFetch = () =>
-  self.addEventListener('fetch', event =>
-    event.respondWith(
-      fetch(event.request)
-        .then(response =>
-          caches.open(shell).then(cache => {
-            cacheable(event.request.url) &&
+  self.addEventListener(
+    'fetch',
+    event =>
+      cacheable(event.request.url) &&
+      event.respondWith(
+        fetch(event.request)
+          .then(response =>
+            caches.open(shell).then(cache => {
               cache.put(event.request, response.clone());
-            return response;
-          })
-        )
-        .catch(() => caches.match(event.request))
-    )
+              return response;
+            })
+          )
+          .catch(() => caches.match(event.request))
+      )
   );
 
 const listenInstall = () =>
