@@ -1,0 +1,12 @@
+.offline-message {
+  --horizontal-padding: 1em;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 768px;
+  padding-left: var(--horizontal-padding);
+  padding-right: var(--horizontal-padding);
+  text-align: center;
+}
+html:not(.offline) .offline-message {
+  display: none;
+}
