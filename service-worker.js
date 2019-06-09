@@ -1,6 +1,8 @@
 const cacheable = url =>
   urls.includes(url.replace(`${location.protocol}//${location.host}/`, '')) ||
-  (location.hostname === 'localhost' && /\.(css|js)$/.test(url));
+  (location.hostname === 'localhost' &&
+    /\.(css|js)$/.test(url) &&
+    !url.endsWith('/service-worker.js'));
 
 const listenFetch = () =>
   self.addEventListener(
