@@ -90,10 +90,11 @@ const cacheBuster = () =>
   ).slice(0, 7);
 
 const copyAssets = () => {
-  const target = distributionPath('assets');
+  const filename = 'assets';
+  const target = distributionPath(filename);
   process.env.CI
-    ? copyDirectory('assets', target)
-    : symlinkFile('../assets', target);
+    ? copyDirectory(filename, target)
+    : symlinkFile(path.join('..', filename), target);
 };
 
 const copyPDFJSFiles = () =>
