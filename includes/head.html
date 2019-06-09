@@ -31,6 +31,8 @@
     var cacheBuster = '<!--cacheBuster-->';
 
     document.documentElement.classList.remove('scriptless');
+    navigator.onLine === false &&
+      document.documentElement.classList.add('offline');
 
     const updateBookHref = container =>
       [...container.children].forEach(

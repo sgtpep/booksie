@@ -1,3 +1,7 @@
+html.offline .source-books {
+  display: none;
+}
+
 .source-books > a[id]:empty {
   margin-top: -0.75em;
   position: absolute;
