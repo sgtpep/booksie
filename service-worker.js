@@ -44,7 +44,9 @@ const shell = 'shell';
 const urls = [
   '',
   'manifest.webmanifest',
-  ...['favicon.png', 'logo.svg'].map(filename => `assets/${filename}`),
+  ...['favicon.png', 'icon.png', 'icon.svg', 'logo.svg', 'splash.png'].map(
+    filename => `assets/${filename}`
+  ),
 ];
 
 main();
