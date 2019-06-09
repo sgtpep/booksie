@@ -1,5 +1,5 @@
 .menu {
-  margin-top: -2.25em;
+  margin-top: -2.3125em;
   position: absolute;
   right: 0;
 }
@@ -30,6 +30,7 @@
   list-style: none;
   margin-bottom: 0;
   margin-top: 0;
+  overflow: hidden;
   padding-left: 0;
   position: absolute;
   right: 0;
