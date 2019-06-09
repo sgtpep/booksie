@@ -21,17 +21,18 @@ a.book {
 .book.new::before {
   -webkit-transform: translate(50%, 50%) rotate(-45deg);
   background-color: #ef5350;
-  bottom: 0;
   color: white;
   content: 'NEW';
   font-size: 0.5em;
   font-weight: bold;
-  height: 5em;
+  padding-top: 4em;
   position: absolute;
   right: 0;
   text-align: center;
-  transform: translate(50%, 50%) rotate(-45deg);
+  top: 0;
+  transform: translate(50%, -50%) rotate(45deg);
   width: 100%;
+  z-index: 1;
 }
 @media (min-width: 768px) {
   .book.new::before {
