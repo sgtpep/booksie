@@ -32,13 +32,12 @@
 
     const updateBookHref = container =>
       [...container.children].forEach(
-        element =>
-          element.firstElementChild &&
-          element.firstElementChild.href &&
-          (element.firstElementChild.href = `#${element.firstElementChild.pathname.replace(
-            /^\/(.+)\..+$/,
-            '$1'
-          )}`)
+        book =>
+          book.classList.contains('book') &&
+          ([book.dataset.href, book.firstElementChild.href] = [
+            book.firstElementChild.href,
+            `#${book.dataset.source}/${book.dataset.slug}`,
+          ])
       );
   </script>
 </html>
