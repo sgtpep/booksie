@@ -19,7 +19,11 @@ const listenFetch = () =>
 
 const listenInstall = () =>
   self.addEventListener('install', event =>
-    event.waitUntil(caches.open(shell).then(cache => cache.addAll(urls)))
+    event.waitUntil(
+      caches
+        .open(shell)
+        .then(cache => cache.addAll(urls.map(url => url || '.')))
+    )
   );
 
 const main = () => {
