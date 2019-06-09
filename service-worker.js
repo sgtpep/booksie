@@ -10,7 +10,7 @@ const listenFetch = () =>
     event =>
       cacheable(event.request.url) &&
       event.respondWith(
-        navigator.onLine
+        navigator.onLine || navigator.onLine === undefined
           ? fetch(event.request)
               .then(response =>
                 caches.open(shell).then(cache => {
