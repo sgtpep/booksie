@@ -166,7 +166,7 @@ const loadDocument = (source, slug, copyright = false) => {
             copyright
               ? copyrightPage > 0
                 ? copyrightPage
-                : pdf.numPages - copyrightPage + 1
+                : pdf.numPages + copyrightPage + 1
               : 1
           );
           resetQueue();
