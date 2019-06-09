@@ -402,7 +402,7 @@ const main = () => {
 
 const manifest = 'manifest.webmanifest';
 
-const name = 'Booksie';
+const name = 'Booksie.org';
 
 const readInclude = (name, replacements = {}) =>
   replaceTokens(
