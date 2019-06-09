@@ -8,14 +8,16 @@ const listenFetch = () =>
     event =>
       cacheable(event.request.url) &&
       event.respondWith(
-        fetch(event.request)
-          .then(response =>
-            caches.open(shell).then(cache => {
-              cache.put(event.request, response.clone());
-              return response;
-            })
-          )
-          .catch(() => caches.match(event.request))
+        navigator.onLine
+          ? fetch(event.request)
+              .then(response =>
+                caches.open(shell).then(cache => {
+                  cache.put(event.request, response.clone());
+                  return response;
+                })
+              )
+              .catch(() => caches.match(event.request))
+          : caches.match(event.request)
       )
   );
 
