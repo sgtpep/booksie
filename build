@@ -424,8 +424,8 @@ const replaceImages = html =>
     '<img class="lazy-loading" /><noscript>$&</noscript>'
   );
 
-const replaceTokens = (string, replacements) =>
-  Object.entries(replacements).reduce(
+const replaceTokens = (string, replacements) => {
+  const result = Object.entries(replacements).reduce(
     (string, [token, replacement]) =>
       string
         .replace(new RegExp(`^ +(?=<!--${token}-->)`, 'gm'), '')
@@ -435,6 +435,10 @@ const replaceTokens = (string, replacements) =>
         ),
     string
   );
+  const match = result.match(/<!--(\w+)-->/);
+  assert(!match, match && `Unreplaced token ${match[1]}`);
+  return result;
+};
 
 const sourceLogo = source => {
   const filename = fs
