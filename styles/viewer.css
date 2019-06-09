@@ -64,7 +64,7 @@ a.viewer-action {
 
 #viewer {
   --color: whitesmoke;
-  --duration: 150ms;
+  --delay: 150ms;
   -moz-user-select: none;
   -ms-user-select: none;
   -webkit-user-select: none;
@@ -74,7 +74,7 @@ a.viewer-action {
   position: fixed;
   right: 0;
   top: 0;
-  transition: opacity var(--duration), visibility var(--duration);
+  transition: opacity var(--delay), visibility var(--delay);
   user-select: none;
   z-index: 1000;
 }
