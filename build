@@ -203,14 +203,14 @@ const generateCoversStyle = () => {
     Array(Math.ceil(fetchBooks().length / (spriteWidth * spriteHeight)))
   )
     .map((value, index) => {
-      const imageURL = (scale = 1) =>
+      const url = (scale = 1) =>
         `url(${coversPath}/${index}${
           scale === 1 ? '' : `@${scale}x`
         }.jpg?${buster})`;
-      const images = coverScales.map(scale => `${imageURL(scale)} ${scale}x`);
+      const images = coverScales.map(scale => `${url(scale)} ${scale}x`);
       return `
 .cover-${index}, html.scriptless .cover[data-cover="${index}"] {
-  background-image: ${imageURL()};
+  background-image: ${url()};
   background-image: -webkit-image-set(${images.join(', ')});
   background-image: image-set(${images.join(', ')});
 }
