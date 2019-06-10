@@ -54,8 +54,8 @@ const saveBook = book =>
           ).then(images => {
             const clone = book.cloneNode(true);
             clone.dataset.href = generateCacheURL(book, '.pdf');
-            clone.dataset.offline = true;
             const cover = clone.querySelector('.cover');
+            cover.classList.add('offline');
             cover.classList.remove(`cover-${cover.dataset.cover}`);
             cover.setAttribute(
               'style',

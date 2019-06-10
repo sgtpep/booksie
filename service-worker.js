@@ -1,5 +1,7 @@
 const baseURL = `${location.protocol}//${location.host}`;
 
+const booksKey = 'books';
+
 const cacheable = url =>
   urls.includes(url.replace(`${baseURL}/`, '')) ||
   (location.hostname === 'localhost' &&
@@ -7,22 +9,22 @@ const cacheable = url =>
     url !== `${baseURL}/service-worker.js`);
 
 const listenFetch = () =>
-  self.addEventListener(
-    'fetch',
-    event =>
-      cacheable(event.request.url) &&
-      event.respondWith(
-        navigator.onLine || navigator.onLine === undefined
-          ? fetch(event.request)
-              .then(response =>
-                caches.open(shellKey).then(cache => {
-                  cache.put(event.request, response.clone());
-                  return response;
-                })
-              )
-              .catch(() => caches.match(event.request))
-          : caches.match(event.request)
-      )
+  self.addEventListener('fetch', event =>
+    event.request.url.startsWith(`${baseURL}/books/`)
+      ? event.respondWith(caches.match(event.request))
+      : cacheable(event.request.url) &&
+        event.respondWith(
+          navigator.onLine || navigator.onLine === undefined
+            ? fetch(event.request)
+                .then(response =>
+                  caches.open(shellKey).then(cache => {
+                    cache.put(event.request, response.clone());
+                    return response;
+                  })
+                )
+                .catch(() => caches.match(event.request))
+            : caches.match(event.request)
+        )
   );
 
 const listenInstall = () =>
@@ -49,6 +51,8 @@ const urls = [
   'assets/logo.svg',
   'assets/splash.png',
   'manifest.webmanifest',
+  'pdfjs/pdf.min.js',
+  'pdfjs/pdf.worker.min.js',
 ];
 
 main();

@@ -1,13 +1,9 @@
-html.offline .source-books {
-  display: none;
-}
-
 .source-books > a[id]:empty {
   margin-top: -0.75em;
   position: absolute;
 }
-
-.source-books > a#saved:not(.loaded):empty ~ * {
+.source-books > a#saved:empty:not(.loaded) ~ *,
+html.offline .source-books > a[id]:empty:not(#saved) ~ * {
   display: none;
 }
 

@@ -63,8 +63,10 @@ const displayPage = number => {
 
 const displayPreviousPage = () => displayPage(currentNumber - 1);
 
-const documentURL = (source, slug) =>
-  `https://data.booksie.org/${source}/${slug}.pdf`;
+const documentURL = (source, slug) => {
+  const book = queryBook(source, slug);
+  return book && book.dataset.href;
+};
 
 const elements = {};
 
