@@ -1,0 +1,22 @@
+#saving-progress {
+  --delay: 150ms;
+  --radius: 0.5em;
+  background-color: var(--background-color);
+  border-top-left-radius: var(--radius);
+  bottom: 0;
+  box-shadow: 0 0.0625em 0.25em rgba(0, 0, 0, 0.25);
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0.25em 0.5em;
+  pointer-events: none;
+  position: fixed;
+  right: 0;
+  text-align: center;
+  transition: opacity var(--delay), visibility var(--delay);
+  z-index: 2;
+}
+#saving-progress[hidden] {
+  display: block;
+  opacity: 0;
+  visibility: hidden;
+}

@@ -9,9 +9,29 @@ const coverSize = parseInt(
 const generateCacheURL = (book, extension) =>
   `${book.dataset.source}/${book.dataset.slug}${extension}`;
 
+const progress = document.getElementById('saving-progress');
+
+const savingBooks = new Set();
+
+const updateProgress = () => {
+  savingBooks.size &&
+    (progress.textContent = `Saving ${
+      savingBooks.size === 1
+        ? 'a book'
+        : `${
+            savingBooks.size <= 3
+              ? { 2: 'two', 3: 'three' }[savingBooks.size]
+              : savingBooks.size
+          } books`
+    }...`);
+  progress.hidden = !savingBooks.size;
+};
+
 export default book =>
   window.caches
     ? caches.open(booksKey).then(cache => {
+        savingBooks.add(book);
+        updateProgress();
         const cover = book.querySelector('.cover');
         const left = parseInt(cover.style.backgroundPositionX) / 100;
         const top = parseInt(cover.style.backgroundPositionY) / 100;
@@ -74,6 +94,10 @@ export default book =>
               })
             );
           }),
-        ]).then(() => updateSavedBooks());
+        ]).then(() => {
+          savingBooks.delete(book);
+          updateProgress();
+          updateSavedBooks();
+        });
       })
     : alert('Not supported in your browser.');
