@@ -162,7 +162,7 @@ const generateBook = book => {
   return readInclude('book', {
     ...book,
     copyrightPage: source.copyrightPage,
-    menu: readInclude('menu'),
+    menu: readInclude('menu').trim(),
     newClass: book.new ? ' new' : '',
     sourceName: source.name,
   });
