@@ -15,7 +15,7 @@ const listenFetch = () =>
         navigator.onLine || navigator.onLine === undefined
           ? fetch(event.request)
               .then(response =>
-                caches.open(shell).then(cache => {
+                caches.open(shellKey).then(cache => {
                   cache.put(event.request, response.clone());
                   return response;
                 })
@@ -29,7 +29,7 @@ const listenInstall = () =>
   self.addEventListener('install', event =>
     event.waitUntil(
       caches
-        .open(shell)
+        .open(shellKey)
         .then(cache => cache.addAll(urls.map(url => url || '.')))
     )
   );
@@ -39,7 +39,7 @@ const main = () => {
   listenInstall();
 };
 
-const shell = 'shell';
+const shellKey = 'shell';
 
 const urls = [
   '',

@@ -1,5 +1,7 @@
 import { coverURL } from './cover-lazy-loading.js';
 
+export const booksKey = 'books';
+
 const downloadBook = book => {
   const anchor = document.createElement('a');
   anchor.download = '';
@@ -10,7 +12,7 @@ const downloadBook = book => {
 
 const saveBook = book =>
   window.caches
-    ? caches.open('books').then(cache => {
+    ? caches.open(booksKey).then(cache => {
         const cover = book.querySelector('.cover');
         return cache
           .addAll([
@@ -34,9 +36,12 @@ const saveBook = book =>
               .cssText.replace(/^.+( {)/, `.${coverClass}$1`);
             return cache.put(
               `/${book.dataset.source}/${book.dataset.slug}.html`,
-              new Response(`${clone.outerHTML}\n${style}`, {
-                headers: { 'Content-Type': 'text/html' },
-              })
+              new Response(
+                clone.outerHTML.replace(/<\/.+>$/, `<style>${style}</style>$&`),
+                {
+                  headers: { 'Content-Type': 'text/html' },
+                }
+              )
             );
           });
       })

@@ -350,6 +350,12 @@ ${fs
 const generateSourceBooks = () => {
   const newBooks = generateNewBooks();
   return [
+    readInclude('source-books', {
+      books: [],
+      heading: 'Saved Books',
+      id: 'saved',
+      sourceDescription: null,
+    }),
     newBooks.length &&
       readInclude('source-books', {
         books: newBooks,
