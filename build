@@ -187,7 +187,8 @@ const generateBookEntries = source => {
         left: `${-(absoluteIndex % spriteWidth) * 100}%`,
         new: Date.now() - Date.parse(book.added) < 1000 * 60 * 60 * 24 * 10,
         sprite: Math.floor(absoluteIndex / (spriteWidth * spriteHeight)),
-        top: `${-Math.floor(absoluteIndex / spriteWidth) * 100}%`,
+        top: `${-(Math.floor(absoluteIndex / spriteWidth) % spriteHeight) *
+          100}%`,
       };
     });
 };
