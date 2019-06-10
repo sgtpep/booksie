@@ -147,7 +147,7 @@ a.viewer-action {
   position: absolute;
   right: 0;
   top: 0;
-  transition: var(--delay) opacity;
+  transition: opacity var(--delay);
 }
 #viewer-pages > img.fading {
   opacity: 0;
