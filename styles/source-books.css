@@ -2,7 +2,15 @@
   margin-top: -0.75em;
   position: absolute;
 }
-.source-books > a#saved:empty:not(.loaded) ~ *,
+.source-books > a#saved:empty ~ * {
+  --delay: 300ms;
+  transition: opacity var(--delay), visibility var(--delay);
+}
+.source-books > a#saved:empty:not(.visible) ~ * {
+  opacity: 0;
+  position: absolute;
+  visibility: hidden;
+}
 html.offline .source-books > a[id]:empty:not(#saved) ~ * {
   display: none;
 }

@@ -1,8 +1,5 @@
-import { booksKey } from './save-book.js';
-
-export default () =>
-  window.caches &&
-  caches.open(booksKey).then(cache =>
+window.caches &&
+  caches.open('books').then(cache =>
     cache
       .keys()
       .then(requests => {
@@ -25,6 +22,6 @@ export default () =>
         saved.parentElement
           .querySelector('.books')
           .insertAdjacentHTML('afterbegin', htmls.join('\n'));
-        saved.classList.toggle('loaded', htmls.length);
+        saved.classList.toggle('visible', htmls.length);
       })
   );

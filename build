@@ -355,6 +355,7 @@ const generateSourceBooks = () => {
       books: [],
       heading: 'Saved Books',
       id: 'saved',
+      script: fs.readFileSync('scripts/saved-books.js', 'utf8').trim(),
       sourceDescription: null,
     }),
     newBooks.length &&
@@ -362,6 +363,7 @@ const generateSourceBooks = () => {
         books: newBooks,
         heading: 'New Arrivals',
         id: 'new',
+        script: null,
         sourceDescription: null,
       }),
     ...sources.map(source =>
@@ -369,6 +371,7 @@ const generateSourceBooks = () => {
         books: generateBooks(source.id),
         heading: `Books by ${source.name}`,
         id: source.id,
+        script: null,
         sourceDescription: generateSourceDescription(source.id),
       })
     ),
