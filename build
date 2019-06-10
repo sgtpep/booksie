@@ -217,9 +217,6 @@ const generateCoversStyle = () => {
     .join('\n');
 };
 
-const generateDescription = () =>
-  `${name}: ${description[0].toLowerCase()}${description.slice(1)}`;
-
 const generateDevelopmentScript = () => {
   ['node_modules', 'scripts'].forEach(filename =>
     symlinkFile(path.join('..', filename), distributionPath(filename))
@@ -254,7 +251,7 @@ const generateHead = () =>
     cacheBuster: cacheBuster(),
     coverSize,
     coversStyle: generateCoversStyle(),
-    description: generateDescription(),
+    description,
     name,
     manifest,
     spriteHeight,
@@ -301,7 +298,7 @@ const generateMain = () =>
 const generateManifest = () => ({
   background_color: backgroundColor,
   categories: ['books', 'education', 'kids'],
-  description: generateDescription(),
+  description,
   display: 'standalone',
   icons: [
     { sizes: '192x192', src: 'assets/icon.png' },
