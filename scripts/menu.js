@@ -1,21 +1,16 @@
 import saveBook, { booksKey } from './save-book.js';
 
 const deleteBook = book =>
-  caches
-    .open(booksKey)
-    .then(cache =>
-      cache
-        .keys()
-        .then(requests =>
-          requests
-            .filter(request =>
-              request.url.includes(
-                `${book.dataset.source}/${book.dataset.slug}.`
-              )
-            )
-            .forEach(request => cache.delete(request))
+  caches.open(booksKey).then(cache =>
+    cache.keys().then(requests => {
+      requests
+        .filter(request =>
+          request.url.includes(`${book.dataset.source}/${book.dataset.slug}.`)
         )
-    );
+        .forEach(request => cache.delete(request));
+      updateSavedBooks();
+    })
+  );
 
 const downloadBook = book => {
   const anchor = document.createElement('a');

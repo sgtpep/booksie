@@ -74,6 +74,6 @@ export default book =>
               })
             );
           }),
-        ]);
+        ]).then(() => updateSavedBooks());
       })
     : alert('Not supported in your browser.');
