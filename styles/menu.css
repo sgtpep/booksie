@@ -24,7 +24,8 @@
   transition: background-color var(--delay);
   width: calc(var(--height) * 0.75);
 }
-.menu:focus > a {
+.menu:focus > a,
+.menu:hover > a {
   background-color: rgba(0, 0, 0, 0.1);
 }
 
