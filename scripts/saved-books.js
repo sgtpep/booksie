@@ -1,4 +1,4 @@
-import { booksKey } from './menu.js';
+import { booksKey } from './save-book.js';
 
 export default () =>
   window.caches &&
