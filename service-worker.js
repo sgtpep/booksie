@@ -10,8 +10,12 @@ const cacheable = url =>
 
 const listenFetch = () =>
   self.addEventListener('fetch', event =>
-    event.request.url.startsWith(`${baseURL}/books/`)
-      ? event.respondWith(caches.match(event.request))
+    event.request.url.endsWith('.pdf')
+      ? event.respondWith(
+          caches
+            .match(event.request)
+            .then(response => response || fetch(event.request))
+        )
       : cacheable(event.request.url) &&
         event.respondWith(
           navigator.onLine || navigator.onLine === undefined

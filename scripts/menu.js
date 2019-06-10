@@ -15,7 +15,7 @@ const downloadBook = book => {
 };
 
 const generateCacheURL = (book, extension) =>
-  `books/${book.dataset.source}/${book.dataset.slug}${extension}`;
+  `${book.dataset.source}/${book.dataset.slug}${extension}`;
 
 const saveBook = book =>
   window.caches
