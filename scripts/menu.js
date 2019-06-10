@@ -2,10 +2,11 @@ import saveBook from './save-book.js';
 
 const downloadBook = book => {
   const anchor = document.createElement('a');
-  anchor.download = '';
   anchor.href = book.dataset.href;
   anchor.target = '_blank';
+  document.body.appendChild(anchor);
   anchor.click();
+  document.body.removeChild(anchor);
 };
 
 const showCopyright = book =>

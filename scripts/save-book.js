@@ -49,18 +49,19 @@ export default book =>
             const cover = clone.querySelector('.cover');
             cover.classList.add('offline');
             cover.classList.remove(`cover-${cover.dataset.cover}`);
+            const style = document.styleSheets[0];
             cover.setAttribute(
               'style',
-              [...document.styleSheets[0].rules]
+              [...(style.rules || style.cssRules)]
                 .find(style =>
                   style.selectorText.startsWith(
                     `.cover-${cover.dataset.cover},`
                   )
                 )
                 .cssText.replace(/^.+{(.+)}$/, '$1')
-                .replace(/(?<=url\()[^)]+/g, url => {
-                  const match = url.match(/@(\d+)x/);
-                  return images[match ? Number(match[1]) - 1 : 0];
+                .replace(/(\burl\()([^)]+)/g, (match, prefix, url) => {
+                  const scale = url.match(/@(\d+)x/);
+                  return `${prefix}${images[scale ? Number(scale[1]) - 1 : 0]}`;
                 })
             );
             return cache.put(
