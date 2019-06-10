@@ -43,10 +43,12 @@ const shell = 'shell';
 
 const urls = [
   '',
+  'assets/favicon.png',
+  'assets/icon.png',
+  'assets/icon.svg',
+  'assets/logo.svg',
+  'assets/splash.png',
   'manifest.webmanifest',
-  ...['favicon.png', 'icon.png', 'icon.svg', 'logo.svg', 'splash.png'].map(
-    filename => `assets/${filename}`
-  ),
 ];
 
 main();
