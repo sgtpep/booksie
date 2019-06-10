@@ -5,16 +5,21 @@ export default () =>
   caches.open(booksKey).then(cache =>
     cache
       .keys()
-      .then(requests =>
-        Promise.all(
+      .then(requests => {
+        const urls = requests.map(request => request.url);
+        return Promise.all(
           requests
             .reverse()
-            .filter(request => request.url.endsWith('.html'))
+            .filter(
+              request =>
+                request.url.endsWith('.html') &&
+                urls.includes(request.url.replace(/\.\w+$/, '.pdf'))
+            )
             .map(request =>
               caches.match(request).then(response => response.text())
             )
-        )
-      )
+        );
+      })
       .then(htmls => {
         const saved = document.querySelector('#saved');
         saved.parentElement
