@@ -1,6 +1,7 @@
 .menu {
   --delay: 150ms;
-  margin-top: -2.3125em;
+  --height: 2em;
+  margin-top: calc(-1 * var(--height) - 0.25em);
   position: absolute;
   right: 0;
 }
@@ -14,11 +15,11 @@
   display: inline-block;
   font-size: 1.2em;
   font-weight: bold;
-  line-height: 2em;
+  line-height: var(--height);
   opacity: 0.5;
   text-align: center;
   transition: background-color var(--delay);
-  width: 1.25em;
+  width: calc(var(--height) * 0.75);
 }
 .menu:hover > a {
   background-color: rgba(0, 0, 0, 0.1);
