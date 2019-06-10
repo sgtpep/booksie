@@ -1,4 +1,21 @@
-import saveBook from './save-book.js';
+import saveBook, { booksKey } from './save-book.js';
+
+const deleteBook = book =>
+  caches
+    .open(booksKey)
+    .then(cache =>
+      cache
+        .keys()
+        .then(requests =>
+          requests
+            .filter(request =>
+              request.url.includes(
+                `${book.dataset.source}/${book.dataset.slug}.`
+              )
+            )
+            .forEach(request => cache.delete(request))
+        )
+    );
 
 const downloadBook = book => {
   const anchor = document.createElement('a');
@@ -21,6 +38,8 @@ export default () =>
         const book = event.target.closest('.book');
         event.target.dataset.action === 'copyright'
           ? showCopyright(book)
+          : event.target.dataset.action === 'delete'
+          ? deleteBook(book)
           : event.target.dataset.action === 'download'
           ? downloadBook(book)
           : event.target.dataset.action === 'save'

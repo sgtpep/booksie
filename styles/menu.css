@@ -49,10 +49,20 @@
   visibility: hidden;
 }
 
-.menu > ul > li {
+.menu > ul a {
+  color: inherit;
   cursor: pointer;
+  display: block;
+  font-weight: inherit;
   padding: 0.5em 0.75em;
 }
-.menu > ul > li:hover {
+.menu > ul a:hover {
   background-color: rgba(0, 0, 0, 0.05);
+}
+
+.book.offline .menu a[data-action='save'] {
+  display: none;
+}
+.book:not(.offline) .menu a[data-action='delete'] {
+  display: none;
 }

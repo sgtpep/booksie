@@ -9,6 +9,6 @@
     background-size: inherit;
   }
 }
-html:not(.scriptless) .cover:not([class*=' cover-']):not(.offline) {
+html:not(.scriptless) .book:not(.offline) .cover:not([class*=' cover-']) {
   opacity: 0;
 }
