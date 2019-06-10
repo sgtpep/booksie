@@ -18,7 +18,7 @@ const loadCover = cover => {
     );
     image.src = `covers/${cover.dataset.cover}${
       devicePixelRatio > 1 ? '@2x' : ''
-    }.jpg${window.cacheBuster ? `?${cacheBuster}` : ''}`;
+    }.jpg?${cover.dataset.buster}`;
   }
 };
 

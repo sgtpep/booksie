@@ -171,6 +171,7 @@ const generateBook = book => {
 const generateBookEntries = source => {
   let startIndex;
   const books = fetchBooks();
+  const buster = cacheBuster();
   return books
     .filter(book => book.source === source)
     .map((book, index) => {
@@ -182,6 +183,7 @@ const generateBookEntries = source => {
       const absoluteIndex = startIndex + index;
       return {
         ...book,
+        buster,
         left: `${-(absoluteIndex % spriteWidth) * 100}%`,
         new: Date.now() - Date.parse(book.added) < 1000 * 60 * 60 * 24 * 10,
         sprite: Math.floor(absoluteIndex / (spriteWidth * spriteHeight)),
@@ -248,7 +250,6 @@ const generateFooter = () => {
 const generateHead = () =>
   readInclude('head', {
     backgroundColor,
-    cacheBuster: cacheBuster(),
     coverSize,
     coversStyle: generateCoversStyle(),
     description,
