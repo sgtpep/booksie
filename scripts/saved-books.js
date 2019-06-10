@@ -8,17 +8,18 @@ export default () =>
       .then(requests =>
         Promise.all(
           requests
+            .reverse()
             .filter(request => request.url.endsWith('.html'))
             .map(request =>
               caches.match(request).then(response => response.text())
             )
         )
       )
-      .then(html => {
+      .then(htmls => {
         const saved = document.querySelector('#saved');
         saved.parentElement
           .querySelector('.books')
-          .insertAdjacentHTML('afterbegin', html.join('\n'));
-        saved.classList.add('loaded');
+          .insertAdjacentHTML('afterbegin', htmls.join('\n'));
+        saved.classList.toggle('loaded', htmls.length);
       })
   );
