@@ -1,11 +1,17 @@
 .cover {
-  background-size: calc(var(--reduced-cover-size) * var(--sprite-width))
-    calc(var(--reduced-cover-size) * var(--sprite-height));
   padding-top: 100%;
   transition: opacity 150ms;
 }
+.book.offline .cover {
+  background-size: var(--reduced-cover-size);
+}
+.book:not(.offline) .cover {
+  background-size: calc(var(--reduced-cover-size) * var(--sprite-width))
+    calc(var(--reduced-cover-size) * var(--sprite-height));
+}
 @media (min-width: 768px) {
-  .cover {
+  .book.offline .cover,
+  .book:not(.offline) .cover {
     background-size: inherit;
   }
 }
