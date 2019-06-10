@@ -14,14 +14,18 @@ const showCopyright = book =>
 
 export default () =>
   addEventListener('click', event => {
-    if (event.target.dataset.action && event.target.closest('.menu')) {
-      const book = event.target.closest('.book');
-      event.target.dataset.action === 'copyright'
-        ? showCopyright(book)
-        : event.target.dataset.action === 'download'
-        ? downloadBook(book)
-        : event.target.dataset.action === 'save'
-        ? saveBook(book)
-        : undefined;
+    if (event.target.dataset.action) {
+      const menu = event.target.closest('.menu');
+      if (menu) {
+        menu.blur();
+        const book = event.target.closest('.book');
+        event.target.dataset.action === 'copyright'
+          ? showCopyright(book)
+          : event.target.dataset.action === 'download'
+          ? downloadBook(book)
+          : event.target.dataset.action === 'save'
+          ? saveBook(book)
+          : undefined;
+      }
     }
   });

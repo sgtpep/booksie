@@ -5,6 +5,9 @@
   position: absolute;
   right: 0;
 }
+.menu:focus {
+  outline: none;
+}
 
 .menu > a {
   --border-radius: 0.375em;
@@ -21,7 +24,7 @@
   transition: background-color var(--delay);
   width: calc(var(--height) * 0.75);
 }
-.menu:hover > a {
+.menu:focus > a {
   background-color: rgba(0, 0, 0, 0.1);
 }
 
@@ -40,7 +43,7 @@
   white-space: nowrap;
   z-index: 2;
 }
-.menu:not(:hover) > ul {
+.menu:not(:focus) > ul {
   opacity: 0;
   visibility: hidden;
 }
