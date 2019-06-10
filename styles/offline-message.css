@@ -1,4 +1,4 @@
-.offline-message {
+#offline-message {
   --horizontal-padding: 1em;
   margin-left: auto;
   margin-right: auto;
@@ -7,6 +7,6 @@
   padding-right: var(--horizontal-padding);
   text-align: center;
 }
-html:not(.offline) .offline-message {
+html:not(.offline) #offline-message {
   display: none;
 }
