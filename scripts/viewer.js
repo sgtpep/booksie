@@ -226,7 +226,7 @@ const onHashChange = (event = { newURL: location.href, oldURL: '' }) => {
   const oldHash = extractHash(event.oldURL);
   if (hash.includes('/')) {
     const [source, slug, action] = hash.split('/');
-    openViewer(source, slug, action === 'copyright');
+    openViewer(source, decodeURIComponent(slug), action === 'copyright');
   } else if (oldHash.includes('/')) {
     closeViewer();
   }

@@ -5,7 +5,9 @@ const deleteBook = book =>
     cache.keys().then(requests => {
       requests
         .filter(request =>
-          request.url.includes(`${book.dataset.source}/${book.dataset.slug}.`)
+          request.url.includes(
+            `/${book.dataset.source}/${encodeURIComponent(book.dataset.slug)}.`
+          )
         )
         .forEach(request => cache.delete(request));
       updateSavedBooks();
