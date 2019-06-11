@@ -32,7 +32,7 @@
     navigator.onLine === false &&
       document.documentElement.classList.add('offline');
 
-    const updateBookHref = container =>
+    const updateBookHrefs = container =>
       [...container.children].forEach(
         book =>
           book.classList.contains('book') &&
