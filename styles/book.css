@@ -50,7 +50,6 @@
 }
 
 .book.new > a::before {
-  -webkit-transform: translate(50%, 50%) rotate(-45deg);
   background-color: #ef5350;
   color: white;
   content: 'NEW';
@@ -61,6 +60,7 @@
   position: absolute;
   text-align: center;
   top: 0;
+  -webkit-transform: translate(-50%, -50%) rotate(-45deg);
   transform: translate(-50%, -50%) rotate(-45deg);
   width: 100%;
   z-index: 1;

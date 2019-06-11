@@ -40,13 +40,13 @@
 @media (min-width: 480px) {
   .source-description > img,
   .source-description > noscript > img {
-    -webkit-transform: translate(-50%, -50%);
     height: auto;
     left: calc(var(--logo-width) / 2 + var(--horizontal-padding));
     max-height: var(--logo-height);
     max-width: var(--logo-width);
     position: absolute;
     top: 50%;
+    -webkit-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
   }
 }
