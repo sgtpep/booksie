@@ -8,6 +8,9 @@
 .menu:focus {
   outline: none;
 }
+html.scriptless .menu {
+  display: none;
+}
 
 .menu > a {
   --border-radius: 0.375em;
