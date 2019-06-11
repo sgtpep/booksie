@@ -10,6 +10,28 @@
   }
 }
 
+.book::before {
+  --delay: 150ms;
+  --radius: 0.5em;
+  background-color: var(--background-color);
+  border-bottom-left-radius: var(--radius);
+  border-bottom-right-radius: var(--radius);
+  box-shadow: 0 0.0625em 0.25em rgba(0, 0, 0, 0.25);
+  content: 'Saving...';
+  left: 50%;
+  padding: 0.25em 0.5em;
+  position: absolute;
+  top: 0;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+  transition: opacity var(--delay), visibility var(--delay);
+  z-index: 1;
+}
+.book:not(.saving)::before {
+  opacity: 0;
+  visibility: hidden;
+}
+
 .book > a {
   --delay: 150ms;
   border-radius: 0.375em;
