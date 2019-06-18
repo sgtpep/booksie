@@ -29,7 +29,7 @@ const showCopyright = book =>
 export default () =>
   addEventListener('click', event => {
     if (event.target.dataset.action) {
-      const menu = event.target.closest('.menu');
+      const menu = event.target.closest('.book-menu');
       if (menu) {
         menu.blur();
         const book = event.target.closest('.book');

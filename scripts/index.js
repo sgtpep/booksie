@@ -1,19 +1,19 @@
+import bookMenu from './book-menu.js';
 import contact from './contact.js';
 import coverLazyLoading from './cover-lazy-loading.js';
 import externalLinks from './external-links.js';
 import lazyLoading from './lazy-loading.js';
-import menu from './menu.js';
 import offline from './offline.js';
 import randomization from './randomization.js';
 import serviceWorker from './service-worker.js';
 import stickyElements from './sticky-elements.js';
 import viewer from './viewer.js';
 
+bookMenu();
 contact();
 coverLazyLoading();
 externalLinks();
 lazyLoading();
-menu();
 offline();
 randomization(() => coverLazyLoading());
 serviceWorker();

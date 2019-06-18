@@ -1,18 +1,18 @@
-.menu {
+.book-menu {
   --delay: 150ms;
   --height: 2em;
   margin-top: calc(-1 * var(--height) - 0.25em);
   position: absolute;
   right: 0;
 }
-.menu:focus {
+.book-menu:focus {
   outline: none;
 }
-html.scriptless .menu {
+html.scriptless .book-menu {
   display: none;
 }
 
-.menu > a {
+.book-menu > a {
   --border-radius: 0.375em;
   border-bottom-right-radius: var(--border-radius);
   border-top-left-radius: var(--border-radius);
@@ -27,12 +27,12 @@ html.scriptless .menu {
   transition: background-color var(--delay);
   width: calc(var(--height) * 0.75);
 }
-.menu:focus > a,
-.menu:hover > a {
+.book-menu:focus > a,
+.book-menu:hover > a {
   background-color: rgba(0, 0, 0, 0.1);
 }
 
-.menu > ul {
+.book-menu > ul {
   background-color: white;
   border-radius: 0.375em;
   box-shadow: 0 0.0625em 0.25em rgba(0, 0, 0, 0.25);
@@ -47,25 +47,25 @@ html.scriptless .menu {
   white-space: nowrap;
   z-index: 2;
 }
-.menu:not(:focus) > ul {
+.book-menu:not(:focus) > ul {
   opacity: 0;
   visibility: hidden;
 }
 
-.menu > ul a {
+.book-menu > ul a {
   color: inherit;
   cursor: pointer;
   display: block;
   font-weight: inherit;
   padding: 0.5em 0.75em;
 }
-.menu > ul a:hover {
+.book-menu > ul a:hover {
   background-color: rgba(0, 0, 0, 0.05);
 }
 
-.book.offline .menu a[data-action='save'] {
+.book.offline .book-menu a[data-action='save'] {
   display: none;
 }
-.book:not(.offline) .menu a[data-action='delete'] {
+.book:not(.offline) .book-menu a[data-action='delete'] {
   display: none;
 }
