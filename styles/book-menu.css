@@ -45,7 +45,7 @@ html.scriptless .book-menu {
   right: 0;
   transition: opacity var(--delay), visibility var(--delay);
   white-space: nowrap;
-  z-index: 2;
+  z-index: 3;
 }
 .book-menu:not(:focus) > ul {
   opacity: 0;

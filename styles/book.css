@@ -57,13 +57,14 @@
 .book.new > a::before {
   background-color: #ef5350;
   color: white;
-  content: 'NEW';
+  content: 'New';
   font-size: 0.7em;
   font-weight: bold;
   left: 0;
   padding-top: 4em;
   position: absolute;
   text-align: center;
+  text-transform: uppercase;
   top: 0;
   -webkit-transform: translate(-50%, -50%) rotate(-45deg);
   transform: translate(-50%, -50%) rotate(-45deg);

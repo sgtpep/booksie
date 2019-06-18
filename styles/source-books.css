@@ -25,7 +25,7 @@ html.offline .source-books > a[id]:empty:not(#saved) ~ * {
   position: sticky;
   text-align: center;
   top: 0;
-  z-index: 1;
+  z-index: 2;
 }
 .source-books > h2.sticky {
   box-shadow: 0 -0.25em white, 0 0.0625em 0.25em rgba(0, 0, 0, 0.25);
