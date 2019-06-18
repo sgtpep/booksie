@@ -17,9 +17,8 @@
   border-bottom-left-radius: var(--radius);
   border-bottom-right-radius: var(--radius);
   box-shadow: 0 0.0625em 0.25em rgba(0, 0, 0, 0.25);
-  content: 'Saving...';
   left: 50%;
-  padding: 0.25em 0.5em;
+  padding: 0.375em 0.75em;
   position: absolute;
   top: 0;
   -webkit-transform: translateX(-50%);
@@ -27,7 +26,13 @@
   transition: opacity var(--delay), visibility var(--delay);
   z-index: 1;
 }
-.book:not(.saving)::before {
+.book.saved::before {
+  content: 'Saved!';
+}
+.book.saving::before {
+  content: 'Saving...';
+}
+.book:not(.saved):not(.saving)::before {
   opacity: 0;
   visibility: hidden;
 }

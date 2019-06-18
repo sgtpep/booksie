@@ -47,6 +47,7 @@ export default book =>
           ).then(images => {
             const clone = book.cloneNode(true);
             clone.classList.add('offline');
+            clone.classList.remove('saved');
             clone.classList.remove('saving');
             clone.dataset.href = generateCacheURL(book, '.pdf');
             const cover = clone.querySelector('.cover');
@@ -77,6 +78,8 @@ export default book =>
             );
           }),
         ]).then(() => {
+          book.classList.add('saved');
+          setTimeout(() => book.classList.remove('saved'), 1500);
           book.classList.remove('saving');
           updateSavedBooks();
         });
