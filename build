@@ -15,6 +15,7 @@ const {
   fetchURL,
   makeDirectories,
   memoize,
+  readDirectory,
   symlinkFile,
 } = require('booksie-data');
 
@@ -46,20 +47,16 @@ const buildCovers = scale => {
         ],
         { env: { MAGICK_TEMPORARY_PATH: cachePath() } }
       )
-    : fs
-        .readdirSync(covers)
-        .filter(filename => !/@.+?x\.jpg$/.test(filename))
-        .forEach(filename => {
-          const output = outputMask.replace(
-            '%d',
-            path.basename(filename, '.jpg')
-          );
+    : readDirectory(covers)
+        .filter(cover => !/@.+?x\.jpg$/.test(cover))
+        .forEach(cover => {
+          const output = outputMask.replace('%d', path.basename(cover, '.jpg'));
           fs.existsSync(output) ||
             executeCommand([
               'convert',
               '-resize',
               `${scale * 100}%`,
-              path.join(covers, filename),
+              cover,
               output,
             ]);
         });
@@ -90,11 +87,11 @@ const cacheBuster = () =>
   ).slice(0, 7);
 
 const copyAssets = () => {
-  const dirname = 'assets';
-  const target = distributionPath(dirname);
+  const directory = 'assets';
+  const target = distributionPath(directory);
   process.env.CI
-    ? copyDirectory(dirname, target)
-    : symlinkFile(path.join('..', dirname), target);
+    ? copyDirectory(directory, target)
+    : symlinkFile(path.join('..', directory), target);
 };
 
 const copyPDFJSFiles = () =>
@@ -231,10 +228,10 @@ const generateDevelopmentScript = () => {
 };
 
 const generateDevelopmentStyle = () =>
-  fs
-    .readdirSync('styles')
-    .map(filename => {
-      symlinkFile(path.join('../styles', filename), distributionPath(filename));
+  readDirectory('styles')
+    .map(style => {
+      const filename = path.basename(style);
+      symlinkFile(path.join('..', style), distributionPath(filename));
       return `<link href="${filename}" rel="stylesheet">`;
     })
     .join('\n');
@@ -312,9 +309,7 @@ const generateManifest = () => ({
     { src: 'assets/icon.svg' },
   ],
   name,
-  screenshots: fs
-    .readdirSync('assets/screenshots')
-    .map(filename => ({ src: path.join('assets/screenshots', filename) })),
+  screenshots: readDirectory('assets/screenshots').map(src => ({ src })),
   serviceworker: { src: 'service-worker.js' },
   short_name: name,
   start_url: '.',
@@ -347,11 +342,8 @@ ${executeCommand([
 
 const generateProductionStyle = () =>
   `<style>
-${fs
-  .readdirSync('styles')
-  .map(filename =>
-    fs.readFileSync(path.join('styles', filename), 'utf8').trim()
-  )
+${readDirectory('styles')
+  .map(style => fs.readFileSync(style, 'utf8').trim())
   .join('\n\n')}
 </style>`;
 
@@ -456,14 +448,15 @@ const replaceTokens = (string, replacements) => {
 };
 
 const sourceLogo = source => {
-  const filename = fs
-    .readdirSync('assets/sources')
-    .find(filename => filename.startsWith(`${source}.`));
-  return filename
+  const logo = readDirectory('assets/sources').find(logo =>
+    path.basename(logo).startsWith(`${source}.`)
+  );
+  return logo
     ? `<img alt="${
-        sources.find(source => source.id === filename.replace(/\..+?$/, ''))
-          .name
-      }" src="assets/sources/${filename}"/>`
+        sources.find(
+          source => source.id === path.basename(logo).replace(/\..+?$/, '')
+        ).name
+      }" src="${logo}"/>`
     : null;
 };
 
