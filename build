@@ -312,6 +312,7 @@ const generateManifest = () => ({
     { src: 'assets/icon.svg' },
   ],
   name,
+  screenshots: fs.readdirSync('assets/screenshots').map(src => ({ src })),
   serviceworker: { src: 'service-worker.js' },
   short_name: name,
   start_url: '.',
