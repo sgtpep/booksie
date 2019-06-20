@@ -6,7 +6,7 @@ export default () => {
           entry.boundingClientRect.width &&
           entry.target.nextElementSibling.classList.toggle(
             'sticky',
-            !entry.isIntersecting
+            !entry.isIntersecting && entry.boundingClientRect.top < 0
           )
       )
     );
