@@ -327,7 +327,7 @@ const generateNewBooks = () =>
   sources
     .map(source => generateBookEntries(source.id).filter(entry => entry.new))
     .flat()
-    .map(book => generateBook({ ...book, new: false }).trim())
+    .map(book => generateBook(book).trim())
     .join('');
 
 const generateProductionScript = () => `<script defer>
