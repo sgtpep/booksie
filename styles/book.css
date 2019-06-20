@@ -56,6 +56,7 @@
 
 .book.new > a::before {
   background-color: #ef5350;
+  box-shadow: 0 0.0625em 0.25em rgba(0, 0, 0, 0.25);
   color: white;
   content: 'New';
   font-size: 0.7em;
