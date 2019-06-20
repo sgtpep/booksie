@@ -1,6 +1,7 @@
 const randomBook = () => {
   const books = document.querySelectorAll('.book');
-  books[Math.floor(Math.random() * books.length)].click();
+  const book = books[Math.floor(Math.random() * books.length)];
+  location = `#${book.dataset.source}/${book.dataset.slug}`;
 };
 
 const shuffleBooks = (onShuffle = () => {}) =>
