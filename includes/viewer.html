@@ -1,7 +1,29 @@
 <div hidden id="viewer">
   <div class="viewer-message" hidden id="viewer-heading"></div>
   <div class="viewer-message" hidden id="viewer-loading">
-    <!--spinner-->Loading...<span id="viewer-progress"><span></span></span>
+    <svg
+      height="60"
+      id="viewer-spinner"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-width="4"
+      viewBox="10 10 44 44"
+      width="60"
+    >
+      <path d="M32 20v-8" />
+      <path d="M38 21.6l4-7" />
+      <path d="M42.4 26l7-4" />
+      <path d="M44 32h8" />
+      <path d="M42.4 38l7 4" />
+      <path d="M38 42.4l4 7" />
+      <path d="M32 44v8" />
+      <path d="M26 42.4l-4 7" />
+      <path d="M21.6 38l-7 4" />
+      <path d="M20 32h-8" />
+      <path d="M21.6 26l-7-4" />
+      <path d="M26 21.6l-4-7" />
+    </svg>
+    Loading...<span id="viewer-progress"><span></span></span>
   </div>
   <div class="viewer-message" id="viewer-error"></div>
   <div id="viewer-pages"></div>

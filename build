@@ -295,7 +295,7 @@ const generateMain = () =>
   readInclude('main', {
     books: generateSourceBooks(),
     navigation: generateNavigation(),
-    viewer: generateViewer(),
+    viewer: readInclude('viewer'),
   });
 
 const generateManifest = () => ({
@@ -388,9 +388,6 @@ const generateSourceDescription = id => {
     logo: sourceLogo(id),
   });
 };
-
-const generateViewer = () =>
-  readInclude('viewer', { spinner: fs.readFileSync('images/spinner.svg') });
 
 const licenseURL = license =>
   assert(
