@@ -28,7 +28,9 @@ const listenFetch = () =>
                   })
                 )
                 .catch(() => caches.match(event.request))
-            : caches.match(event.request)
+            : event.request.url.startsWith(baseURL)
+            ? caches.match(event.request)
+            : new Response()
         )
   );
 
