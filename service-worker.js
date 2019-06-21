@@ -1,12 +1,10 @@
-const baseURL = `${location.protocol}//${location.host}`;
-
 const booksKey = 'books';
 
 const cacheable = url =>
-  urls.includes(url.replace(`${baseURL}/`, '')) ||
+  urls.includes(url.replace(document.baseURI, '')) ||
   (location.hostname === 'localhost' &&
     /\.(css|js)$/.test(url) &&
-    url !== `${baseURL}/service-worker.js`);
+    url !== `${document.baseURI}service-worker.js`);
 
 const listenFetch = () =>
   self.addEventListener('fetch', event =>
