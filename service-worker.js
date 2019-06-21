@@ -1,10 +1,11 @@
 const booksKey = 'books';
 
 const cacheable = url =>
-  urls.includes(url.replace(document.baseURI, '')) ||
-  (location.hostname === 'localhost' &&
-    /\.(css|js)$/.test(url) &&
-    url !== `${document.baseURI}service-worker.js`);
+  url.startsWith(document.baseURI) &&
+  (urls.includes(url.replace(document.baseURI, '')) ||
+    (location.hostname === 'localhost' &&
+      /\.(css|js)$/.test(url) &&
+      url !== `${document.baseURI}service-worker.js`));
 
 const listenFetch = () =>
   self.addEventListener('fetch', event =>
