@@ -9,6 +9,20 @@ const coverSize = parseInt(
 const generateCacheURL = (book, extension) =>
   `${book.dataset.source}/${book.dataset.slug}${extension}`;
 
+const reloadIfNeeded = () =>
+  /\bApple\b/.test(navigator.vendor) &&
+  caches
+    .open(booksKey)
+    .then(cache =>
+      cache
+        .keys()
+        .then(
+          requests =>
+            requests.filter(request => request.url.endsWith('.pdf')).length ===
+              1 && location.reload()
+        )
+    );
+
 export default book =>
   window.caches
     ? caches.open(booksKey).then(cache => {
@@ -83,6 +97,7 @@ export default book =>
           setTimeout(() => book.classList.remove('saved'), 1500);
           book.classList.remove('saving');
           updateSavedBooks();
+          reloadIfNeeded();
         });
       })
     : alert('Not supported in your browser.');
