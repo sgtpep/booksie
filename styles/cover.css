@@ -1,6 +1,8 @@
 .cover {
+  --delay: 150ms;
   padding-top: 100%;
-  transition: opacity 150ms;
+  -webkit-transition: opacity var(--delay);
+  transition: opacity var(--delay);
 }
 .book.offline .cover {
   background-size: var(--reduced-cover-size);

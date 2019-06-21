@@ -4,6 +4,7 @@
 }
 .source-books > a#saved:empty ~ * {
   --delay: 300ms;
+  -webkit-transition: opacity var(--delay), visibility var(--delay);
   transition: opacity var(--delay), visibility var(--delay);
 }
 .source-books > a#saved:empty:not(.visible) ~ * {

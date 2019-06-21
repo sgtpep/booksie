@@ -23,6 +23,7 @@
   top: 0;
   -webkit-transform: translateX(-50%);
   transform: translateX(-50%);
+  -webkit-transition: opacity var(--delay), visibility var(--delay);
   transition: opacity var(--delay), visibility var(--delay);
   z-index: 1;
 }
@@ -47,6 +48,7 @@
   overflow: hidden;
   position: relative;
   text-decoration: inherit;
+  -webkit-transition: box-shadow var(--delay), opacity var(--delay);
   transition: box-shadow var(--delay), opacity var(--delay);
 }
 .book:hover > a {

@@ -7,6 +7,7 @@ html.viewing > body {
   --delay: 150ms;
   display: inline-block;
   text-align: center;
+  -webkit-transition: color var(--delay), text-shadow var(--delay);
   transition: color var(--delay), text-shadow var(--delay);
   width: var(--height);
 }
@@ -35,11 +36,14 @@ a.viewer-action {
 
 .viewer-message {
   --horizontal-margin: 1em;
+  -webkit-box-align: center;
   align-items: center;
   bottom: 0;
   color: var(--color);
+  display: -webkit-box;
   display: flex;
   font-size: larger;
+  -webkit-box-pack: center;
   justify-content: center;
   left: 0;
   margin-left: var(--horizontal-margin);
@@ -65,16 +69,17 @@ a.viewer-action {
 #viewer {
   --color: whitesmoke;
   --delay: 150ms;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -webkit-user-select: none;
   background-color: black;
   bottom: 0;
   left: 0;
   position: fixed;
   right: 0;
   top: 0;
+  -webkit-transition: opacity var(--delay), visibility var(--delay);
   transition: opacity var(--delay), visibility var(--delay);
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
   user-select: none;
   z-index: 1000;
 }
@@ -147,6 +152,7 @@ a.viewer-action {
   position: absolute;
   right: 0;
   top: 0;
+  -webkit-transition: opacity var(--delay);
   transition: opacity var(--delay);
 }
 #viewer-pages > img.fading {

@@ -1,5 +1,7 @@
 img.lazy-loading {
-  transition: opacity 150ms;
+  --delay: 150ms;
+  -webkit-transition: opacity var(--delay);
+  transition: opacity var(--delay);
 }
 img.lazy-loading:not([src]) {
   visibility: hidden;

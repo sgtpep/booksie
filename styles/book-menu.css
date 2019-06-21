@@ -24,6 +24,7 @@ html.scriptless .book-menu {
   line-height: var(--height);
   opacity: 0.5;
   text-align: center;
+  -webkit-transition: background-color var(--delay);
   transition: background-color var(--delay);
   width: calc(var(--height) * 0.75);
 }
@@ -43,6 +44,7 @@ html.scriptless .book-menu {
   padding-left: 0;
   position: absolute;
   right: 0;
+  -webkit-transition: opacity var(--delay), visibility var(--delay);
   transition: opacity var(--delay), visibility var(--delay);
   white-space: nowrap;
   z-index: 3;

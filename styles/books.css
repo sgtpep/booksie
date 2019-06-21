@@ -1,9 +1,12 @@
 .books {
   --horizontal-margin: 4px;
   --vertical-margin: 0.75em;
+  -webkit-box-align: start;
   align-items: flex-start;
+  display: -webkit-box;
   display: flex;
   flex-wrap: wrap;
+  -webkit-box-pack: space-evenly;
   justify-content: space-evenly;
   margin: var(--vertical-margin) var(--horizontal-margin);
 }
