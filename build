@@ -353,6 +353,7 @@ const generateSourceBooks = () => {
     readInclude('source-books', {
       books: [],
       heading: 'Saved Books',
+      hiddenAttribute: ' hidden',
       id: 'saved',
       script: fs.readFileSync('scripts/saved-books.js', 'utf8').trim(),
       sourceDescription: null,
@@ -361,6 +362,7 @@ const generateSourceBooks = () => {
       readInclude('source-books', {
         books: newBooks,
         heading: 'New Arrivals',
+        hiddenAttribute: '',
         id: 'new',
         script: null,
         sourceDescription: null,
@@ -369,6 +371,7 @@ const generateSourceBooks = () => {
       readInclude('source-books', {
         books: generateBooks(source.id),
         heading: `Books by ${source.name}`,
+        hiddenAttribute: '',
         id: source.id,
         script: null,
         sourceDescription: generateSourceDescription(source.id),

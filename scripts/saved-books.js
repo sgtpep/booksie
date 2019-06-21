@@ -21,7 +21,8 @@ function updateSavedBooks(initial = false) {
         .then(htmls => {
           const saved = document.querySelector('#saved');
           const height = document.documentElement.scrollHeight;
-          const books = saved.closest('.source-books').querySelector('.books');
+          const sourceBooks = saved.closest('.source-books');
+          const books = sourceBooks.querySelector('.books');
           while (
             books.firstElementChild &&
             books.firstElementChild.classList.contains('book')
@@ -29,7 +30,7 @@ function updateSavedBooks(initial = false) {
             books.removeChild(books.firstElementChild);
           }
           books.insertAdjacentHTML('afterbegin', htmls.join('\n'));
-          saved.classList.toggle('visible', htmls.length);
+          sourceBooks.hidden = !htmls.length;
           document.documentElement.scrollHeight > height &&
             !initial &&
             scrollBy(0, document.documentElement.scrollHeight - height);
