@@ -1,7 +1,6 @@
 let observer;
 
-const addCoverClass = cover =>
-  cover.classList.add(`cover-${cover.dataset.cover}`);
+const addCoverClass = cover => toggleCoverClass(cover, true);
 
 const coverPreloaded = {};
 
@@ -9,7 +8,9 @@ export const coverURL = (index, scale = 1, buster = undefined) =>
   `covers/${index}${scale > 1 ? '@2x' : ''}.jpg${buster ? `?${buster}` : ''}`;
 
 const loadCover = cover => {
-  if (!coverPreloaded[cover.dataset.cover]) {
+  if (coverPreloaded[cover.dataset.cover]) {
+    addCoverClass(cover);
+  } else {
     coverPreloaded[cover.dataset.cover] = true;
     const image = new Image();
     image.addEventListener('load', () =>
@@ -27,17 +28,19 @@ const loadCover = cover => {
   }
 };
 
+const toggleCoverClass = (cover, force) =>
+  cover.classList.toggle(`cover-${cover.dataset.cover}`, force);
+
 export default () => {
   (
     observer ||
     (observer = new IntersectionObserver(
       entries =>
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            observer.unobserve(entry.target);
-            loadCover(entry.target);
-          }
-        }),
+        entries.forEach(entry =>
+          entry.isIntersecting
+            ? loadCover(entry.target)
+            : toggleCoverClass(entry.target, false)
+        ),
       { rootMargin: '500% 0%' }
     ))
   ).disconnect();
