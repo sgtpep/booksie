@@ -47,8 +47,9 @@ export default book =>
           ).then(images => {
             const clone = book.cloneNode(true);
             clone.classList.add('offline');
-            clone.classList.remove('saved');
-            clone.classList.remove('saving');
+            ['new', 'saved', 'saving'].forEach(className =>
+              clone.classList.remove(className)
+            );
             clone.dataset.href = generateCacheURL(book, '.pdf');
             const cover = clone.querySelector('.cover');
             cover.classList.remove(`cover-${cover.dataset.cover}`);
