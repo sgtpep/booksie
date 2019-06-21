@@ -1,4 +1,5 @@
 import bookMenu from './book-menu.js';
+import clicky from './clicky.js';
 import contact from './contact.js';
 import coverLazyLoading from './cover-lazy-loading.js';
 import externalLinks from './external-links.js';
@@ -10,6 +11,7 @@ import stickyElements from './sticky-elements.js';
 import viewer from './viewer.js';
 
 bookMenu();
+clicky();
 contact();
 coverLazyLoading();
 externalLinks();
