@@ -147,7 +147,7 @@ const listenViewerDragEvents = () => {
   viewer.addEventListener('mousedown', onDragStart);
   viewer.addEventListener('mouseup', onDragStop);
   viewer.addEventListener('touchend', onDragStop);
-  viewer.addEventListener('touchstart', onDragStart);
+  viewer.addEventListener('touchstart', onDragStart, { passive: true });
 };
 
 const loadDocument = (source, slug, copyright = false) => {
