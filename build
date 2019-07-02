@@ -91,8 +91,9 @@ const cacheBuster = () =>
     JSON.stringify(fetchBooks().map(book => [book.source, book.slug]))
   ).slice(0, 7);
 
-const copyAssets = () => {
-  const directory = 'assets';
+const copyAssets = () => copyOrSymlinkDirectory('assets');
+
+const copyOrSymlinkDirectory = directory => {
   const target = distributionPath(directory);
   process.env.CI
     ? copyDirectory(directory, target)
@@ -116,8 +117,7 @@ const copyServiceWorker = () => {
 };
 
 const copyWellKnown = () => {
-  const directory = '.well-known';
-  copyDirectory(directory, distributionPath(directory));
+  copyOrSymlinkDirectory('.well-known');
   fs.writeFileSync(distributionPath('.nojekyll'), '');
 };
 
