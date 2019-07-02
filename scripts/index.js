@@ -1,6 +1,6 @@
 import './canvas-toblob-polyfill.js';
 import bookMenu from './book-menu.js';
-import clicky from './clicky.js';
+import clickyAnalytics from './clicky-analytics.js';
 import contact from './contact.js';
 import coverLazyLoading from './cover-lazy-loading.js';
 import lazyLoading from './lazy-loading.js';
@@ -11,7 +11,7 @@ import stickyElements from './sticky-elements.js';
 import viewer from './viewer.js';
 
 bookMenu();
-clicky();
+clickyAnalytics();
 contact();
 coverLazyLoading();
 lazyLoading();
