@@ -419,7 +419,7 @@ const main = () => {
 
 const manifest = 'manifest.webmanifest';
 
-const name = 'Booksie.org';
+const name = 'Booksie';
 
 const readInclude = (name, replacements = {}) =>
   replaceTokens(

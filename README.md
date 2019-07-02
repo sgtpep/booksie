@@ -1,8 +1,8 @@
-# Booksie.org
+# Booksie
 
 [![Build Status](https://travis-ci.org/sgtpep/booksie.svg?branch=master)](https://travis-ci.org/sgtpep/booksie)
 
-[![Booksie.org](assets/logo.svg)](https://www.booksie.org/)
+[![Booksie](assets/logo.svg)](https://www.booksie.org/)
 
 **Free Picture Storybooks for Children**
 
