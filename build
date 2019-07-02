@@ -87,14 +87,12 @@ const cacheBuster = () =>
   ).slice(0, 7);
 
 const copyAssets = () => {
-  ['.well-known', 'assets'].forEach(directory => {
-    const target = distributionPath(directory);
-    process.env.CI
-      ? copyDirectory(directory, target)
-      : symlinkFile(path.join('..', directory), target);
-  });
-  fs.writeFileSync(distributionPath('.nojekyll'), '')
-}
+  const directory = 'assets';
+  const target = distributionPath(directory);
+  process.env.CI
+    ? copyDirectory(directory, target)
+    : symlinkFile(path.join('..', directory), target);
+};
 
 const copyPDFJSFiles = () =>
   ['pdf.min.js', 'pdf.worker.min.js'].forEach(filename =>
@@ -110,6 +108,12 @@ const copyServiceWorker = () => {
   process.env.CI
     ? copyFile(filename, target)
     : symlinkFile(path.join('..', filename), target);
+};
+
+const copyWellKnown = () => {
+  const directory = '.well-known';
+  copyDirectory(directory, distributionPath(directory));
+  fs.writeFileSync(distributionPath('.nojekyll'), '');
 };
 
 const coverScales = [1, 2];
@@ -415,6 +419,7 @@ const main = () => {
   copyAssets();
   copyPDFJSFiles();
   copyServiceWorker();
+  copyWellKnown();
 };
 
 const manifest = 'manifest.webmanifest';
