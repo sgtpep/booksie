@@ -13,6 +13,8 @@
   "manifest_version": 2,
   "name": null,
   "offline_enabled": true,
-  "permissions": ["webview"],
+  "permissions": [
+    "webview"
+  ],
   "version": "1"
 }
