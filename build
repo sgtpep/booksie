@@ -28,6 +28,12 @@ const backgroundColor = '#fcfcb4';
 
 const buildAllCovers = () => coverScales.forEach(scale => buildCovers(scale));
 
+const buildChromeAppManifest = () =>
+  fs.writeFileSync(
+    'chrome-app/manifest.json',
+    JSON.stringify(generateChromeAppManifest(), null, 2)
+  );
+
 const buildCovers = scale => {
   const covers = distributionPath(coversPath);
   const outputMask = path.join(
@@ -208,6 +214,21 @@ const generateBooks = source =>
   generateBookEntries(source)
     .map(book => generateBook(book).trim())
     .join('');
+
+const generateChromeAppManifest = () => ({
+  app: {
+    background: {
+      scripts: ['background.js'],
+    },
+  },
+  description,
+  icons: { '128': 'icon.png' },
+  manifest_version: 2,
+  name,
+  offline_enabled: true,
+  permissions: ['webview'],
+  version: '1',
+});
 
 const generateCoversStyle = () => {
   const buster = cacheBuster();
@@ -419,13 +440,13 @@ const licenseURL = license =>
 
 const main = () => {
   buildAllCovers();
+  buildChromeAppManifest();
   buildIndex();
   buildManifest();
   copyAssets();
   copyPDFJSFiles();
   copyServiceWorker();
   copyWellKnown();
-  updateChromeAppManifest();
 };
 
 const manifest = 'manifest.webmanifest';
@@ -478,21 +499,5 @@ const spriteHeight = 3;
 const spriteWidth = 7;
 
 const title = 'Free Picture Storybooks for Children';
-
-const updateChromeAppManifest = () => {
-  const manifest = 'chrome-app/manifest.json';
-  fs.writeFileSync(
-    manifest,
-    JSON.stringify(
-      {
-        ...JSON.parse(fs.readFileSync(manifest)),
-        description,
-        name,
-      },
-      null,
-      2
-    ) + '\n'
-  );
-};
 
 require.main === module && main();
