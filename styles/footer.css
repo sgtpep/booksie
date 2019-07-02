@@ -13,3 +13,7 @@ footer > * {
 footer a {
   color: #fa9dc8;
 }
+
+footer > :last-child > a:not(:last-child) {
+  margin-right: 0.5em;
+}
