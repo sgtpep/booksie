@@ -483,11 +483,15 @@ const updateChromeAppManifest = () => {
   const manifest = 'chrome-app/manifest.json';
   fs.writeFileSync(
     manifest,
-    JSON.stringify({
-      ...JSON.parse(fs.readFileSync(manifest)),
-      description,
-      name,
-    }, null, 2)
+    JSON.stringify(
+      {
+        ...JSON.parse(fs.readFileSync(manifest)),
+        description,
+        name,
+      },
+      null,
+      2
+    ) + '\n'
   );
 };
 
