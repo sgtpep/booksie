@@ -420,6 +420,7 @@ const main = () => {
   copyPDFJSFiles();
   copyServiceWorker();
   copyWellKnown();
+  updateChromeAppManifest();
 };
 
 const manifest = 'manifest.webmanifest';
@@ -472,5 +473,17 @@ const spriteHeight = 3;
 const spriteWidth = 7;
 
 const title = 'Free Picture Storybooks for Children';
+
+const updateChromeAppManifest = () => {
+  const manifest = 'chrome-app/manifest.json';
+  fs.writeFileSync(
+    manifest,
+    JSON.stringify({
+      ...JSON.parse(fs.readFileSync(manifest)),
+      description,
+      name,
+    }, null, 2)
+  );
+};
 
 require.main === module && main();
