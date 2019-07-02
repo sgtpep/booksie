@@ -19,6 +19,11 @@ const {
   symlinkFile,
 } = require('booksie-data');
 
+const anchor = (url, text = url) =>
+  `<a href="${url}"${
+    /^https?:\/\//.test(url) ? ' rel="noopener noreferrer" target="_blank"' : ''
+  }>${text}</a>`;
+
 const backgroundColor = '#fcfcb4';
 
 const buildAllCovers = () => coverScales.forEach(scale => buildCovers(scale));
@@ -283,7 +288,7 @@ const generateHeader = () =>
 
 const generateHomepage = homepage =>
   (Array.isArray(homepage) ? homepage : [homepage])
-    .map(homepage => `<a href="${homepage}">${homepage}</a>`)
+    .map(homepage => anchor(homepage))
     .join(', ');
 
 const generateIndex = () =>
@@ -294,7 +299,7 @@ const generateLicense = license =>
   `License${
     Array.isArray(license) && license.length > 1 ? 's' : ''
   }: ${(Array.isArray(license) ? license : [license])
-    .map(license => `<a href="${licenseURL(license)}">${license}</a>`)
+    .map(license => anchor(licenseURL(license), license))
     .join(', ')}`;
 
 const generateMain = () =>
@@ -325,7 +330,7 @@ const generateManifest = () => ({
 const generateNavigation = () =>
   readInclude('navigation', {
     links: sources
-      .map(source => `<a href="#${source.id}">${source.name}</a>`)
+      .map(source => anchor(`#${source.id}`, source.name))
       .join(', '),
   });
 
