@@ -1,3 +1,4 @@
+import './canvas-toblob-polyfill.js';
 import bookMenu from './book-menu.js';
 import clicky from './clicky.js';
 import contact from './contact.js';
