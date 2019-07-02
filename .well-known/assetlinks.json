@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "org.booksie.www",
+      "sha256_cert_fingerprints": [
+        "SHA256: 58:9C:E5:8F:DB:F7:C0:13:02:47:59:06:4D:92:27:14:53:CE:22:63:24:70:9C:5E:20:A8:F5:A8:2F:18:65:A6"
+      ]
+    }
+  }
+]

@@ -87,12 +87,14 @@ const cacheBuster = () =>
   ).slice(0, 7);
 
 const copyAssets = () => {
-  const directory = 'assets';
-  const target = distributionPath(directory);
-  process.env.CI
-    ? copyDirectory(directory, target)
-    : symlinkFile(path.join('..', directory), target);
-};
+  ['.well-known', 'assets'].forEach(directory => {
+    const target = distributionPath(directory);
+    process.env.CI
+      ? copyDirectory(directory, target)
+      : symlinkFile(path.join('..', directory), target);
+  });
+  fs.writeFileSync(distributionPath('.nojekyll'), '')
+}
 
 const copyPDFJSFiles = () =>
   ['pdf.min.js', 'pdf.worker.min.js'].forEach(filename =>
