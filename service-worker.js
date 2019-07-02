@@ -53,6 +53,7 @@ const urls = [
   'assets/icon.png',
   'assets/icon.svg',
   'assets/logo.svg',
+  'assets/privacy-policy.html',
   'assets/splash.png',
   'manifest.webmanifest',
   'pdfjs/pdf.min.js',
