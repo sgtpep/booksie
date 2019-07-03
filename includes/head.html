@@ -34,6 +34,8 @@
       document.documentElement.classList.add('offline');
     navigator.platform.startsWith('Win') &&
       document.documentElement.classList.add('windows');
+    /\bEdge\b/.test(navigator.userAgent) &&
+      document.documentElement.classList.add('edge');
 
     const updateBookHrefs = container =>
       [...container.children].forEach(
