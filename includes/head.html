@@ -32,6 +32,8 @@
     document.documentElement.classList.remove('scriptless');
     navigator.onLine === false &&
       document.documentElement.classList.add('offline');
+    navigator.platform.startsWith('Win') &&
+      document.documentElement.classList.add('windows');
 
     const updateBookHrefs = container =>
       [...container.children].forEach(

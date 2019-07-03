@@ -107,12 +107,18 @@ a.viewer-action {
 #viewer-edge-next:not(.disabled) {
   cursor: e-resize;
 }
+html.windows #viewer-edge-next:not(.disabled) {
+  cursor: pointer;
+}
 
 #viewer-edge-previous {
   left: 0;
 }
 #viewer-edge-previous:not(.disabled) {
   cursor: w-resize;
+}
+html.windows #viewer-edge-previous:not(.disabled) {
+  cursor: pointer;
 }
 
 #viewer-heading {
