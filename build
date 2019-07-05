@@ -336,6 +336,9 @@ const generateManifest = () => ({
   description,
   display: 'standalone',
   icons: [
+    { sizes: '44x44', src: 'assets/windows/44.png' },
+    { sizes: '50x50', src: 'assets/windows/50.png' },
+    { sizes: '150x150', src: 'assets/windows/150.png' },
     { sizes: '192x192', src: 'assets/icon.png' },
     { sizes: '512x512', src: 'assets/splash.png' },
     { src: 'assets/icon.svg' },
