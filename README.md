@@ -18,6 +18,7 @@ An open catalog of free picture storybooks for children instantly available for 
 https://www.booksie.org/
 
 [<img alt="Get it on Google Play" height="60" src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png">](https://play.google.com/store/apps/details?id=org.booksie.www)
+[<img alt="Get it from Microsoft" height="60" src="https://assets.windowsphone.com/85864462-9c82-451e-9355-a3d5f874397a/English_get-it-from-MS_InvariantCulture_Default.png">](https://www.microsoft.com/en-us/p/booksie/9mtjfqt5s6x5)
 [![Available in the Chrome Web Store](https://developer.chrome.com/webstore/images/ChromeWebStore_Badge_v2_206x58.png)](https://chrome.google.com/webstore/detail/booksie/njfbpmjedghkdjaaaekflfefjjgijhng)
 
 [Age Rating](https://web.iarcservices.com/Dashboard/Certificate/06c6a867-e2e5-4426-8ffa-afddc120c923)
