@@ -10,10 +10,14 @@ footer > * {
   max-width: 960px;
 }
 
+footer > :last-child > a:not(:last-child) {
+  margin-right: 0.5em;
+}
+
 footer a {
   color: #fa9dc8;
 }
 
-footer > :last-child > a:not(:last-child) {
-  margin-right: 0.5em;
+footer abbr {
+  text-decoration: none;
 }
