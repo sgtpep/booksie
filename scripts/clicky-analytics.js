@@ -5,11 +5,11 @@ export default () => {
       history_disable: true,
       outbound_disable: true,
       ping_disable: true,
-    };
-    window.clicky_site_ids = [101191727];
-    const script = document.createElement('script');
-    script.async = true;
-    script.src = '//static.getclicky.com/js';
-    document.body.appendChild(script);
+    }
+    window.clicky_site_ids = [101191727]
+    const script = document.createElement('script')
+    script.async = true
+    script.src = '//static.getclicky.com/js'
+    document.body.appendChild(script)
   }
-};
+}

@@ -6,12 +6,12 @@ export default () => {
           entry.boundingClientRect.width &&
           entry.target.nextElementSibling.classList.toggle(
             'sticky',
-            !entry.isIntersecting && entry.boundingClientRect.top < 0
-          )
-      )
-    );
-    [...document.querySelectorAll('.stickiness-sentinel')].forEach(sentinel =>
-      observer.observe(sentinel)
-    );
+            !entry.isIntersecting && entry.boundingClientRect.top < 0,
+          ),
+      ),
+    )
+    ;[...document.querySelectorAll('.stickiness-sentinel')].forEach(sentinel =>
+      observer.observe(sentinel),
+    )
   }
-};
+}

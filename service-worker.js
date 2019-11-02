@@ -1,12 +1,12 @@
-const baseURL = `${location.protocol}//${location.host}/`;
+const baseURL = `${location.protocol}//${location.host}/`
 
-const booksKey = 'books';
+const booksKey = 'books'
 
 const cacheable = url =>
   urls.includes(url.replace(baseURL, '')) ||
   (location.hostname === 'localhost' &&
     /\.(css|js)$/.test(url) &&
-    url !== `${baseURL}service-worker.js`);
+    url !== `${baseURL}service-worker.js`)
 
 const listenFetch = () =>
   self.addEventListener('fetch', event =>
@@ -14,7 +14,7 @@ const listenFetch = () =>
       ? event.respondWith(
           caches
             .match(event.request)
-            .then(response => response || fetch(event.request))
+            .then(response => response || fetch(event.request)),
         )
       : cacheable(event.request.url) &&
         event.respondWith(
@@ -22,30 +22,30 @@ const listenFetch = () =>
             ? fetch(event.request)
                 .then(response =>
                   caches.open(shellKey).then(cache => {
-                    cache.put(event.request, response.clone());
-                    return response;
-                  })
+                    cache.put(event.request, response.clone())
+                    return response
+                  }),
                 )
                 .catch(() => caches.match(event.request))
-            : caches.match(event.request)
-        )
-  );
+            : caches.match(event.request),
+        ),
+  )
 
 const listenInstall = () =>
   self.addEventListener('install', event =>
     event.waitUntil(
       caches
         .open(shellKey)
-        .then(cache => cache.addAll(urls.map(url => url || '.')))
-    )
-  );
+        .then(cache => cache.addAll(urls.map(url => url || '.'))),
+    ),
+  )
 
 const main = () => {
-  listenFetch();
-  listenInstall();
-};
+  listenFetch()
+  listenInstall()
+}
 
-const shellKey = 'shell';
+const shellKey = 'shell'
 
 const urls = [
   '',
@@ -58,6 +58,6 @@ const urls = [
   'manifest.webmanifest',
   'pdfjs/pdf.min.js',
   'pdfjs/pdf.worker.min.js',
-];
+]
 
-main();
+main()

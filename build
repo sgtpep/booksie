@@ -1,8 +1,8 @@
 #!/usr/bin/env node
-const fs = require('fs');
-const path = require('path');
-const rollup = require('rollup');
-const sources = require('./sources');
+const fs = require('fs')
+const path = require('path')
+const rollup = require('rollup')
+const sources = require('./sources')
 const {
   assert,
   cachePath,
@@ -17,29 +17,29 @@ const {
   memoize,
   readDirectory,
   symlinkFile,
-} = require('booksie-data');
+} = require('booksie-data')
 
 const anchor = (url, text = url) =>
   `<a href="${url}"${
     /^https?:\/\//.test(url) ? ' rel="noopener noreferrer" target="_blank"' : ''
-  }>${text}</a>`;
+  }>${text}</a>`
 
-const backgroundColor = '#fcfcb4';
+const backgroundColor = '#fcfcb4'
 
-const buildAllCovers = () => coverScales.forEach(scale => buildCovers(scale));
+const buildAllCovers = () => coverScales.forEach(scale => buildCovers(scale))
 
 const buildChromeAppManifest = () =>
   fs.writeFileSync(
     'chrome-app/manifest.json',
-    JSON.stringify(generateChromeAppManifest(), null, 2)
-  );
+    JSON.stringify(generateChromeAppManifest(), null, 2),
+  )
 
 const buildCovers = scale => {
-  const covers = distributionPath(coversPath);
+  const covers = distributionPath(coversPath)
   const outputMask = path.join(
     covers,
-    `%d${scale === 1 ? '' : `@${scale}x`}.jpg`
-  );
+    `%d${scale === 1 ? '' : `@${scale}x`}.jpg`,
+  )
   scale === 1 || process.env.CI
     ? (fs.existsSync(outputMask.replace('%d', '0')) && !process.env.CI) ||
       executeCommand(
@@ -56,12 +56,12 @@ const buildCovers = scale => {
           `${spriteWidth}x${spriteHeight}`,
           makeDirectories(outputMask),
         ],
-        { env: { MAGICK_TEMPORARY_PATH: cachePath() } }
+        { env: { MAGICK_TEMPORARY_PATH: cachePath() } },
       )
     : readDirectory(covers)
         .filter(cover => !/@.+?x\.jpg$/.test(cover))
         .forEach(cover => {
-          const output = outputMask.replace('%d', path.basename(cover, '.jpg'));
+          const output = outputMask.replace('%d', path.basename(cover, '.jpg'))
           fs.existsSync(output) ||
             executeCommand([
               'convert',
@@ -69,81 +69,81 @@ const buildCovers = scale => {
               `${scale * 100}%`,
               cover,
               output,
-            ]);
-        });
-};
+            ])
+        })
+}
 
 const buildIndex = () =>
   fs.writeFileSync(
     makeDirectories(distributionPath('index.html')),
-    replaceImages(generateIndex())
-  );
+    replaceImages(generateIndex()),
+  )
 
 const buildManifest = () =>
   fs.writeFileSync(
     makeDirectories(distributionPath(manifest)),
-    JSON.stringify(generateManifest(), null, 2)
-  );
+    JSON.stringify(generateManifest(), null, 2),
+  )
 
 const cache = func => (...args) => {
-  const cache = cachePath(`${func.name}:${calculateMD5(JSON.stringify(args))}`);
+  const cache = cachePath(`${func.name}:${calculateMD5(JSON.stringify(args))}`)
   fs.existsSync(cache) ||
-    fs.writeFileSync(makeDirectories(cache), JSON.stringify(func(...args)));
-  return JSON.parse(fs.readFileSync(cache, 'utf8'));
-};
+    fs.writeFileSync(makeDirectories(cache), JSON.stringify(func(...args)))
+  return JSON.parse(fs.readFileSync(cache, 'utf8'))
+}
 
 const cacheBuster = () =>
   memoize(calculateMD5)(
-    JSON.stringify(fetchBooks().map(book => [book.source, book.slug]))
-  ).slice(0, 7);
+    JSON.stringify(fetchBooks().map(book => [book.source, book.slug])),
+  ).slice(0, 7)
 
-const copyAssets = () => copyOrSymlinkDirectory('assets');
+const copyAssets = () => copyOrSymlinkDirectory('assets')
 
 const copyOrSymlinkDirectory = directory => {
-  const target = distributionPath(directory);
+  const target = distributionPath(directory)
   process.env.CI
     ? copyDirectory(directory, target)
-    : symlinkFile(path.join('..', directory), target);
-};
+    : symlinkFile(path.join('..', directory), target)
+}
 
 const copyPDFJSFiles = () =>
   ['pdf.min.js', 'pdf.worker.min.js'].forEach(filename =>
     copyFile(
       path.join('node_modules/pdfjs-dist/build', filename),
-      distributionPath('pdfjs', filename)
-    )
-  );
+      distributionPath('pdfjs', filename),
+    ),
+  )
 
 const copyServiceWorker = () => {
-  const filename = 'service-worker.js';
-  const target = distributionPath(filename);
+  const filename = 'service-worker.js'
+  const target = distributionPath(filename)
   process.env.CI
     ? copyFile(filename, target)
-    : symlinkFile(path.join('..', filename), target);
-};
+    : symlinkFile(path.join('..', filename), target)
+}
 
 const copyWellKnown = () => {
-  copyOrSymlinkDirectory('.well-known');
-  fs.writeFileSync(distributionPath('.nojekyll'), '');
-};
+  copyOrSymlinkDirectory('.well-known')
+  fs.writeFileSync(distributionPath('.nojekyll'), '')
+}
 
-const coverScales = [1, 2];
+const coverScales = [1, 2]
 
-const coverSize = 192;
+const coverSize = 192
 
-const coversPath = 'covers';
+const coversPath = 'covers'
 
 const description =
-  'An open catalog of free picture storybooks for children instantly available for reading.';
+  'An open catalog of free picture storybooks for children instantly available for reading.'
 
 const donationURL = () =>
-  fs.readFileSync('.github/FUNDING.yml', 'utf8').match(/(?<=^custom: ).+/);
+  fs.readFileSync('.github/FUNDING.yml', 'utf8').match(/(?<=^custom: ).+/)
 
 const downloadCovers = () => {
   const books = fetchBooks().map(book => ({
     ...book,
     cover: cachePath(book.source, `${book.slug}.jpg`),
-  }));
+  }))
   const options = books.reduce(
     (options, book) =>
       fs.existsSync(book.cover)
@@ -153,51 +153,51 @@ const downloadCovers = () => {
             '-o',
             makeDirectories(book.cover),
             `https://data.booksie.org/${encodeURIComponent(
-              book.source
+              book.source,
             )}/${encodeURIComponent(book.slug)}.jpg`,
           ],
-    []
-  );
-  options.length && executeCurl(options);
-  return books.map(book => book.cover);
-};
+    [],
+  )
+  options.length && executeCurl(options)
+  return books.map(book => book.cover)
+}
 
 const fetchBooks = () => {
-  const ids = sources.map(source => source.id);
+  const ids = sources.map(source => source.id)
   return JSON.parse(
     (process.env.CI ? memoize : cache)(fetchURL)(
-      'https://data.booksie.org/books.json'
-    )
+      'https://data.booksie.org/books.json',
+    ),
   )
     .sort((a, b) => -a.added.localeCompare(b.added))
     .sort((a, b) => ids.indexOf(a.source) - ids.indexOf(b.source))
-    .slice(0, process.env.CI ? Infinity : 100);
-};
+    .slice(0, process.env.CI ? Infinity : 100)
+}
 
 const generateBook = book => {
-  const source = sources.find(source => source.id === book.source);
+  const source = sources.find(source => source.id === book.source)
   return readInclude('book', {
     ...book,
     copyrightPage: source.copyrightPage,
     menu: readInclude('book-menu').trim(),
     newClass: book.new ? ' new' : '',
     sourceName: source.name,
-  });
-};
+  })
+}
 
 const generateBookEntries = source => {
-  let startIndex;
-  const books = fetchBooks();
-  const buster = cacheBuster();
+  let startIndex
+  const books = fetchBooks()
+  const buster = cacheBuster()
   return books
     .filter(book => book.source === source)
     .map((book, index) => {
       startIndex === undefined &&
         (startIndex = books.findIndex(
           foundBook =>
-            foundBook.source === source && foundBook.slug === book.slug
-        ));
-      const absoluteIndex = startIndex + index;
+            foundBook.source === source && foundBook.slug === book.slug,
+        ))
+      const absoluteIndex = startIndex + index
       return {
         ...book,
         buster,
@@ -206,14 +206,14 @@ const generateBookEntries = source => {
         sprite: Math.floor(absoluteIndex / (spriteWidth * spriteHeight)),
         top: `${-(Math.floor(absoluteIndex / spriteWidth) % spriteHeight) *
           100}%`,
-      };
-    });
-};
+      }
+    })
+}
 
 const generateBooks = source =>
   generateBookEntries(source)
     .map(book => generateBook(book).trim())
-    .join('');
+    .join('')
 
 const generateChromeAppManifest = () => ({
   app: {
@@ -228,49 +228,49 @@ const generateChromeAppManifest = () => ({
   offline_enabled: true,
   permissions: ['webview'],
   version: '1',
-});
+})
 
 const generateCoversStyle = () => {
-  const buster = cacheBuster();
+  const buster = cacheBuster()
   return Array.from(
-    Array(Math.ceil(fetchBooks().length / (spriteWidth * spriteHeight)))
+    Array(Math.ceil(fetchBooks().length / (spriteWidth * spriteHeight))),
   )
     .map((value, index) => {
       const url = (scale = 1) =>
         `url(${coversPath}/${index}${
           scale === 1 ? '' : `@${scale}x`
-        }.jpg?${buster})`;
-      const images = coverScales.map(scale => `${url(scale)} ${scale}x`);
+        }.jpg?${buster})`
+      const images = coverScales.map(scale => `${url(scale)} ${scale}x`)
       return `
 .cover-${index}, html.scriptless .cover[data-cover="${index}"] {
   background-image: ${url()};
   background-image: -webkit-image-set(${images.join(', ')});
   background-image: image-set(${images.join(', ')});
 }
-`.trim();
+`.trim()
     })
-    .join('\n');
-};
+    .join('\n')
+}
 
 const generateDevelopmentScript = () => {
-  ['node_modules', 'scripts'].forEach(filename =>
-    symlinkFile(path.join('..', filename), distributionPath(filename))
-  );
-  return `<script src="scripts/index.js" type="module"></script>`;
-};
+  ;['node_modules', 'scripts'].forEach(filename =>
+    symlinkFile(path.join('..', filename), distributionPath(filename)),
+  )
+  return `<script src="scripts/index.js" type="module"></script>`
+}
 
 const generateDevelopmentStyle = () =>
   readDirectory('styles')
     .map(style => {
-      const filename = path.basename(style);
-      symlinkFile(path.join('..', style), distributionPath(filename));
-      return `<link href="${filename}" rel="stylesheet">`;
+      const filename = path.basename(style)
+      symlinkFile(path.join('..', style), distributionPath(filename))
+      return `<link href="${filename}" rel="stylesheet">`
     })
-    .join('\n');
+    .join('\n')
 
 const generateFooter = () => {
-  const firstYear = 2019;
-  const year = new Date().getFullYear();
+  const firstYear = 2019
+  const year = new Date().getFullYear()
   return readInclude('footer', {
     donate: donationURL(),
     name,
@@ -278,8 +278,8 @@ const generateFooter = () => {
       ? generateProductionScript()
       : generateDevelopmentScript(),
     years: year === firstYear ? year : `${firstYear}—${year}`,
-  }).trim();
-};
+  }).trim()
+}
 
 const generateHead = () =>
   readInclude('head', {
@@ -298,22 +298,22 @@ const generateHead = () =>
     url: `https://${fs
       .readFileSync('.travis.yml', 'utf8')
       .match(/(?<= fqdn: ).+/)}/`,
-  }).replace('</html>\n', '');
+  }).replace('</html>\n', '')
 
 const generateHeader = () =>
   readInclude('header', {
     description: description.replace(/ of /, `$&${fetchBooks().length} `),
     name,
     title,
-  });
+  })
 
 const generateHomepage = homepage =>
   (Array.isArray(homepage) ? homepage : [homepage])
     .map(homepage => anchor(homepage))
-    .join(', ');
+    .join(', ')
 
 const generateIndex = () =>
-  generateHead() + generateHeader() + generateMain() + generateFooter();
+  generateHead() + generateHeader() + generateMain() + generateFooter()
 
 const generateLicense = license =>
   license &&
@@ -321,14 +321,14 @@ const generateLicense = license =>
     Array.isArray(license) && license.length > 1 ? 's' : ''
   }: ${(Array.isArray(license) ? license : [license])
     .map(license => anchor(licenseURL(license), license))
-    .join(', ')}`;
+    .join(', ')}`
 
 const generateMain = () =>
   readInclude('main', {
     books: generateSourceBooks(),
     navigation: generateNavigation(),
     viewer: readInclude('viewer'),
-  });
+  })
 
 const generateManifest = () => ({
   background_color: backgroundColor,
@@ -349,21 +349,21 @@ const generateManifest = () => ({
   short_name: name,
   start_url: '.',
   theme_color: backgroundColor,
-});
+})
 
 const generateNavigation = () =>
   readInclude('navigation', {
     links: sources
       .map(source => anchor(`#${source.id}`, source.name))
       .join(', '),
-  });
+  })
 
 const generateNewBooks = () =>
   sources
     .map(source => generateBookEntries(source.id).filter(entry => entry.new))
     .flat()
     .map(book => generateBook(book).trim())
-    .join('');
+    .join('')
 
 const generateProductionScript = () => `<script defer>
 ${executeCommand([
@@ -373,17 +373,17 @@ ${executeCommand([
   'iife',
   '--silent',
 ]).trim()}
-</script>`;
+</script>`
 
 const generateProductionStyle = () =>
   `<style>
 ${readDirectory('styles')
   .map(style => fs.readFileSync(style, 'utf8').trim())
   .join('\n\n')}
-</style>`;
+</style>`
 
 const generateSourceBooks = () => {
-  const newBooks = generateNewBooks();
+  const newBooks = generateNewBooks()
   return [
     readInclude('source-books', {
       books: [],
@@ -410,22 +410,22 @@ const generateSourceBooks = () => {
         id: source.id,
         script: null,
         sourceDescription: generateSourceDescription(source.id),
-      })
+      }),
     ),
   ]
     .filter(Boolean)
-    .join('\n');
-};
+    .join('\n')
+}
 
 const generateSourceDescription = id => {
-  const source = sources.find(sourceItem => sourceItem.id === id);
+  const source = sources.find(sourceItem => sourceItem.id === id)
   return readInclude('source-description', {
     description: source.description,
     homepage: generateHomepage(source.homepage),
     license: generateLicense(source.license),
     logo: sourceLogo(id),
-  });
-};
+  })
+}
 
 const licenseURL = license =>
   assert(
@@ -438,35 +438,35 @@ const licenseURL = license =>
       : license === 'CC BY-NC-SA 4.0'
       ? 'https://creativecommons.org/licenses/by-nc-sa/4.0/'
       : undefined,
-    `Unknown license ${license}`
-  );
+    `Unknown license ${license}`,
+  )
 
 const main = () => {
-  buildAllCovers();
-  buildChromeAppManifest();
-  buildIndex();
-  buildManifest();
-  copyAssets();
-  copyPDFJSFiles();
-  copyServiceWorker();
-  copyWellKnown();
-};
+  buildAllCovers()
+  buildChromeAppManifest()
+  buildIndex()
+  buildManifest()
+  copyAssets()
+  copyPDFJSFiles()
+  copyServiceWorker()
+  copyWellKnown()
+}
 
-const manifest = 'manifest.webmanifest';
+const manifest = 'manifest.webmanifest'
 
-const name = 'Booksie';
+const name = 'Booksie'
 
 const readInclude = (name, replacements = {}) =>
   replaceTokens(
     fs.readFileSync(path.join('includes', `${name}.html`), 'utf8'),
-    replacements
-  );
+    replacements,
+  )
 
 const replaceImages = html =>
   html.replace(
     /<img .+?\/>/gs,
-    '<img class="lazy-loading" /><noscript>$&</noscript>'
-  );
+    '<img class="lazy-loading" /><noscript>$&</noscript>',
+  )
 
 const replaceTokens = (string, replacements) => {
   const result = Object.entries(replacements).reduce(
@@ -475,32 +475,32 @@ const replaceTokens = (string, replacements) => {
         .replace(new RegExp(`^ +(?=<!--${token}-->)`, 'gm'), '')
         .replace(
           new RegExp(`<!--${token}-->`, 'g'),
-          [null, undefined].includes(replacement) ? '' : replacement
+          [null, undefined].includes(replacement) ? '' : replacement,
         ),
-    string
-  );
-  const match = result.match(/<!--(\w+)-->/);
-  assert(!match, match && `Unreplaced token ${match[1]}`);
-  return result;
-};
+    string,
+  )
+  const match = result.match(/<!--(\w+)-->/)
+  assert(!match, match && `Unreplaced token ${match[1]}`)
+  return result
+}
 
 const sourceLogo = source => {
   const logo = readDirectory('assets/sources').find(logo =>
-    path.basename(logo).startsWith(`${source}.`)
-  );
+    path.basename(logo).startsWith(`${source}.`),
+  )
   return logo
     ? `<img alt="${
         sources.find(
-          source => source.id === path.basename(logo).replace(/\..+?$/, '')
+          source => source.id === path.basename(logo).replace(/\..+?$/, ''),
         ).name
       }" src="${logo}"/>`
-    : null;
-};
+    : null
+}
 
-const spriteHeight = 3;
+const spriteHeight = 3
 
-const spriteWidth = 7;
+const spriteWidth = 7
 
-const title = 'Free Picture Storybooks for Children';
+const title = 'Free Picture Storybooks for Children'
 
-require.main === module && main();
+require.main === module && main()

@@ -1,3 +1,3 @@
 chrome.app.runtime.onLaunched.addListener(() =>
-  chrome.app.window.create('index.html')
-);
+  chrome.app.window.create('index.html'),
+)

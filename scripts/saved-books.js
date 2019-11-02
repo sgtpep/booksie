@@ -4,37 +4,37 @@ function updateSavedBooks(initial = false) {
       cache
         .keys()
         .then(requests => {
-          const urls = requests.map(request => request.url);
+          const urls = requests.map(request => request.url)
           return Promise.all(
             requests
               .reverse()
               .filter(
                 request =>
                   request.url.endsWith('.html') &&
-                  urls.includes(request.url.replace(/\.\w+$/, '.pdf'))
+                  urls.includes(request.url.replace(/\.\w+$/, '.pdf')),
               )
               .map(request =>
-                caches.match(request).then(response => response.text())
-              )
-          );
+                caches.match(request).then(response => response.text()),
+              ),
+          )
         })
         .then(htmls => {
-          const saved = document.querySelector('#saved');
-          const height = document.documentElement.scrollHeight;
-          const sourceBooks = saved.closest('.source-books');
-          const books = sourceBooks.querySelector('.books');
+          const saved = document.querySelector('#saved')
+          const height = document.documentElement.scrollHeight
+          const sourceBooks = saved.closest('.source-books')
+          const books = sourceBooks.querySelector('.books')
           while (
             books.firstElementChild &&
             books.firstElementChild.classList.contains('book')
           ) {
-            books.removeChild(books.firstElementChild);
+            books.removeChild(books.firstElementChild)
           }
-          books.insertAdjacentHTML('afterbegin', htmls.join('\n'));
-          sourceBooks.hidden = !htmls.length;
+          books.insertAdjacentHTML('afterbegin', htmls.join('\n'))
+          sourceBooks.hidden = !htmls.length
           document.documentElement.scrollHeight > height &&
             !initial &&
-            scrollBy(0, document.documentElement.scrollHeight - height);
-        })
-    );
+            scrollBy(0, document.documentElement.scrollHeight - height)
+        }),
+    )
 }
-updateSavedBooks(true);
+updateSavedBooks(true)

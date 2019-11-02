@@ -1,8 +1,8 @@
 const randomBook = () => {
-  const books = document.querySelectorAll('.book');
-  const book = books[Math.floor(Math.random() * books.length)];
-  location = `#${book.dataset.source}/${book.dataset.slug}`;
-};
+  const books = document.querySelectorAll('.book')
+  const book = books[Math.floor(Math.random() * books.length)]
+  location = `#${book.dataset.source}/${book.dataset.slug}`
+}
 
 const shuffleBooks = (onShuffle = () => {}) =>
   [...document.querySelectorAll('.books')]
@@ -12,25 +12,25 @@ const shuffleBooks = (onShuffle = () => {}) =>
           () =>
             new Promise(resolve =>
               setTimeout(() => {
-                shuffleSourceBooks(books);
-                resolve();
-              })
-            )
+                shuffleSourceBooks(books)
+                resolve()
+              }),
+            ),
         ),
-      Promise.resolve()
+      Promise.resolve(),
     )
-    .then(() => onShuffle());
+    .then(() => onShuffle())
 
 const shuffleSourceBooks = books => {
-  const clone = books.cloneNode(true);
-  [...clone.querySelectorAll('.book')].forEach((book, index, books) =>
+  const clone = books.cloneNode(true)
+  ;[...clone.querySelectorAll('.book')].forEach((book, index, books) =>
     book.parentElement.insertBefore(
       books[(Math.random() * books.length) | 0],
-      book.parentElement.firstElementChild
-    )
-  );
-  books.parentElement.replaceChild(clone, books);
-};
+      book.parentElement.firstElementChild,
+    ),
+  )
+  books.parentElement.replaceChild(clone, books)
+}
 
 export default (onShuffle = () => {}) =>
   document
@@ -43,5 +43,5 @@ export default (onShuffle = () => {}) =>
           ? randomBook()
           : event.target.dataset.action === 'shuffle'
           ? shuffleBooks(onShuffle)
-          : undefinded)
-    );
+          : undefinded),
+    )

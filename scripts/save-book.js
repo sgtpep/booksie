@@ -1,13 +1,13 @@
-import { coverURL } from './cover-lazy-loading.js';
+import { coverURL } from './cover-lazy-loading.js'
 
-export const booksKey = 'books';
+export const booksKey = 'books'
 
 const coverSize = parseInt(
-  getComputedStyle(document.documentElement).getPropertyValue('--cover-size')
-);
+  getComputedStyle(document.documentElement).getPropertyValue('--cover-size'),
+)
 
 const generateCacheURL = (book, extension) =>
-  `${book.dataset.source}/${book.dataset.slug}${extension}`;
+  `${book.dataset.source}/${book.dataset.slug}${extension}`
 
 const reloadIfNeeded = () =>
   /\bApple\b/.test(navigator.vendor) &&
@@ -19,69 +19,69 @@ const reloadIfNeeded = () =>
         .then(
           requests =>
             requests.filter(request => request.url.endsWith('.pdf')).length ===
-              1 && location.reload()
-        )
-    );
+              1 && location.reload(),
+        ),
+    )
 
 export default book =>
   window.caches
     ? caches.open(booksKey).then(cache => {
-        book.classList.add('saving');
-        const cover = book.querySelector('.cover');
-        const left = parseInt(cover.style.backgroundPositionX) / 100;
-        const top = parseInt(cover.style.backgroundPositionY) / 100;
+        book.classList.add('saving')
+        const cover = book.querySelector('.cover')
+        const left = parseInt(cover.style.backgroundPositionX) / 100
+        const top = parseInt(cover.style.backgroundPositionY) / 100
         return Promise.all([
           fetch(book.dataset.href).then(response =>
-            cache.put(generateCacheURL(book, '.pdf'), response)
+            cache.put(generateCacheURL(book, '.pdf'), response),
           ),
           Promise.all(
             [1, 2].map(scale =>
               new Promise((resolve, reject) => {
-                const image = new Image();
-                image.addEventListener('load', () => resolve([image, scale]));
+                const image = new Image()
+                image.addEventListener('load', () => resolve([image, scale]))
                 image.src = coverURL(
                   cover.dataset.cover,
                   scale,
-                  cover.dataset.buster
-                );
+                  cover.dataset.buster,
+                )
               }).then(([image, scale]) => {
-                const canvas = document.createElement('canvas');
-                canvas.height = coverSize * scale;
-                canvas.width = coverSize * scale;
+                const canvas = document.createElement('canvas')
+                canvas.height = coverSize * scale
+                canvas.width = coverSize * scale
                 canvas
                   .getContext('2d')
                   .drawImage(
                     image,
                     left * coverSize * scale,
-                    top * coverSize * scale
-                  );
-                return canvas.toDataURL('image/jpeg', 0.8);
-              })
-            )
+                    top * coverSize * scale,
+                  )
+                return canvas.toDataURL('image/jpeg', 0.8)
+              }),
+            ),
           ).then(images => {
-            const clone = book.cloneNode(true);
-            clone.classList.add('offline');
-            ['new', 'saved', 'saving'].forEach(className =>
-              clone.classList.remove(className)
-            );
-            clone.dataset.href = generateCacheURL(book, '.pdf');
-            const cover = clone.querySelector('.cover');
-            cover.classList.remove(`cover-${cover.dataset.cover}`);
-            const style = document.styleSheets[0];
+            const clone = book.cloneNode(true)
+            clone.classList.add('offline')
+            ;['new', 'saved', 'saving'].forEach(className =>
+              clone.classList.remove(className),
+            )
+            clone.dataset.href = generateCacheURL(book, '.pdf')
+            const cover = clone.querySelector('.cover')
+            cover.classList.remove(`cover-${cover.dataset.cover}`)
+            const style = document.styleSheets[0]
             cover.setAttribute(
               'style',
               [...(style.rules || style.cssRules)]
                 .find(style =>
                   style.selectorText.startsWith(
-                    `.cover-${cover.dataset.cover},`
-                  )
+                    `.cover-${cover.dataset.cover},`,
+                  ),
                 )
                 .cssText.replace(/^.+{(.+)}$/, '$1')
                 .replace(/(\burl\()([^)]+)/g, (match, prefix, url) => {
-                  const scale = url.match(/@(\d+)x/);
-                  return `${prefix}${images[scale ? Number(scale[1]) - 1 : 0]}`;
-                })
-            );
+                  const scale = url.match(/@(\d+)x/)
+                  return `${prefix}${images[scale ? Number(scale[1]) - 1 : 0]}`
+                }),
+            )
             return cache.put(
               generateCacheURL(book, '.html'),
               new Response(clone.outerHTML, {
@@ -89,15 +89,15 @@ export default book =>
                   'Content-Length': clone.outerHTML.length,
                   'Content-Type': 'text/html',
                 },
-              })
-            );
+              }),
+            )
           }),
         ]).then(() => {
-          book.classList.add('saved');
-          setTimeout(() => book.classList.remove('saved'), 1500);
-          book.classList.remove('saving');
-          updateSavedBooks();
-          reloadIfNeeded();
-        });
+          book.classList.add('saved')
+          setTimeout(() => book.classList.remove('saved'), 1500)
+          book.classList.remove('saving')
+          updateSavedBooks()
+          reloadIfNeeded()
+        })
       })
-    : alert('Not supported in your browser.');
+    : alert('Not supported in your browser.')

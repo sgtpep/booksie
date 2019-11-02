@@ -1,7 +1,7 @@
 export default () =>
   document.getElementById('contact').addEventListener('click', event => {
-    event.preventDefault();
+    event.preventDefault()
     location = `mailto:${atob(
-      'bWFpbEBkYW5pbC5tb2Jp'
-    )}?subject=${encodeURIComponent(`A message from ${location.host}`)}`;
-  });
+      'bWFpbEBkYW5pbC5tb2Jp',
+    )}?subject=${encodeURIComponent(`A message from ${location.host}`)}`
+  })

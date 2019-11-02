@@ -1,4 +1,4 @@
-import saveBook, { booksKey } from './save-book.js';
+import saveBook, { booksKey } from './save-book.js'
 
 const deleteBook = book =>
   caches.open(booksKey).then(cache =>
@@ -6,33 +6,33 @@ const deleteBook = book =>
       requests
         .filter(request =>
           request.url.includes(
-            `/${book.dataset.source}/${encodeURIComponent(book.dataset.slug)}.`
-          )
+            `/${book.dataset.source}/${encodeURIComponent(book.dataset.slug)}.`,
+          ),
         )
-        .forEach(request => cache.delete(request));
-      updateSavedBooks();
-    })
-  );
+        .forEach(request => cache.delete(request))
+      updateSavedBooks()
+    }),
+  )
 
 const downloadBook = book => {
-  const anchor = document.createElement('a');
-  anchor.href = book.dataset.href;
-  anchor.target = '_blank';
-  document.body.appendChild(anchor);
-  anchor.click();
-  document.body.removeChild(anchor);
-};
+  const anchor = document.createElement('a')
+  anchor.href = book.dataset.href
+  anchor.target = '_blank'
+  document.body.appendChild(anchor)
+  anchor.click()
+  document.body.removeChild(anchor)
+}
 
 const showCopyright = book =>
-  (location = `#${book.dataset.source}/${book.dataset.slug}/copyright`);
+  (location = `#${book.dataset.source}/${book.dataset.slug}/copyright`)
 
 export default () =>
   addEventListener('click', event => {
     if (event.target.dataset.action) {
-      const menu = event.target.closest('.book-menu');
+      const menu = event.target.closest('.book-menu')
       if (menu) {
-        menu.blur();
-        const book = event.target.closest('.book');
+        menu.blur()
+        const book = event.target.closest('.book')
         event.target.dataset.action === 'copyright'
           ? showCopyright(book)
           : event.target.dataset.action === 'delete'
@@ -41,7 +41,7 @@ export default () =>
           ? downloadBook(book)
           : event.target.dataset.action === 'save'
           ? saveBook(book)
-          : undefined;
+          : undefined
       }
     }
-  });
+  })
