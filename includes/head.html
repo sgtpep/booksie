@@ -29,13 +29,13 @@
   </style>
   <!--style-->
   <script>
-    document.documentElement.classList.remove('scriptless');
+    document.documentElement.classList.remove('scriptless')
     navigator.onLine === false &&
-      document.documentElement.classList.add('offline');
+      document.documentElement.classList.add('offline')
     navigator.platform.startsWith('Win') &&
-      document.documentElement.classList.add('windows');
-    /\bEdge\b/.test(navigator.userAgent) &&
-      document.documentElement.classList.add('edge');
+      document.documentElement.classList.add('windows')
+    ;/\bEdge\b/.test(navigator.userAgent) &&
+      document.documentElement.classList.add('edge')
 
     const updateBookHrefs = container =>
       [...container.children].forEach(
@@ -44,7 +44,7 @@
           ([book.dataset.href, book.firstElementChild.href] = [
             book.firstElementChild.href,
             `#${book.dataset.source}/${book.dataset.slug}`,
-          ])
-      );
+          ]),
+      )
   </script>
 </html>
