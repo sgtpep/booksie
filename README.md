@@ -23,7 +23,7 @@ https://www.booksie.org/
 [<img alt="Get it from Microsoft" height="60" src="https://assets.windowsphone.com/85864462-9c82-451e-9355-a3d5f874397a/English_get-it-from-MS_InvariantCulture_Default.png">](https://www.microsoft.com/en-us/p/booksie/9mtjfqt5s6x5)
 [![Available in the Chrome Web Store](https://developer.chrome.com/webstore/images/ChromeWebStore_Badge_v2_206x58.png)](https://chrome.google.com/webstore/detail/booksie/njfbpmjedghkdjaaaekflfefjjgijhng)
 
-## Age Rating
+## Content Rating
 
 ESRB: Everyone, PEGI 3, USK: All ages, ClassInd: All ages, IARC: Rated for 3+.
 
