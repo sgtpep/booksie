@@ -34,9 +34,6 @@ html.offline .source-books > a[id]:empty:not(#saved) ~ * {
 html.edge .source-books > h2 {
   margin-bottom: 1.5em;
 }
-.source-books > h2.sticky {
-  box-shadow: 0 -0.25em white, 0 0.0625em 0.25em rgba(0, 0, 0, 0.25);
-}
 
 .source-books > h2 > a {
   display: block;

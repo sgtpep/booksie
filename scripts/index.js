@@ -7,7 +7,6 @@ import lazyLoading from './lazy-loading.js'
 import offline from './offline.js'
 import randomization from './randomization.js'
 import serviceWorker from './service-worker.js'
-import stickyElements from './sticky-elements.js'
 import viewer from './viewer.js'
 
 bookMenu()
@@ -18,5 +17,4 @@ lazyLoading()
 offline()
 randomization(() => coverLazyLoading())
 serviceWorker()
-stickyElements()
 viewer()
