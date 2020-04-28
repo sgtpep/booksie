@@ -42,12 +42,10 @@ const debounce = (func, delay) => {
   }
 }
 
-const displayNextPage = () => displayPage(currentNumber + 1)
-
-const displayNextPageOrClose = () =>
+const displayNextPage = () =>
   currentNumber && pdf && currentNumber === pdf.numPages
     ? closeViewer()
-    : displayNextPage()
+    : displayPage(currentNumber + 1)
 
 const displayPage = number => {
   if (numberValid(number)) {
@@ -218,7 +216,7 @@ const onDragStart = event => (clientX = eventClientX(event))
 const onDragStop = event => {
   const difference = eventClientX(event) - clientX
   Math.abs(difference) >= 100 &&
-    (difference > 0 ? displayPreviousPage() : displayNextPageOrClose())
+    (difference > 0 ? displayPreviousPage() : displayNextPage())
 }
 
 const onHashChange = (event = { newURL: location.href, oldURL: '' }) => {
@@ -236,7 +234,7 @@ const onKeyDown = event =>
   event.key === 'ArrowLeft' || (event.key === ' ' && event.shiftKey)
     ? displayPreviousPage()
     : event.key === 'ArrowRight' || (event.key === ' ' && !event.shiftKey)
-    ? displayNextPageOrClose()
+    ? displayNextPage()
     : event.key === 'Escape'
     ? closeViewer()
     : undefined
@@ -411,7 +409,7 @@ const unloadDocument = () => {
 }
 
 const updateNavigation = number => {
-  ;['#viewer-action-next', '#viewer-edge-next'].forEach(selector =>
+  ;['#viewer-action-next'].forEach(selector =>
     queryElement(selector).classList.toggle(
       'disabled',
       pdf && number === pdf.numPages,
