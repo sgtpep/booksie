@@ -1,20 +1,20 @@
 import saveBook, { booksKey } from './save-book.js'
 
-const deleteBook = book =>
-  caches.open(booksKey).then(cache =>
-    cache.keys().then(requests => {
+const deleteBook = (book) =>
+  caches.open(booksKey).then((cache) =>
+    cache.keys().then((requests) => {
       requests
-        .filter(request =>
+        .filter((request) =>
           request.url.includes(
             `/${book.dataset.source}/${encodeURIComponent(book.dataset.slug)}.`,
           ),
         )
-        .forEach(request => cache.delete(request))
+        .forEach((request) => cache.delete(request))
       updateSavedBooks()
     }),
   )
 
-const downloadBook = book => {
+const downloadBook = (book) => {
   const anchor = document.createElement('a')
   anchor.href = book.dataset.href
   anchor.target = '_blank'
@@ -23,11 +23,11 @@ const downloadBook = book => {
   document.body.removeChild(anchor)
 }
 
-const showCopyright = book =>
+const showCopyright = (book) =>
   (location = `#${book.dataset.source}/${book.dataset.slug}/copyright`)
 
 export default () =>
-  addEventListener('click', event => {
+  addEventListener('click', (event) => {
     if (event.target.dataset.action) {
       const menu = event.target.closest('.book-menu')
       if (menu) {

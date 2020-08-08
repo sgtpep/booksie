@@ -9,7 +9,7 @@ let rendering
 let transitionEndName
 let urls
 
-const calculateViewport = page => {
+const calculateViewport = (page) => {
   updatePageView(page)
   const viewer = queryElement('#viewer')
   const { height, width } = page.getViewport(1)
@@ -24,12 +24,13 @@ const closeViewer = () => {
   redirectHome()
   setTimeout(() => unloadDocument())
   toggleViewer(false)
+  document.exitFullscreen()
 }
 
 const createImage = (url, onLoad) => {
   const image = new Image()
   image.addEventListener('load', () => onLoad(image))
-  image.addEventListener('dragstart', event => event.preventDefault())
+  image.addEventListener('dragstart', (event) => event.preventDefault())
   image.draggable = false
   image.src = url
 }
@@ -47,7 +48,7 @@ const displayNextPage = () =>
     ? closeViewer()
     : displayPage(currentNumber + 1)
 
-const displayPage = number => {
+const displayPage = (number) => {
   if (numberValid(number)) {
     currentNumber = number
     updateNavigation(number)
@@ -68,10 +69,10 @@ const documentURL = (source, slug) => {
 
 const elements = {}
 
-const eventClientX = event =>
+const eventClientX = (event) =>
   (event.changedTouches ? event.changedTouches[0] : event).clientX
 
-const extractHash = url => url.replace(/^.+?(#|$)/, '')
+const extractHash = (url) => url.replace(/^.+?(#|$)/, '')
 
 const generateBookTitle = (source, slug) => {
   const book = queryBook(source, slug)
@@ -79,9 +80,9 @@ const generateBookTitle = (source, slug) => {
 }
 
 const hidePages = () => {
-  const remove = element =>
+  const remove = (element) =>
     element.parentElement && element.parentElement.removeChild(element)
-  ;[...queryElement('#viewer-pages').children].forEach(image => {
+  ;[...queryElement('#viewer-pages').children].forEach((image) => {
     image.classList.add('fading')
     listenTransitionEnd(image, () => remove(image))
   })
@@ -112,7 +113,7 @@ const listenTransitionEnd = (element, onTransitionEnd) => {
 }
 
 const listenViewerClick = () =>
-  queryElement('#viewer').addEventListener('click', event =>
+  queryElement('#viewer').addEventListener('click', (event) =>
     event.target === queryElement('#viewer-action-close')
       ? closeViewer()
       : [
@@ -132,7 +133,7 @@ const listenViewerDoubleClick = () => {
   const viewer = queryElement('#viewer')
   viewer.addEventListener(
     'dblclick',
-    event =>
+    (event) =>
       event.target.tagName === 'A' ||
       (document.fullscreenElement
         ? document.exitFullscreen()
@@ -159,7 +160,7 @@ const loadDocument = (source, slug, copyright = false) => {
       ;(loadingTask = window['pdfjs-dist/build/pdf'].getDocument(
         documentURL(source, slug),
       )).promise.then(
-        loadedPDF => {
+        (loadedPDF) => {
           pdf = loadedPDF
           const copyrightPage = Number(book.dataset.copyrightPage)
           displayPage(
@@ -173,7 +174,7 @@ const loadDocument = (source, slug, copyright = false) => {
           setTimeout(() => updateProgress(), 50)
           updateProgress(size, size)
         },
-        error => {
+        (error) => {
           toggleError(
             true,
             `Loading error: ${error.message.replace(/\.$/, '')}.`,
@@ -184,14 +185,14 @@ const loadDocument = (source, slug, copyright = false) => {
       const book = queryBook(source, slug)
       const size = Number(book.dataset.size)
       loadingTask.onProgress = throttle(
-        progress => updateProgress(progress.loaded, size),
+        (progress) => updateProgress(progress.loaded, size),
         150,
       )
     }),
   )
 }
 
-const loadPDFJS = onLoad => {
+const loadPDFJS = (onLoad) => {
   if (window['pdfjs-dist/build/pdf']) {
     onLoad()
   } else {
@@ -202,7 +203,7 @@ const loadPDFJS = onLoad => {
   }
 }
 
-const numberValid = number => number >= 1 && pdf && number <= pdf.numPages
+const numberValid = (number) => number >= 1 && pdf && number <= pdf.numPages
 
 const offsetView = (view, top, right, bottom, left) => {
   view[0] += left
@@ -211,9 +212,9 @@ const offsetView = (view, top, right, bottom, left) => {
   view[3] -= top
 }
 
-const onDragStart = event => (clientX = eventClientX(event))
+const onDragStart = (event) => (clientX = eventClientX(event))
 
-const onDragStop = event => {
+const onDragStop = (event) => {
   const difference = eventClientX(event) - clientX
   Math.abs(difference) >= 100 &&
     (difference > 0 ? displayPreviousPage() : displayNextPage())
@@ -230,7 +231,7 @@ const onHashChange = (event = { newURL: location.href, oldURL: '' }) => {
   }
 }
 
-const onKeyDown = event =>
+const onKeyDown = (event) =>
   event.key === 'ArrowLeft' || (event.key === ' ' && event.shiftKey)
     ? displayPreviousPage()
     : event.key === 'ArrowRight' || (event.key === ' ' && !event.shiftKey)
@@ -266,7 +267,7 @@ const openViewer = (source, slug, copyright = false) => {
 const queryBook = (source, slug) =>
   document.querySelector(`.book[data-source="${source}"][data-slug="${slug}"]`)
 
-const queryElement = selector =>
+const queryElement = (selector) =>
   elements[selector] || (elements[selector] = document.querySelector(selector))
 
 const redirectHome = () => {
@@ -276,7 +277,7 @@ const redirectHome = () => {
   }
 }
 
-const renderPage = number => {
+const renderPage = (number) => {
   if (urls[number]) {
     updatePage(urls[number])
   } else if (rendering) {
@@ -291,7 +292,7 @@ const renderPage = number => {
     const previousURLs = urls
     pdf &&
       pdf.getPage(number).then(
-        page => {
+        (page) => {
           const canvas = document.createElement('canvas')
           const viewport = calculateViewport(page)
           canvas.height = Math.round(viewport.height)
@@ -302,7 +303,7 @@ const renderPage = number => {
           })
           renderTask.promise.then(
             () =>
-              canvas.toBlob(blob => {
+              canvas.toBlob((blob) => {
                 if (urls === previousURLs) {
                   urls[number] = URL.createObjectURL(blob)
                   number === currentNumber && updatePage(urls[number])
@@ -320,7 +321,7 @@ const renderPage = number => {
   }
 }
 
-const replacePage = image => {
+const replacePage = (image) => {
   hidePages()
   const pages = queryElement('#viewer-pages')
   pages.insertAdjacentElement('afterbegin', image)
@@ -334,17 +335,17 @@ const resetQueue = () =>
   pdf &&
   (numberQueue = [
     ...Array.from(Array(pdf.numPages - currentNumber + 1).keys()).map(
-      number => number + currentNumber,
+      (number) => number + currentNumber,
     ),
     ...Array.from(Array(currentNumber - 1).keys())
-      .map(number => number + 1)
+      .map((number) => number + 1)
       .reverse(),
   ])
 
 const resetRendering = () => {
   renderTask && renderTask.cancel()
   rendering = false
-  urls && urls.forEach(url => URL.revokeObjectURL(url))
+  urls && urls.forEach((url) => URL.revokeObjectURL(url))
   urls = []
 }
 
@@ -358,14 +359,14 @@ const toggleError = (visible, text = '') => {
   error.textContent = text
 }
 
-const toggleGlobalListners = adding =>
+const toggleGlobalListners = (adding) =>
   [
     ['keydown', onKeyDown],
     [
       'resize',
       onResizeDebounced || (onResizeDebounced = debounce(onResize, 150)),
     ],
-  ].map(args => (adding ? addEventListener : removeEventListener)(...args))
+  ].map((args) => (adding ? addEventListener : removeEventListener)(...args))
 
 const toggleLoading = (visible, title = '') => {
   queryElement('#viewer-loading').hidden = !visible
@@ -377,13 +378,13 @@ const toggleLoading = (visible, title = '') => {
   }
 }
 
-const toggleNavigation = visible =>
-  ['#viewer-edges', '#viewer-navigation'].forEach(selector => {
+const toggleNavigation = (visible) =>
+  ['#viewer-edges', '#viewer-navigation'].forEach((selector) => {
     const element = queryElement(selector)
     element.hidden === !visible || (element.hidden = !visible)
   })
 
-const toggleViewer = visible => {
+const toggleViewer = (visible) => {
   document.documentElement.classList.toggle('viewing', visible)
   hidePages()
   queryElement('#viewer').hidden = !visible
@@ -408,14 +409,14 @@ const unloadDocument = () => {
   resetRendering()
 }
 
-const updateNavigation = number => {
-  ;['#viewer-action-next'].forEach(selector =>
+const updateNavigation = (number) => {
+  ;['#viewer-action-next'].forEach((selector) =>
     queryElement(selector).classList.toggle(
       'disabled',
       pdf && number === pdf.numPages,
     ),
   )
-  ;['#viewer-action-previous', '#viewer-edge-previous'].forEach(selector =>
+  ;['#viewer-action-previous', '#viewer-edge-previous'].forEach((selector) =>
     queryElement(selector).classList.toggle('disabled', number === 1),
   )
   queryElement('#viewer-number').textContent = number
@@ -423,13 +424,13 @@ const updateNavigation = number => {
   toggleNavigation(true)
 }
 
-const updatePage = url =>
-  createImage(url, image => {
+const updatePage = (url) =>
+  createImage(url, (image) => {
     replacePage(image)
     toggleLoading(false)
   })
 
-const updatePageView = page => {
+const updatePageView = (page) => {
   if (!page._viewUpdated) {
     const name = sourceName()
     if (name === 'lets-read') {

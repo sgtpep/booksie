@@ -1,4 +1,4 @@
-const loadImage = image => {
+const loadImage = (image) => {
   const newImage = new DOMParser().parseFromString(
     image.nextElementSibling.textContent,
     'text/html',
@@ -12,8 +12,8 @@ export default () => {
   const images = [...document.querySelectorAll('img.lazy-loading')]
   if (window.IntersectionObserver) {
     const observer = new IntersectionObserver(
-      entries =>
-        entries.forEach(entry => {
+      (entries) =>
+        entries.forEach((entry) => {
           if (entry.isIntersecting) {
             observer.unobserve(entry.target)
             loadImage(entry.target)
@@ -21,8 +21,8 @@ export default () => {
         }),
       { rootMargin: '500% 0%' },
     )
-    images.forEach(image => observer.observe(image))
+    images.forEach((image) => observer.observe(image))
   } else {
-    images.forEach(image => addCoverClass(image))
+    images.forEach((image) => addCoverClass(image))
   }
 }

@@ -13,29 +13,29 @@ const reloadIfNeeded = () =>
   /\bApple\b/.test(navigator.vendor) &&
   caches
     .open(booksKey)
-    .then(cache =>
+    .then((cache) =>
       cache
         .keys()
         .then(
-          requests =>
-            requests.filter(request => request.url.endsWith('.pdf')).length ===
-              1 && location.reload(),
+          (requests) =>
+            requests.filter((request) => request.url.endsWith('.pdf'))
+              .length === 1 && location.reload(),
         ),
     )
 
-export default book =>
+export default (book) =>
   window.caches
-    ? caches.open(booksKey).then(cache => {
+    ? caches.open(booksKey).then((cache) => {
         book.classList.add('saving')
         const cover = book.querySelector('.cover')
         const left = parseInt(cover.style.backgroundPositionX) / 100
         const top = parseInt(cover.style.backgroundPositionY) / 100
         return Promise.all([
-          fetch(book.dataset.href).then(response =>
+          fetch(book.dataset.href).then((response) =>
             cache.put(generateCacheURL(book, '.pdf'), response),
           ),
           Promise.all(
-            [1, 2].map(scale =>
+            [1, 2].map((scale) =>
               new Promise((resolve, reject) => {
                 const image = new Image()
                 image.addEventListener('load', () => resolve([image, scale]))
@@ -58,10 +58,10 @@ export default book =>
                 return canvas.toDataURL('image/jpeg', 0.8)
               }),
             ),
-          ).then(images => {
+          ).then((images) => {
             const clone = book.cloneNode(true)
             clone.classList.add('offline')
-            ;['new', 'saved', 'saving'].forEach(className =>
+            ;['new', 'saved', 'saving'].forEach((className) =>
               clone.classList.remove(className),
             )
             clone.dataset.href = generateCacheURL(book, '.pdf')
@@ -71,7 +71,7 @@ export default book =>
             cover.setAttribute(
               'style',
               [...(style.rules || style.cssRules)]
-                .find(style =>
+                .find((style) =>
                   style.selectorText.startsWith(
                     `.cover-${cover.dataset.cover},`,
                   ),

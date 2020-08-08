@@ -37,14 +37,18 @@
     ;/\bEdge\b/.test(navigator.userAgent) &&
       document.documentElement.classList.add('edge')
 
-    const updateBookHrefs = container =>
-      [...container.children].forEach(
-        book =>
-          book.classList.contains('book') &&
-          ([book.dataset.href, book.firstElementChild.href] = [
+    const updateBookHrefs = (container) =>
+      [...container.children]
+        .filter((element) => element.classList.contains('book'))
+        .forEach((book) => {
+          const anchor = book.firstElementChild
+          ;[book.dataset.href, anchor.href] = [
             book.firstElementChild.href,
             `#${book.dataset.source}/${book.dataset.slug}`,
-          ]),
-      )
+          ]
+          anchor.addEventListener('click', () =>
+            document.documentElement.requestFullscreen(),
+          )
+        })
   </script>
 </html>

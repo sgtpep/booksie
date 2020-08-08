@@ -10,7 +10,7 @@ const shuffleBooks = (onShuffle = () => {}) =>
       (promise, books) =>
         promise.then(
           () =>
-            new Promise(resolve =>
+            new Promise((resolve) =>
               setTimeout(() => {
                 shuffleSourceBooks(books)
                 resolve()
@@ -21,7 +21,7 @@ const shuffleBooks = (onShuffle = () => {}) =>
     )
     .then(() => onShuffle())
 
-const shuffleSourceBooks = books => {
+const shuffleSourceBooks = (books) => {
   const clone = books.cloneNode(true)
   ;[...clone.querySelectorAll('.book')].forEach((book, index, books) =>
     book.parentElement.insertBefore(
@@ -37,7 +37,7 @@ export default (onShuffle = () => {}) =>
     .querySelector('#randomization')
     .addEventListener(
       'click',
-      event =>
+      (event) =>
         event.target.tagName === 'A' &&
         (event.target.dataset.action === 'book'
           ? randomBook()

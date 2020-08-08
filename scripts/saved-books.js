@@ -1,24 +1,24 @@
 function updateSavedBooks(initial = false) {
   window.caches &&
-    caches.open('books').then(cache =>
+    caches.open('books').then((cache) =>
       cache
         .keys()
-        .then(requests => {
-          const urls = requests.map(request => request.url)
+        .then((requests) => {
+          const urls = requests.map((request) => request.url)
           return Promise.all(
             requests
               .reverse()
               .filter(
-                request =>
+                (request) =>
                   request.url.endsWith('.html') &&
                   urls.includes(request.url.replace(/\.\w+$/, '.pdf')),
               )
-              .map(request =>
-                caches.match(request).then(response => response.text()),
+              .map((request) =>
+                caches.match(request).then((response) => response.text()),
               ),
           )
         })
-        .then(htmls => {
+        .then((htmls) => {
           const saved = document.querySelector('#saved')
           const height = document.documentElement.scrollHeight
           const sourceBooks = saved.closest('.source-books')
