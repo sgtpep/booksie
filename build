@@ -26,7 +26,7 @@ const anchor = (url, text = url) =>
 
 const backgroundColor = '#fcfcb4'
 
-const buildAllCovers = () => coverScales.forEach(scale => buildCovers(scale))
+const buildAllCovers = () => coverScales.forEach((scale) => buildCovers(scale))
 
 const buildChromeAppManifest = () =>
   fs.writeFileSync(
@@ -34,7 +34,7 @@ const buildChromeAppManifest = () =>
     JSON.stringify(generateChromeAppManifest(), null, 2),
   )
 
-const buildCovers = scale => {
+const buildCovers = (scale) => {
   const covers = distributionPath(coversPath)
   const outputMask = path.join(
     covers,
@@ -59,8 +59,8 @@ const buildCovers = scale => {
         { env: { MAGICK_TEMPORARY_PATH: cachePath() } },
       )
     : readDirectory(covers)
-        .filter(cover => !/@.+?x\.jpg$/.test(cover))
-        .forEach(cover => {
+        .filter((cover) => !/@.+?x\.jpg$/.test(cover))
+        .forEach((cover) => {
           const output = outputMask.replace('%d', path.basename(cover, '.jpg'))
           fs.existsSync(output) ||
             executeCommand([
@@ -85,7 +85,7 @@ const buildManifest = () =>
     JSON.stringify(generateManifest(), null, 2),
   )
 
-const cache = func => (...args) => {
+const cache = (func) => (...args) => {
   const cache = cachePath(`${func.name}:${calculateMD5(JSON.stringify(args))}`)
   fs.existsSync(cache) ||
     fs.writeFileSync(makeDirectories(cache), JSON.stringify(func(...args)))
@@ -94,12 +94,25 @@ const cache = func => (...args) => {
 
 const cacheBuster = () =>
   memoize(calculateMD5)(
-    JSON.stringify(fetchBooks().map(book => [book.source, book.slug])),
+    JSON.stringify(fetchBooks().map((book) => [book.source, book.slug])),
   ).slice(0, 7)
+
+const config = () => {
+  const config = path.join(__dirname, 'config.json')
+  return {
+    ...JSON.parse(
+      fs.readFileSync(path.join(__dirname, 'config.example.json')),
+      'utf8',
+    ),
+    ...(fs.existsSync(config)
+      ? JSON.parse(fs.readFileSync(config), 'utf8')
+      : {}),
+  }
+}
 
 const copyAssets = () => copyOrSymlinkDirectory('assets')
 
-const copyOrSymlinkDirectory = directory => {
+const copyOrSymlinkDirectory = (directory) => {
   const target = distributionPath(directory)
   process.env.CI
     ? copyDirectory(directory, target)
@@ -107,7 +120,7 @@ const copyOrSymlinkDirectory = directory => {
 }
 
 const copyPDFJSFiles = () =>
-  ['pdf.min.js', 'pdf.worker.min.js'].forEach(filename =>
+  ['pdf.min.js', 'pdf.worker.min.js'].forEach((filename) =>
     copyFile(
       path.join('node_modules/pdfjs-dist/build', filename),
       distributionPath('pdfjs', filename),
@@ -140,7 +153,7 @@ const donationURL = () =>
   fs.readFileSync('.github/FUNDING.yml', 'utf8').match(/(?<=^custom: ).+/)
 
 const downloadCovers = () => {
-  const books = fetchBooks().map(book => ({
+  const books = fetchBooks().map((book) => ({
     ...book,
     cover: cachePath(book.source, `${book.slug}.jpg`),
   }))
@@ -152,21 +165,21 @@ const downloadCovers = () => {
             ...options,
             '-o',
             makeDirectories(book.cover),
-            `https://data.booksie.org/${encodeURIComponent(
+            `${config().baseURL}${encodeURIComponent(
               book.source,
             )}/${encodeURIComponent(book.slug)}.jpg`,
           ],
     [],
   )
   options.length && executeCurl(options)
-  return books.map(book => book.cover)
+  return books.map((book) => book.cover)
 }
 
 const fetchBooks = () => {
-  const ids = sources.map(source => source.id)
+  const ids = sources.map((source) => source.id)
   return JSON.parse(
     (process.env.CI ? memoize : cache)(fetchURL)(
-      'https://data.booksie.org/books.json',
+      `${config().baseURL}books.json`,
     ),
   )
     .sort((a, b) => -a.added.localeCompare(b.added))
@@ -174,8 +187,8 @@ const fetchBooks = () => {
     .slice(0, process.env.CI ? Infinity : 100)
 }
 
-const generateBook = book => {
-  const source = sources.find(source => source.id === book.source)
+const generateBook = (book) => {
+  const source = sources.find((source) => source.id === book.source)
   return readInclude('book', {
     ...book,
     copyrightPage: source.copyrightPage,
@@ -185,16 +198,16 @@ const generateBook = book => {
   })
 }
 
-const generateBookEntries = source => {
+const generateBookEntries = (source) => {
   let startIndex
   const books = fetchBooks()
   const buster = cacheBuster()
   return books
-    .filter(book => book.source === source)
+    .filter((book) => book.source === source)
     .map((book, index) => {
       startIndex === undefined &&
         (startIndex = books.findIndex(
-          foundBook =>
+          (foundBook) =>
             foundBook.source === source && foundBook.slug === book.slug,
         ))
       const absoluteIndex = startIndex + index
@@ -204,15 +217,16 @@ const generateBookEntries = source => {
         left: `${-(absoluteIndex % spriteWidth) * 100}%`,
         new: Date.now() - Date.parse(book.added) < 1000 * 60 * 60 * 24 * 10,
         sprite: Math.floor(absoluteIndex / (spriteWidth * spriteHeight)),
-        top: `${-(Math.floor(absoluteIndex / spriteWidth) % spriteHeight) *
-          100}%`,
+        top: `${
+          -(Math.floor(absoluteIndex / spriteWidth) % spriteHeight) * 100
+        }%`,
       }
     })
 }
 
-const generateBooks = source =>
+const generateBooks = (source) =>
   generateBookEntries(source)
-    .map(book => generateBook(book).trim())
+    .map((book) => generateBook(book).trim())
     .join('')
 
 const generateChromeAppManifest = () => ({
@@ -240,7 +254,7 @@ const generateCoversStyle = () => {
         `url(${coversPath}/${index}${
           scale === 1 ? '' : `@${scale}x`
         }.jpg?${buster})`
-      const images = coverScales.map(scale => `${url(scale)} ${scale}x`)
+      const images = coverScales.map((scale) => `${url(scale)} ${scale}x`)
       return `
 .cover-${index}, html.scriptless .cover[data-cover="${index}"] {
   background-image: ${url()};
@@ -253,7 +267,7 @@ const generateCoversStyle = () => {
 }
 
 const generateDevelopmentScript = () => {
-  ;['node_modules', 'scripts'].forEach(filename =>
+  ;['node_modules', 'scripts'].forEach((filename) =>
     symlinkFile(path.join('..', filename), distributionPath(filename)),
   )
   return `<script src="scripts/index.js" type="module"></script>`
@@ -261,7 +275,7 @@ const generateDevelopmentScript = () => {
 
 const generateDevelopmentStyle = () =>
   readDirectory('styles')
-    .map(style => {
+    .map((style) => {
       const filename = path.basename(style)
       symlinkFile(path.join('..', style), distributionPath(filename))
       return `<link href="${filename}" rel="stylesheet">`
@@ -307,20 +321,20 @@ const generateHeader = () =>
     title,
   })
 
-const generateHomepage = homepage =>
+const generateHomepage = (homepage) =>
   (Array.isArray(homepage) ? homepage : [homepage])
-    .map(homepage => anchor(homepage))
+    .map((homepage) => anchor(homepage))
     .join(', ')
 
 const generateIndex = () =>
   generateHead() + generateHeader() + generateMain() + generateFooter()
 
-const generateLicense = license =>
+const generateLicense = (license) =>
   license &&
   `License${
     Array.isArray(license) && license.length > 1 ? 's' : ''
   }: ${(Array.isArray(license) ? license : [license])
-    .map(license => anchor(licenseURL(license), license))
+    .map((license) => anchor(licenseURL(license), license))
     .join(', ')}`
 
 const generateMain = () =>
@@ -344,7 +358,7 @@ const generateManifest = () => ({
     { src: 'assets/icon.svg' },
   ],
   name,
-  screenshots: readDirectory('assets/screenshots').map(src => ({ src })),
+  screenshots: readDirectory('assets/screenshots').map((src) => ({ src })),
   serviceworker: { src: 'service-worker.js' },
   short_name: name,
   start_url: '.',
@@ -354,15 +368,17 @@ const generateManifest = () => ({
 const generateNavigation = () =>
   readInclude('navigation', {
     links: sources
-      .map(source => anchor(`#${source.id}`, source.name))
+      .map((source) => anchor(`#${source.id}`, source.name))
       .join(', '),
   })
 
 const generateNewBooks = () =>
   sources
-    .map(source => generateBookEntries(source.id).filter(entry => entry.new))
+    .map((source) =>
+      generateBookEntries(source.id).filter((entry) => entry.new),
+    )
     .flat()
-    .map(book => generateBook(book).trim())
+    .map((book) => generateBook(book).trim())
     .join('')
 
 const generateProductionScript = () => `<script defer>
@@ -378,7 +394,7 @@ ${executeCommand([
 const generateProductionStyle = () =>
   `<style>
 ${readDirectory('styles')
-  .map(style => fs.readFileSync(style, 'utf8').trim())
+  .map((style) => fs.readFileSync(style, 'utf8').trim())
   .join('\n\n')}
 </style>`
 
@@ -402,7 +418,7 @@ const generateSourceBooks = () => {
         script: null,
         sourceDescription: null,
       }),
-    ...sources.map(source =>
+    ...sources.map((source) =>
       readInclude('source-books', {
         books: generateBooks(source.id),
         heading: `Books by ${source.name}`,
@@ -417,8 +433,8 @@ const generateSourceBooks = () => {
     .join('\n')
 }
 
-const generateSourceDescription = id => {
-  const source = sources.find(sourceItem => sourceItem.id === id)
+const generateSourceDescription = (id) => {
+  const source = sources.find((sourceItem) => sourceItem.id === id)
   return readInclude('source-description', {
     description: source.description,
     homepage: generateHomepage(source.homepage),
@@ -427,7 +443,7 @@ const generateSourceDescription = id => {
   })
 }
 
-const licenseURL = license =>
+const licenseURL = (license) =>
   assert(
     license === 'CC BY-NC-SA 3.0'
       ? 'https://creativecommons.org/licenses/by-nc-sa/3.0/'
@@ -462,7 +478,7 @@ const readInclude = (name, replacements = {}) =>
     replacements,
   )
 
-const replaceImages = html =>
+const replaceImages = (html) =>
   html.replace(
     /<img .+?\/>/gs,
     '<img class="lazy-loading" /><noscript>$&</noscript>',
@@ -484,14 +500,14 @@ const replaceTokens = (string, replacements) => {
   return result
 }
 
-const sourceLogo = source => {
-  const logo = readDirectory('assets/sources').find(logo =>
+const sourceLogo = (source) => {
+  const logo = readDirectory('assets/sources').find((logo) =>
     path.basename(logo).startsWith(`${source}.`),
   )
   return logo
     ? `<img alt="${
         sources.find(
-          source => source.id === path.basename(logo).replace(/\..+?$/, ''),
+          (source) => source.id === path.basename(logo).replace(/\..+?$/, ''),
         ).name
       }" src="${logo}"/>`
     : null
