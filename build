@@ -26,6 +26,8 @@ const anchor = (url, text = url) =>
 
 const backgroundColor = '#fcfcb4'
 
+const baseURL = 'https://www.booksie.org/'
+
 const buildAllCovers = () => coverScales.forEach((scale) => buildCovers(scale))
 
 const buildChromeAppManifest = () =>
@@ -309,9 +311,7 @@ const generateHead = () =>
       ? generateProductionStyle()
       : generateDevelopmentStyle(),
     title,
-    url: `https://${fs
-      .readFileSync('.travis.yml', 'utf8')
-      .match(/(?<= fqdn: ).+/)}/`,
+    url: baseURL,
   }).replace('</html>\n', '')
 
 const generateHeader = () =>
@@ -383,7 +383,7 @@ const generateNewBooks = () =>
 
 const generateProductionScript = () => `<script defer>
 ${executeCommand([
-  'rollup',
+  'node_modules/.bin/rollup',
   'scripts/index.js',
   '-f',
   'iife',

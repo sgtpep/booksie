@@ -1,0 +1,21 @@
+name: CI
+on:
+  schedule:
+    - cron: "0 0 * * 0"
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - run: sudo apt update
+      - run: sudo apt install nodejs
+      - run: npm i
+      - run: sudo sed -i 's/\(<policy domain="resource" name="memory" value="\)[^"]*/\15GiB/' /etc/ImageMagick-6/policy.xml
+      - run: ./build
+      - uses: JamesIves/github-pages-deploy-action@4.1.4
+        with:
+          branch: gh-pages
+          folder: dist
+          clean: true
+          single-commit: true
