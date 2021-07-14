@@ -1,0 +1,62 @@
+{
+  "background_color": "#fcfcb4",
+  "categories": [
+    "books",
+    "education",
+    "kids"
+  ],
+  "description": "An open catalog of free picture storybooks for children instantly available for reading.",
+  "display": "standalone",
+  "icons": [
+    {
+      "sizes": "44x44",
+      "src": "assets/windows/44.png"
+    },
+    {
+      "sizes": "50x50",
+      "src": "assets/windows/50.png"
+    },
+    {
+      "sizes": "150x150",
+      "src": "assets/windows/150.png"
+    },
+    {
+      "sizes": "192x192",
+      "src": "assets/icon.png"
+    },
+    {
+      "sizes": "512x512",
+      "src": "assets/splash.png"
+    },
+    {
+      "src": "assets/icon.svg"
+    }
+  ],
+  "name": "Booksie",
+  "screenshots": [
+    {
+      "src": "assets/screenshots/1.webp"
+    },
+    {
+      "src": "assets/screenshots/2.webp"
+    },
+    {
+      "src": "assets/screenshots/3.webp"
+    },
+    {
+      "src": "assets/screenshots/4.webp"
+    },
+    {
+      "src": "assets/screenshots/5.webp"
+    },
+    {
+      "src": "assets/screenshots/6.webp"
+    }
+  ],
+  "serviceworker": {
+    "src": "service-worker.js"
+  },
+  "short_name": "Booksie",
+  "start_url": ".",
+  "theme_color": "#fcfcb4"
+}
